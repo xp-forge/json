@@ -10,8 +10,13 @@ Reads JSON from input streams.
 
 Examples
 --------
+Reading a JSON file:
 
 ```php
 $json= new JsonReader();
 $value= $json->read((new File('input.json'))->getInputStream());
 ```
+
+Performance
+-----------
+The JSON reader's performance is twice that of the implementation in xp-framework/webservices.
