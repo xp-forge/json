@@ -99,8 +99,8 @@ class JsonReaderTest extends \unittest\TestCase {
   #  [0.1, '1E-1'], [0.1, '1e-1'],
   #  [-0.1, '-1E-1'], [0.1, '1e-1'],
   #  [0.0, '0E0'], [0.0, '0e0'],
-  #  [10000000000, '1E10'], [10000000000, '1e10'],
-  #  [-10000000000, '-1E10'], [-10000000000, '-1e10']
+  #  [1000000, '1E6'], [1000000, '1e6'],
+  #  [-1000000, '-1E6'], [-1000000, '-1e6']
   #])]
   public function read_exponent($expected, $source) {
     $this->assertEquals($expected, (new JsonReader())->read(new MemoryInputStream($source)));
