@@ -162,10 +162,10 @@ class JsonReader extends \lang\Object {
         return $keyword[$token][0];
       } else if (strpos(self::WHITESPACE, $token) !== false) {
         continue;
-      } else if (1 === sscanf($token, '%f%s', $number, $excess)) {
-        return $number > PHP_INT_MAX || $number < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
-          ? $number
-          : (int)$number
+      } else if (is_numeric($token)) {
+        return $token > PHP_INT_MAX || $token < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
+          ? (double)$token
+          : (int)$token
         ;
       } else {
         throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading value');
