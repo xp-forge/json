@@ -110,6 +110,7 @@ class JsonReader extends \lang\Object {
     while ($t->hasMoreTokens()) {
       $token= $t->nextToken('"\\');
       if ('"' === $token) {
+        if (\xp::ENCODING === $this->encoding) return $string;
         $encoded= iconv($this->encoding, \xp::ENCODING, $string);
         if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
           $e= new FormatException('Illegal encoding');
@@ -123,7 +124,7 @@ class JsonReader extends \lang\Object {
           for ($hex= '', $i= 0; $i < 4; $i++) {
             $hex.= $t->nextToken('0123456789abcdefABCDEF');
           }
-          $string.= iconv('ucs-4be', \xp::ENCODING, pack('N', hexdec($hex)));
+          $string.= iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
         } else if (isset($escapes[$escape])) {
           $string.= $escapes[$escape];
         } else {
