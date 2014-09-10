@@ -110,7 +110,6 @@ class JsonReader extends \lang\Object {
     while ($t->hasMoreTokens()) {
       $token= $t->nextToken('"\\');
       if ('"' === $token) {
-        if (\xp::ENCODING === $this->encoding) return $string;
         $encoded= iconv($this->encoding, \xp::ENCODING, $string);
         if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
           $e= new FormatException('Illegal encoding');
