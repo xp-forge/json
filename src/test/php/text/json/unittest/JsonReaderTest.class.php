@@ -13,6 +13,16 @@ use io\streams\MemoryInputStream;
  */
 class JsonReaderTest extends \unittest\TestCase {
 
+  /**
+   * Helper
+   *
+   * @param  string $source
+   * @return var
+   */
+  protected function read($source) {
+    return (new JsonReader())->read(new MemoryInputStream($source));
+  }
+
   #[@test]
   public function can_create() {
     new JsonReader();
@@ -33,17 +43,17 @@ class JsonReaderTest extends \unittest\TestCase {
   #  ["Test/", '"Test\/"']
   #])]
   public function read_string($expected, $source) {
-    $this->assertEquals($expected, (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals($expected, $this->read($source));
   }
 
   #[@test, @expect('lang.FormatException')]
   public function illegal_escape_sequence() {
-    (new JsonReader())->read(new MemoryInputStream('"\X"'));
+    $this->read('"\X"');
   }
 
   #[@test, @expect('lang.FormatException')]
   public function illegal_encoding() {
-    (new JsonReader())->read(new MemoryInputStream("\"\xfc\""));
+    $this->read("\"\xfc\"");
   }
 
   #[@test]
@@ -55,7 +65,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '"', '"abc', '"abc\"'
   #])]
   public function unclosed_string($source) {
-    (new JsonReader())->read(new MemoryInputStream($source));
+    $this->read($source);
   }
 
   #[@test, @values([
@@ -64,19 +74,19 @@ class JsonReaderTest extends \unittest\TestCase {
   #  [-1, '-1']
   #])]
   public function read_integer($expected, $source) {
-    $this->assertEquals($expected, (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals($expected, $this->read($source));
   }
 
   #[@test]
   public function read_int_max() {
     $n= PHP_INT_MAX;
-    $this->assertEquals($n, (new JsonReader())->read(new MemoryInputStream((string)$n)));
+    $this->assertEquals($n, $this->read((string)$n));
   }
 
   #[@test]
   public function read_int_min() {
     $n= -PHP_INT_MAX -1;
-    $this->assertEquals($n, (new JsonReader())->read(new MemoryInputStream((string)$n)));
+    $this->assertEquals($n, $this->read((string)$n));
   }
 
   #[@test, @values([
@@ -90,7 +100,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  [-9999999999999999999999999999999999999.0, '-9999999999999999999999999999999999999']
   #])]
   public function read_double($expected, $source) {
-    $this->assertEquals($expected, (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals($expected, $this->read($source));
   }
 
   #[@test, @values([
@@ -103,7 +113,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  [-1000000.0, '-1E6'], [-1000000.0, '-1e6']
   #])]
   public function read_exponent($expected, $source) {
-    $this->assertEquals($expected, (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals($expected, $this->read($source));
   }
 
   #[@test, @values([
@@ -112,12 +122,12 @@ class JsonReaderTest extends \unittest\TestCase {
   #  [null, 'null']
   #])]
   public function read_keyword($expected, $source) {
-    $this->assertEquals($expected, (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals($expected, $this->read($source));
   }
 
   #[@test, @values(['{}', '{ }'])]
   public function read_empty_object($source) {
-    $this->assertEquals([], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals([], $this->read($source));
   }
 
   #[@test, @values([
@@ -126,7 +136,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '{ "key" : "value" }'
   #])]
   public function read_key_value_pair($source) {
-    $this->assertEquals(['key' => 'value'], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals(['key' => 'value'], $this->read($source));
   }
 
   #[@test, @values([
@@ -135,7 +145,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '{ "a" : "v1" , "b" : "v2" }'
   #])]
   public function read_key_value_pairs($source) {
-    $this->assertEquals(['a' => 'v1', 'b' => 'v2'], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals(['a' => 'v1', 'b' => 'v2'], $this->read($source));
   }
 
   #[@test, @values([
@@ -144,7 +154,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '{ "" : "value" }'
   #])]
   public function empty_key($source) {
-    $this->assertEquals(['' => 'value'], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals(['' => 'value'], $this->read($source));
   }
 
   #[@test, @expect('lang.FormatException'), @values([
@@ -152,37 +162,37 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '}', '}}'
   #])]
   public function unclosed_object($source) {
-    (new JsonReader())->read(new MemoryInputStream($source));
+    $this->read($source);
   }
 
   #[@test, @expect('lang.FormatException')]
   public function missing_key() {
-    (new JsonReader())->read(new MemoryInputStream('{:"value"}'));
+    $this->read('{:"value"}');
   }
 
   #[@test, @expect('lang.FormatException')]
   public function missing_value() {
-    (new JsonReader())->read(new MemoryInputStream('{"key":}'));
+    $this->read('{"key":}');
   }
 
   #[@test, @expect('lang.FormatException')]
   public function missing_key_and_value() {
-    (new JsonReader())->read(new MemoryInputStream('{:}'));
+    $this->read('{:}');
   }
 
   #[@test, @expect('lang.FormatException')]
   public function missing_colon() {
-    (new JsonReader())->read(new MemoryInputStream('{"key"}'));
+    $this->read('{"key"}');
   }
 
   #[@test, @expect('lang.FormatException')]
   public function missing_comma_between_key_value_pairs() {
-    (new JsonReader())->read(new MemoryInputStream('{"a": "v1" "b": "v2"}'));
+    $this->read('{"a": "v1" "b": "v2"}');
   }
 
   #[@test, @expect('lang.FormatException')]
   public function trailing_comma_in_object() {
-    (new JsonReader())->read(new MemoryInputStream('{"key": "value",}'));
+    $this->read('{"key": "value",}');
   }
 
   #[@test, @expect('lang.FormatException'), @values([
@@ -193,12 +203,12 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '{{}: "value"}', '{{"a": "b"}: "value"}'
   #])]
   public function illegal_key($source) {
-    (new JsonReader())->read(new MemoryInputStream($source));
+    $this->read($source);
   }
 
   #[@test, @values(['[]', '[ ]'])]
   public function read_empty_array($source) {
-    $this->assertEquals([], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals([], $this->read($source));
   }
 
   #[@test, @values([
@@ -206,7 +216,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '[ "value" ]'
   #])]
   public function read_list_with_value($source) {
-    $this->assertEquals(['value'], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals(['value'], $this->read($source));
   }
 
   #[@test, @values([
@@ -215,7 +225,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '[ "v1", "v2" ]'
   #])]
   public function read_list_with_values($source) {
-    $this->assertEquals(['v1', 'v2'], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals(['v1', 'v2'], $this->read($source));
   }
 
   #[@test, @values([
@@ -224,7 +234,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '[ "v1" , [ "v2" , "v3" ] ]'
   #])]
   public function read_list_with_nested_list($source) {
-    $this->assertEquals(['v1', ['v2', 'v3']], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals(['v1', ['v2', 'v3']], $this->read($source));
   }
 
   #[@test, @expect('lang.FormatException'), @values([
@@ -232,27 +242,27 @@ class JsonReaderTest extends \unittest\TestCase {
   #  ']', ']]'
   #])]
   public function unclosed_array($source) {
-    (new JsonReader())->read(new MemoryInputStream($source));
+    $this->read($source);
   }
 
   #[@test, @expect('lang.FormatException')]
   public function missing_comma_after_value() {
-    (new JsonReader())->read(new MemoryInputStream('["v1" "v2"]'));
+    $this->read('["v1" "v2"]');
   }
 
   #[@test, @expect('lang.FormatException')]
   public function trailing_comma_in_array() {
-    (new JsonReader())->read(new MemoryInputStream('["value",]'));
+    $this->read('["value",]');
   }
 
   #[@test, @expect('lang.FormatException'), @values(['', ' ', '  '])]
   public function empty_input($source) {
-    (new JsonReader())->read(new MemoryInputStream($source));
+    $this->read($source);
   }
 
   #[@test, @expect('lang.FormatException')]
   public function xml_input() {
-    (new JsonReader())->read(new MemoryInputStream('<xml version="1.0"?><document/>'));
+    $this->read('<xml version="1.0"?><document/>');
   }
 
   #[@test, @expect('lang.FormatException'), @values([
@@ -265,7 +275,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  '"a", "b"'
   #])]
   public function illegal_token($source) {
-    (new JsonReader())->read(new MemoryInputStream($source));
+    $this->read($source);
   }
 
   #[@test, @values([
@@ -275,7 +285,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  "\t[1]", "\t \t [1]"
   #])]
   public function leading_whitespace_is_ok($source) {
-    $this->assertEquals([1], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals([1], $this->read($source));
   }
 
   #[@test, @values([
@@ -285,7 +295,7 @@ class JsonReaderTest extends \unittest\TestCase {
   #  "[1]\t", "[1]\t \t "
   #])]
   public function trailing_whitespace_is_ok($source) {
-    $this->assertEquals([1], (new JsonReader())->read(new MemoryInputStream($source)));
+    $this->assertEquals([1], $this->read($source));
   }
 
   #[@test]
