@@ -36,8 +36,7 @@ class JsonReader extends \lang\Object {
     $map= [];
     $key= null;
     $next= true;
-    while (true) {
-      $token= $t->nextToken();
+    while (null !== ($token= $t->nextToken())) {
       if ('}' === $token && null === $key) {
         return $map;
       } else if (':' === $token && is_string($key)) {
@@ -68,8 +67,7 @@ class JsonReader extends \lang\Object {
   protected function readList($t) {
     $list= [];
     $next= true;
-    while (true) {
-      $token= $t->nextToken();
+    while (null !== ($token= $t->nextToken())) {
       if (']' === $token) {
         return $list;
       } else if (',' === $token) {
@@ -107,8 +105,7 @@ class JsonReader extends \lang\Object {
     ];
 
     $string= '';
-    while (true) {
-      $token= $t->nextToken('"\\');
+    while (null !== ($token= $t->nextToken('"\\'))) {
       if ('"' === $token) {
         $encoded= iconv($this->encoding, \xp::ENCODING, $string);
         if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
@@ -150,8 +147,7 @@ class JsonReader extends \lang\Object {
       'null'   => [null],
     ];
 
-    while (true) {
-      $token= $t->nextToken();
+    while (null !== ($token= $t->nextToken())) {
       if ('{' === $token) {
         return $this->readObject($t);
       } else if ('[' === $token) {
