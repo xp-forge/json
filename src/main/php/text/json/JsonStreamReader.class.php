@@ -1,8 +1,6 @@
 <?php namespace text\json;
 
 use io\streams\InputStream;
-use text\StreamTokenizer;
-use lang\FormatException;
 
 /**
  * Reads JSON from a given input stream
@@ -21,6 +19,6 @@ class JsonStreamReader extends JsonReader {
    * @param  string $encoding
    */
   public function __construct(InputStream $in, $encoding= \xp::ENCODING) {
-    parent::__construct(new StreamTokenizer($in, '{[,"]}:'.self::WHITESPACE, true), $encoding);
+    parent::__construct(new JsonTokenizer($in), $encoding);
   }
 }

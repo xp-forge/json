@@ -344,4 +344,16 @@ abstract class JsonReaderTest extends \unittest\TestCase {
     foreach ($this->reader('[1 2')->elements() as $element) {
     }
   }
+
+  #[@test]
+  public function read_long_text() {
+    $str= str_repeat('*', 0xFFFF);
+    $this->assertEquals($str, $this->read('"'.$str.'"'));
+  }
+
+  #[@test]
+  public function read_long_texts() {
+    $str= str_repeat('*', 0xFFFF);
+    $this->assertEquals([$str, $str], $this->read('["'.$str.'", "'.$str.'"]'));
+  }
 }
