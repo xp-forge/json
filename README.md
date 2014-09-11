@@ -13,8 +13,18 @@ Examples
 Reading a JSON file:
 
 ```php
-$json= new JsonReader();
-$value= $json->read((new File('input.json'))->getInputStream());
+$json= new JsonStreamReader((new File('input.json'))->getInputStream()));
+$value= $json->read();
+```
+
+Reading elements sequentially doesn't load the entire file into memory. You can
+use the `elements()` method to receive an iterator.
+
+```php
+$json= new JsonStreamReader((new File('large-list.json'))->getInputStream()));
+foreach ($json->elements() as $element) {
+  // Process
+}
 ```
 
 Performance

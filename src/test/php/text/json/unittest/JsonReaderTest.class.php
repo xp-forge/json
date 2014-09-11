@@ -1,6 +1,5 @@
 <?php namespace text\json\unittest;
 
-use text\json\JsonReader;
 use io\streams\MemoryInputStream;
 
 /**
@@ -11,21 +10,26 @@ use io\streams\MemoryInputStream;
  * @see   https://bugs.php.net/bug.php?id=54484
  * @see   https://github.com/xp-framework/xp-framework/issues/189
  */
-class JsonReaderTest extends \unittest\TestCase {
+abstract class JsonReaderTest extends \unittest\TestCase {
+
+  /**
+   * Returns the reader implementation
+   *
+   * @param  string $source
+   * @param  string $encoding
+   * @return text.json.JsonReader
+   */
+  protected abstract function reader($source, $encoding= 'utf-8');
 
   /**
    * Helper
    *
    * @param  string $source
+   * @param  string $encoding
    * @return var
    */
-  protected function read($source) {
-    return (new JsonReader())->read(new MemoryInputStream($source));
-  }
-
-  #[@test]
-  public function can_create() {
-    new JsonReader();
+  protected function read($source, $encoding= 'utf-8') {
+    return $this->reader($source, $encoding)->read();
   }
 
   #[@test, @values([
@@ -58,7 +62,7 @@ class JsonReaderTest extends \unittest\TestCase {
 
   #[@test]
   public function read_iso_8859_1() {
-    $this->assertEquals('ü', (new JsonReader('iso-8859-1'))->read(new MemoryInputStream("\"\xfc\"")));
+    $this->assertEquals('ü', $this->read("\"\xfc\"", 'iso-8859-1'));
   }
 
   #[@test, @expect('lang.FormatException'), @values([
@@ -306,11 +310,38 @@ class JsonReaderTest extends \unittest\TestCase {
         'sizes' => ['S', 'M', 'L', 'XL'],
         'price' => 12.99
       ],
-      (new JsonReader())->read(new MemoryInputStream('{
+      $this->read('{
         "color" : "green",
         "sizes" : [ "S", "M", "L", "XL" ],
         "price" : 12.99
-      }'))
+      }')
     );
+  }
+
+  #[@test, @values(['[1, 2, 3]', '[1,2,3]', '[ 1, 2, 3 ]'])]
+  public function can_read_array_sequentially($source) {
+    $r= [];
+    foreach ($this->reader($source)->elements() as $element) {
+      $r[]= $element;
+    }
+    $this->assertEquals([1, 2, 3], $r);
+  }
+
+  #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "\["/'), @values([
+  #  'null', 'false', 'true',
+  #  '""', '"Test"',
+  #  '0', '0.0',
+  #  '{}'
+  #])]
+  public function cannot_read_other_values_than_arrays_sequentially($source) {
+    foreach ($this->reader($source)->elements() as $element) {
+      $this->fail('Should raise before first element is returned', null, 'lang.FormatException');
+    }
+  }
+
+  #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "," or "\]"/')]
+  public function reading_malformed_array_sequentially() {
+    foreach ($this->reader('[1 2')->elements() as $element) {
+    }
   }
 }

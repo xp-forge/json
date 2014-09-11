@@ -1,0 +1,7 @@
+{
+  "name"    : "xp-forge/json",
+  "version" : "0.2.0",
+  "require" : {
+    "xp-framework/core" : "~6.0"
+  }
+}

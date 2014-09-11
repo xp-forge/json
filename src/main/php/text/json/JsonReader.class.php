@@ -1,54 +1,70 @@
 <?php namespace text\json;
 
-use io\streams\InputStream;
-use text\StreamTokenizer;
+use text\Tokenizer;
 use lang\FormatException;
 
 /**
- * Reads JSON from a given input stream
- *
- * ```php
- * $json= new JsonReader();
- * $value= $json->read((new File('input.json'))->getInputStream());
- * ```
+ * Base class for JSON readers
  */
-class JsonReader extends \lang\Object {
+abstract class JsonReader extends \lang\Object {
   const WHITESPACE = " \n\r\t";
-  protected $encoding;
 
   /**
-   * Creates a new reader
+   * Creates a new stream reader to read from a stream
    *
+   * @param  text.Tokenizer $tokenizer
    * @param  string $encoding
    */
-  public function __construct($encoding= \xp::ENCODING) {
+  public function __construct(Tokenizer $tokenizer, $encoding= \xp::ENCODING) {
+    $this->tokenizer= $tokenizer;
     $this->encoding= $encoding;
+  }
+
+  /**
+   * Resets tokenizer
+   *
+   * @return void
+   */
+  public function reset() {
+    $this->tokenizer->reset();
+  }
+
+  /**
+   * Fetches next token
+   *
+   * @return string
+   */
+  public function nextToken() {
+    while (null !== ($token= $this->tokenizer->nextToken())) {
+      if (strpos(self::WHITESPACE, $token) !== false) continue;
+      break;
+    }
+    return $token;
   }
 
   /**
    * Reads a map
    *
-   * @param  text.Tokenizer $t
    * @return [:var]
    * @throws lang.FormatException
    */
-  protected function readObject($t) {
+  public function nextObject() {
     $map= [];
     $key= null;
     $next= true;
-    while (null !== ($token= $t->nextToken())) {
+    while (null !== ($token= $this->tokenizer->nextToken())) {
       if ('}' === $token && null === $key) {
         return $map;
       } else if (':' === $token && is_string($key)) {
-        $map[$key]= $this->readValue($t);
+        $map[$key]= $this->nextValue();
         $key= null;
       } else if (',' === $token) {
-        $key= $this->readValue($t);
+        $key= $this->nextValue();
       } else if (strpos(self::WHITESPACE, $token) !== false) {
         continue;
       } else if ($next) {
-        $t->pushBack($token);
-        $key= $this->readValue($t);
+        $this->tokenizer->pushBack($token);
+        $key= $this->nextValue();
         $next= false;
       } else {
         throw new FormatException('Unexpected key - missing comma?');
@@ -60,23 +76,22 @@ class JsonReader extends \lang\Object {
   /**
    * Reads a list
    *
-   * @param  text.Tokenizer $t
    * @return [:var]
    * @throws lang.FormatException
    */
-  protected function readList($t) {
+  public function nextList() {
     $list= [];
     $next= true;
-    while (null !== ($token= $t->nextToken())) {
+    while (null !== ($token= $this->tokenizer->nextToken())) {
       if (']' === $token) {
         return $list;
       } else if (',' === $token) {
-        $list[]= $this->readValue($t);
+        $list[]= $this->nextValue();
       } else if (strpos(self::WHITESPACE, $token) !== false) {
         continue;
       } else if ($next) {
-        $t->pushBack($token);
-        $list[]= $this->readValue($t);
+        $this->tokenizer->pushBack($token);
+        $list[]= $this->nextValue();
         $next= false;
       } else {
         throw new FormatException('Unexpected value - missing comma?');
@@ -88,11 +103,10 @@ class JsonReader extends \lang\Object {
   /**
    * Reads a string
    *
-   * @param  text.Tokenizer $t
    * @return string
    * @throws lang.FormatException
    */
-  protected function readString($t) {
+  public function nextString() {
     static $escapes= [
       '"'  => "\"",
       'b'  => "\b",
@@ -105,7 +119,7 @@ class JsonReader extends \lang\Object {
     ];
 
     $string= '';
-    while (null !== ($token= $t->nextToken('"\\'))) {
+    while (null !== ($token= $this->tokenizer->nextToken('"\\'))) {
       if ('"' === $token) {
         $encoded= iconv($this->encoding, \xp::ENCODING, $string);
         if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
@@ -115,10 +129,10 @@ class JsonReader extends \lang\Object {
         }
         return $encoded;
       } else if ('\\' === $token) {
-        $escape= $t->nextToken('"\\bfnrtu');
+        $escape= $this->tokenizer->nextToken('"\\bfnrtu');
         if ('u' === $escape) {
           for ($hex= '', $i= 0; $i < 4; $i++) {
-            $hex.= $t->nextToken('0123456789abcdefABCDEF');
+            $hex.= $this->tokenizer->nextToken('0123456789abcdefABCDEF');
           }
           $string.= iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
         } else if (isset($escapes[$escape])) {
@@ -136,24 +150,23 @@ class JsonReader extends \lang\Object {
   /**
    * Reads a value
    *
-   * @param  text.Tokenizer $t
    * @return var
    * @throws lang.FormatException
    */
-  protected function readValue($t) {
+  public function nextValue() {
     static $keyword= [
       'true'   => [true],
       'false'  => [false],
       'null'   => [null],
     ];
 
-    while (null !== ($token= $t->nextToken())) {
+    while (null !== ($token= $this->tokenizer->nextToken())) {
       if ('{' === $token) {
-        return $this->readObject($t);
+        return $this->nextObject();
       } else if ('[' === $token) {
-        return $this->readList($t);
+        return $this->nextList();
       } else if ('"' === $token) {
-        return $this->readString($t);
+        return $this->nextString();
       } else if (isset($keyword[$token])) {
         return $keyword[$token][0];
       } else if (strpos(self::WHITESPACE, $token) !== false) {
@@ -174,20 +187,27 @@ class JsonReader extends \lang\Object {
   /**
    * Reads a value from an input stream
    *
-   * @param  io.streams.InputStream $in
    * @return var
    */
-  public function read(InputStream $in) {
-    $t= new StreamTokenizer($in, '{[,"]}:'.self::WHITESPACE, true);
-    $value= $this->readValue($t);
+  public function read() {
+    $value= $this->nextValue();
 
-    while ($t->hasMoreTokens()) {
-      $token= $t->nextToken();
+    while ($this->tokenizer->hasMoreTokens()) {
+      $token= $this->tokenizer->nextToken();
       if (strpos(self::WHITESPACE, $token) === false) {
         throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');
       }
     }
 
     return $value;
+  }
+
+  /**
+   * Reads elements from an input stream sequentially
+   *
+   * @return var
+   */
+  public function elements() {
+    return new Elements($this);
   }
 }
