@@ -103,11 +103,11 @@ class JsonTokenizer extends \lang\Object {
           }
           break;
         } while ($o);
-      } else if (false !== strpos('{[:]},', $c)) {
+      } else if (1 === strspn($c, '{[:]},')) {
         $span= 1;
         $token= $c;
-      } else if (false !== strpos(" \r\n\t", $c)) {
-        $pos+= strspn($bytes, " \r\n\t", $pos + 1) + 1;
+      } else if (1 === strspn($c, " \r\n\t")) {
+        $pos+= strspn($bytes, " \r\n\t", $pos);
         continue;
       } else {
         $span= strcspn($bytes, "{[:]},\" \r\n\t", $pos);
