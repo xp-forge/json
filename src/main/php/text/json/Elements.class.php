@@ -8,6 +8,9 @@ use lang\FormatException;
  * further processing instead of parsing the entire representation first.
  */
 class Elements extends \lang\Object implements \Iterator {
+  protected $reader;
+  protected $id= -1;
+  protected $current= null;
 
   /**
    * Creates a new elements iterator
