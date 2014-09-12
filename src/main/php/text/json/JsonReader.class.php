@@ -37,6 +37,28 @@ abstract class JsonReader extends \lang\Object {
   }
 
   /**
+   * Processes an escape sequence
+   *
+   * @param  int $pos The position
+   * @param  int &$offset How many bytes were consumed
+   * @return string
+   * @throws lang.FormatException
+   */
+  protected function escaped($pos, &$offset) {
+    $escape= $this->bytes{$pos + 1};
+    if (isset(self::$escapes[$escape])) {
+      $offset= 2;
+      return self::$escapes[$escape];
+    } else if ('u' === $escape) {
+      $offset= 6;
+      $hex= substr($this->bytes, $pos + 2, 4);
+      return iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
+    } else {
+      throw new FormatException('Illegal escape sequence \\'.$escape.'...');
+    }
+  }
+
+  /**
    * Reads an object
    *
    * @return [:var]

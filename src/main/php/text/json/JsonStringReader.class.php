@@ -32,18 +32,8 @@ class JsonStringReader extends JsonReader {
           $end= $pos + $span;
           if ($end < $len) {
             if ('\\' === $bytes{$end}) {
-              $string.= substr($bytes, $pos + $o, $span - $o);
-              $escape= $bytes{$end + 1};
-              if (isset(self::$escapes[$escape])) {
-                $string.= self::$escapes[$escape];
-                $o= $span + 2;
-              } else if ('u' === $escape) {
-                $hex= substr($bytes, $end + 2, 4);
-                $string.= iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
-                $o= $span + 6;
-              } else {
-                throw new FormatException('Illegal escape sequence \\'.$escape.'...');
-              }
+              $string.= substr($bytes, $pos + $o, $span - $o).$this->escaped($end, $consumed);
+              $o= $span + $consumed;
               continue;
             } else if ('"' === $bytes{$end}) {
               $string.= substr($bytes, $pos + $o, $span + 1 - $o);
