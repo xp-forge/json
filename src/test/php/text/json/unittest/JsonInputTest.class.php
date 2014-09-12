@@ -443,8 +443,8 @@ abstract class JsonInputTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function read_ws_at_end_of_token() {
-    $str= str_repeat('*', 8190);
-    $this->assertEquals([$str, 2], $this->read('["'.$str.'", 2]'));
+  public function read_whitespace_longer_than_chunk_size() {
+    $ws= str_repeat(' ', 8193);
+    $this->assertEquals(['Test', 2], $this->read('["Test",'.$ws.'2]'));
   }
 }
