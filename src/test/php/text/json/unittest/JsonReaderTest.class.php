@@ -71,7 +71,7 @@ abstract class JsonReaderTest extends \unittest\TestCase {
     $this->assertEquals('ü€', $this->read("\"\xfc\u20ac\"", 'iso-8859-15'));
   }
 
-  #[@test, @expect('lang.FormatException'), @values([
+  #[@test, @expect(class= 'lang.FormatException', withMessage= 'Unclosed string'), @values([
   #  '"', '"abc', '"abc\"'
   #])]
   public function unclosed_string($source) {
