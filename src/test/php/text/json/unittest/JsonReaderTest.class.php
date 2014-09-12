@@ -341,7 +341,34 @@ abstract class JsonReaderTest extends \unittest\TestCase {
 
   #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "," or "\]"/')]
   public function reading_malformed_array_sequentially() {
-    foreach ($this->reader('[1 2')->elements() as $element) {
+    foreach ($this->reader('[1 2]')->elements() as $element) {
+    }
+  }
+
+  #[@test, @values(['{"a":"v1","b":"v2"}', '{"a": "v1", "b": "v2"}'])]
+  public function can_read_map_sequentially($source) {
+    $r= [];
+    foreach ($this->reader($source)->pairs() as $key => $value) {
+      $r[$key]= $value;
+    }
+    $this->assertEquals(['a' => 'v1', 'b' => 'v2'], $r);
+  }
+
+  #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "\{"/'), @values([
+  #  'null', 'false', 'true',
+  #  '""', '"Test"',
+  #  '0', '0.0',
+  #  '[]'
+  #])]
+  public function cannot_read_other_values_than_pairs_sequentially($source) {
+    foreach ($this->reader($source)->pairs() as $element) {
+      $this->fail('Should raise before first element is returned', null, 'lang.FormatException');
+    }
+  }
+
+  #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting ":"/')]
+  public function reading_malformed_pairs_sequentially() {
+    foreach ($this->reader('{"key" "value"}')->pairs() as $element) {
     }
   }
 

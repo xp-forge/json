@@ -210,4 +210,13 @@ abstract class JsonReader extends \lang\Object {
   public function elements() {
     return new Elements($this);
   }
+
+  /**
+   * Reads key/value pairs from an input stream sequentially
+   *
+   * @return var
+   */
+  public function pairs() {
+    return new Pairs($this);
+  }
 }
