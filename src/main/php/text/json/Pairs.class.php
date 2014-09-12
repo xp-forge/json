@@ -29,8 +29,7 @@ class Pairs extends \lang\Object implements \Iterator {
       if ('}' === $token) {
         $this->key= null;
       } else {
-        $this->input->pushBack($token);
-        $this->key= $this->input->nextValue();
+        $this->key= $this->input->nextValue($token);
         if (':' === ($token= $this->input->nextToken())) {
           $this->value= $this->input->nextValue();
         } else {

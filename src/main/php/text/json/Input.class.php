@@ -71,11 +71,9 @@ abstract class Input extends \lang\Object {
     if ('}' === $token) {
       return [];
     } else if (null !== $token) {
-      $this->pushBack($token);
-
       $result= [];
       do {
-        $key= $this->nextValue();
+        $key= $this->nextValue($token);
         if (!is_string($key)) {
           throw new FormatException('Illegal key type '.typeof($key).', expecting string');
         }
@@ -84,10 +82,14 @@ abstract class Input extends \lang\Object {
         } else {
           throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading object, expecting ":"');
         }
-        if ('}' === ($token= $this->nextToken())) {
+
+        $delim= $this->nextToken();
+        if (',' === $delim) {
+          continue;
+        } else if ('}' === $delim) {
           return $result;
         }
-      } while (',' === $token);
+      } while ($token= $this->nextToken());
     }
 
     throw new FormatException('Unclosed object');
@@ -104,28 +106,19 @@ abstract class Input extends \lang\Object {
     if (']' === $token) {
       return [];
     } else if (null !== $token) {
-      $this->pushBack($token);
-
       $result= [];
       do {
-        $result[]= $this->nextValue();
-        if (']' === ($token= $this->nextToken())) {
+        $result[]= $this->nextValue($token);
+        $delim= $this->nextToken();
+        if (',' === $delim) {
+          continue;
+        } else if (']' === $delim) {
           return $result;
         }
-      } while (',' === $token);
+      } while ($token= $this->nextToken());
     }
 
     throw new FormatException('Unclosed list');
-  }
-
-  /**
-   * Backs up a couple of couple of bytes
-   *
-   * @param  string $bytes
-   * @return void
-   */
-  public function pushBack($bytes) {
-    $this->pos-= strlen($bytes);
   }
 
   /**
@@ -141,8 +134,8 @@ abstract class Input extends \lang\Object {
    * @return var
    * @throws lang.FormatException
    */
-  public function nextValue() {
-    $token= $this->nextToken();
+  public function nextValue($token= null) {
+    $token= null === $token ? $this->nextToken() : $token;
     if ('"' === $token{0}) {
       return substr($token, 1, -1);
     } else if ('{' === $token) {

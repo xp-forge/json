@@ -28,23 +28,6 @@ class JsonStream extends Input {
   }
 
   /**
-   * Pushes back a given byte sequence to be retokenized
-   *
-   * @param  string $bytes
-   * @return void
-   */
-  public function pushBack($bytes) {
-    $l= strlen($bytes);
-    if ($l < $this->pos) {
-      $this->pos-= $l;
-    } else {
-      $this->bytes= $bytes.substr($this->bytes, $this->pos);
-      $this->len+= $l - $this->pos;
-      $this->pos= 0;
-    }
-  }
-
-  /**
    * Returns next token
    *
    * @return string

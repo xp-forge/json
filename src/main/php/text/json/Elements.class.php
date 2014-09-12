@@ -29,8 +29,7 @@ class Elements extends \lang\Object implements \Iterator {
       if (']' === $token) {
         $this->id= -1;
       } else {
-        $this->input->pushBack($token);
-        $this->current= $this->input->nextValue();
+        $this->current= $this->input->nextValue($token);
         $this->id= 0;
       }
     } else {
