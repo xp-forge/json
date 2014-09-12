@@ -42,15 +42,6 @@ class JsonTokenizer extends \lang\Object {
   }
 
   /**
-   * Returns whether more tokens are available
-   *
-   * @return bool
-   */
-  public function hasNext() {
-    return $this->pos < $this->len;
-  }
-
-  /**
    * Returns next token
    *
    * @return string
