@@ -303,6 +303,11 @@ abstract class JsonReaderTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function files_typically_end_with_trailing_newline() {
+    $this->assertEquals('file-contents', $this->read("\"file-contents\"\n"));
+  }
+
+  #[@test]
   public function indented_json() {
     $this->assertEquals(
       [

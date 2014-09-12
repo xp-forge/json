@@ -14,7 +14,10 @@ class JsonTokenizer extends \lang\Object {
    */
   public function __construct(InputStream $in) {
     $this->in= $in;
-    $this->reset();
+    $this->bytes= $this->in->read();
+    $this->len= strlen($this->bytes);
+    $this->pos= 0;
+    $this->eof= false;
   }
 
   /**
@@ -23,54 +26,7 @@ class JsonTokenizer extends \lang\Object {
    * @return void
    */
   public function reset() {
-    if (null == $this->tokens) {
-      $f= function() {
-        $bytes= $this->in->read();
-        $tokens= [];
-        for ($i= 0, $l= strlen($bytes); $i < $l; ) {
-          if ('"' === $bytes{$i}) {
-            $o= 1;
-            do {
-              $span= strcspn($bytes, '"\\', $i + $o) + $o;
-              if ($i + $span < $l && '\\' === $bytes{$i + $span}) {
-                $o= $span + 1 + 1;
-                continue;
-              }
-              break;
-            } while ($o);
-            //echo "STR: ";
-            $span++;
-          } else if (false !== strpos('{[:]},', $bytes{$i})) {
-            $span= 1;
-            //echo "TOK: ";
-          } else if (false !== strpos(" \r\n\t", $bytes{$i})) {
-            $span= strspn($bytes, " \r\n\t", $i + 1) + 1; 
-            $i+= $span;
-            continue;
-            //echo "W/S: ";
-          } else {
-            $span= strcspn($bytes, "{[:]},\" \r\n\t", $i);
-            //echo "WRD: ";
-          }
-
-          if ($i + $span >= $l) {
-            //echo "underrun\n";
-            if ($this->in->available()) {
-              $bytes= substr($bytes, $i).$this->in->read();
-              $i= 0;
-              $l= strlen($bytes);
-              continue;
-            }
-          }
-
-          //echo "bytes[$i..", $span + $i ,"/$l]= '", addcslashes(substr($bytes, $i, $span), "\0..\17"), "'\n";
-          yield substr($bytes, $i, $span);
-          $i+= $span;
-        }
-      };
-      $this->tokens= $f();
-      $this->current= null;
-    }
+    // NOOP
   }
 
   /**
@@ -80,7 +36,9 @@ class JsonTokenizer extends \lang\Object {
    * @return void
    */
   public function backup($bytes) {
-    $this->current= $bytes;
+    $this->bytes= $bytes.substr($this->bytes, $this->pos);
+    $this->pos= 0;
+    $this->len= strlen($this->bytes);
   }
 
   /**
@@ -89,7 +47,7 @@ class JsonTokenizer extends \lang\Object {
    * @return bool
    */
   public function hasNext() {
-    return $this->tokens->valid();
+    return $this->pos < $this->len;
   }
 
   /**
@@ -98,14 +56,48 @@ class JsonTokenizer extends \lang\Object {
    * @return string
    */
   public function next() {
-    if ($this->current) {
-      $token= $this->current;
-      $this->current= null;
-    } else {
-      $token= $this->tokens->current();
-      $this->tokens->next();
+    while ($this->pos < $this->len) {
+      if ('"' === $this->bytes{$this->pos}) {
+        $o= 1;
+        do {
+          $span= strcspn($this->bytes, '"\\', $this->pos + $o) + $o;
+          if ($this->pos + $span < $this->len && '\\' === $this->bytes{$this->pos + $span}) {
+            $o= $span + 1 + 1;
+            continue;
+          }
+          break;
+        } while ($o);
+        //echo "STR: ";
+        $span++;
+      } else if (false !== strpos('{[:]},', $this->bytes{$this->pos})) {
+        $span= 1;
+        //echo "TOK: ";
+      } else if (false !== strpos(" \r\n\t", $this->bytes{$this->pos})) {
+        $span= strspn($this->bytes, " \r\n\t", $this->pos + 1) + 1; 
+        $this->pos+= $span;
+        continue;
+        //echo "W/S: ";
+      } else {
+        $span= strcspn($this->bytes, "{[:]},\" \r\n\t", $this->pos);
+        //echo "WRD: ";
+      }
+
+      if ($this->pos + $span >= $this->len) {
+        //echo "underrun\n";
+        if ($this->in->available()) {
+          $this->bytes= substr($this->bytes, $this->pos).$this->in->read();
+          $this->pos= 0;
+          $this->len= strlen($this->bytes);
+          continue;
+        }
+      }
+
+      //echo "bytes[$this->pos..", $span + $this->pos ,"/$this->len]= '", addcslashes(substr($this->bytes, $this->pos, $span), "\0..\17"), "'\n";
+      $token= substr($this->bytes, $this->pos, $span);
+      $this->pos+= $span;
+      return $token;
     }
-    // echo "< ", $token, "\n";
-    return $token;
+
+    return null;
   }
 }

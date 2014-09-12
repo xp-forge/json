@@ -180,11 +180,8 @@ abstract class JsonReader extends \lang\Object {
   public function read() {
     $value= $this->nextValue();
 
-    while ($this->tokenizer->hasNext()) {
-      $token= $this->tokenizer->next();
-      if (strpos(self::WHITESPACE, $token) === false) {
-        throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');
-      }
+    if (null !== ($token= $this->tokenizer->next())) {
+      throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');
     }
 
     return $value;
