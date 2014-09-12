@@ -89,12 +89,12 @@ abstract class JsonReader extends \lang\Object {
    */
   public function nextValue() {
     $token= $this->nextToken();
-    if ('{' === $token) {
+    if ('"' === $token{0}) {
+      return substr($token, 1, -1);
+    } else if ('{' === $token) {
       return $this->readObject();
     } else if ('[' === $token) {
       return $this->readList();
-    } else if ('"' === $token{0}) {
-      return substr($token, 1, -1);
     } else if ('true' === $token) {
       return true;
     } else if ('false' === $token) {
