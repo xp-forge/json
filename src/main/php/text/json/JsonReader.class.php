@@ -15,9 +15,109 @@ abstract class JsonReader extends \lang\Object {
    * @param  text.Tokenizer $tokenizer
    * @param  string $encoding
    */
-  public function __construct(Tokenizer $tokenizer, $encoding= \xp::ENCODING) {
+  public function __construct($tokenizer, $encoding= \xp::ENCODING) {
     $this->tokenizer= $tokenizer;
     $this->encoding= $encoding;
+  }
+
+  /**
+   * Reads an object
+   *
+   * @return [:var]
+   * @throws lang.FormatException
+   */
+  protected function readObject() {
+    $token= $this->tokenizer->next();
+    if ('}' === $token) {
+      return [];
+    } else if (null !== $token) {
+      $this->tokenizer->backup($token);
+
+      $result= [];
+      do {
+        $key= $this->nextValue();
+        if (!is_string($key)) {
+          throw new FormatException('Illegal key type '.typeof($key).', expecting string');
+        }
+        if (':' === ($token= $this->tokenizer->next())) {
+          $result[$key]= $this->nextValue();
+        } else {
+          throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading object, expecting ":"');
+        }
+        if ('}' === ($token= $this->tokenizer->next())) {
+          return $result;
+        }
+      } while (',' === $token);
+    }
+
+    throw new FormatException('Unclosed object');
+  }
+
+  /**
+   * Reads a list
+   *
+   * @return [:var]
+   * @throws lang.FormatException
+   */
+  protected function readList() {
+    $token= $this->tokenizer->next();
+    if (']' === $token) {
+      return [];
+    } else if (null !== $token) {
+      $this->tokenizer->backup($token);
+
+      $result= [];
+      do {
+        $result[]= $this->nextValue();
+        if (']' === ($token= $this->tokenizer->next())) {
+          return $result;
+        }
+      } while (',' === $token);
+    }
+
+    throw new FormatException('Unclosed list');
+  }
+
+  /**
+   * Reads a string
+   *
+   * @return string
+   * @throws lang.FormatException
+   */
+  protected function expand($str) {
+    if ('"' !== $str{strlen($str) - 1}) {
+      throw new FormatException('Unclosed string');
+    }
+
+    $escape= function($matches) {
+      static $escapes= [
+        '"'  => "\"",
+        'b'  => "\b",
+        'f'  => "\f",
+        'n'  => "\n",
+        'r'  => "\r",
+        't'  => "\t",
+        '\\' => "\\",
+        '/'  => '/'
+      ];
+
+      $escape= $matches[1];
+      if (isset($escapes[$escape])) {
+        return $escapes[$escape];
+      } else if ('u' === $escape{0}) {
+        return iconv('ucs-4be', $this->encoding, pack('N', hexdec(substr($escape, 1))));
+      } else {
+        throw new FormatException('Illegal escape sequence \\'.$escape.'...');
+      }
+    };
+
+    $encoded= iconv($this->encoding, \xp::ENCODING, preg_replace_callback('/\\\\(u[0-9a-fA-F]{4}|.)/', $escape, substr($str, 1, -1)));
+    if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
+      $e= new FormatException('Illegal encoding');
+      \xp::gc(__FILE__);
+      throw $e;
+    }
+    return $encoded;
   }
 
   /**
@@ -35,116 +135,7 @@ abstract class JsonReader extends \lang\Object {
    * @return string
    */
   public function nextToken() {
-    while (null !== ($token= $this->tokenizer->nextToken())) {
-      if (strpos(self::WHITESPACE, $token) !== false) continue;
-      break;
-    }
-    return $token;
-  }
-
-  /**
-   * Reads a map
-   *
-   * @return [:var]
-   * @throws lang.FormatException
-   */
-  public function nextObject() {
-    $map= [];
-    $key= null;
-    $next= true;
-    while (null !== ($token= $this->tokenizer->nextToken())) {
-      if ('}' === $token && null === $key) {
-        return $map;
-      } else if (':' === $token && is_string($key)) {
-        $map[$key]= $this->nextValue();
-        $key= null;
-      } else if (',' === $token) {
-        $key= $this->nextValue();
-      } else if (strpos(self::WHITESPACE, $token) !== false) {
-        continue;
-      } else if ($next) {
-        $this->tokenizer->pushBack($token);
-        $key= $this->nextValue();
-        $next= false;
-      } else {
-        throw new FormatException('Unexpected key - missing comma?');
-      }
-    }
-    throw new FormatException('Unclosed object');
-  }
-
-  /**
-   * Reads a list
-   *
-   * @return [:var]
-   * @throws lang.FormatException
-   */
-  public function nextList() {
-    $list= [];
-    $next= true;
-    while (null !== ($token= $this->tokenizer->nextToken())) {
-      if (']' === $token) {
-        return $list;
-      } else if (',' === $token) {
-        $list[]= $this->nextValue();
-      } else if (strpos(self::WHITESPACE, $token) !== false) {
-        continue;
-      } else if ($next) {
-        $this->tokenizer->pushBack($token);
-        $list[]= $this->nextValue();
-        $next= false;
-      } else {
-        throw new FormatException('Unexpected value - missing comma?');
-      }
-    }
-    throw new FormatException('Unclosed list');
-  }
-
-  /**
-   * Reads a string
-   *
-   * @return string
-   * @throws lang.FormatException
-   */
-  public function nextString() {
-    static $escapes= [
-      '"'  => "\"",
-      'b'  => "\b",
-      'f'  => "\f",
-      'n'  => "\n",
-      'r'  => "\r",
-      't'  => "\t",
-      '\\' => "\\",
-      '/'  => '/'
-    ];
-
-    $string= '';
-    while (null !== ($token= $this->tokenizer->nextToken('"\\'))) {
-      if ('"' === $token) {
-        $encoded= iconv($this->encoding, \xp::ENCODING, $string);
-        if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
-          $e= new FormatException('Illegal encoding');
-          \xp::gc(__FILE__);
-          throw $e;
-        }
-        return $encoded;
-      } else if ('\\' === $token) {
-        $escape= $this->tokenizer->nextToken('"\\bfnrtu');
-        if ('u' === $escape) {
-          for ($hex= '', $i= 0; $i < 4; $i++) {
-            $hex.= $this->tokenizer->nextToken('0123456789abcdefABCDEF');
-          }
-          $string.= iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
-        } else if (isset($escapes[$escape])) {
-          $string.= $escapes[$escape];
-        } else {
-          throw new FormatException('Illegal escape sequence \\'.$escape.'...');
-        }
-      } else {
-        $string.= $token;
-      }
-    }
-    throw new FormatException('Unclosed string');
+    return $this->tokenizer->next();
   }
 
   /**
@@ -160,25 +151,22 @@ abstract class JsonReader extends \lang\Object {
       'null'   => [null],
     ];
 
-    while (null !== ($token= $this->tokenizer->nextToken())) {
-      if ('{' === $token) {
-        return $this->nextObject();
-      } else if ('[' === $token) {
-        return $this->nextList();
-      } else if ('"' === $token) {
-        return $this->nextString();
-      } else if (isset($keyword[$token])) {
-        return $keyword[$token][0];
-      } else if (strpos(self::WHITESPACE, $token) !== false) {
-        continue;
-      } else if (is_numeric($token)) {
-        return $token > PHP_INT_MAX || $token < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
-          ? (double)$token
-          : (int)$token
-        ;
-      } else {
-        throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading value');
-      }
+    $token= $this->tokenizer->next();
+    if ('{' === $token) {
+      return $this->readObject();
+    } else if ('[' === $token) {
+      return $this->readList();
+    } else if ('"' === $token{0}) {
+      return $this->expand($token);
+    } else if (isset($keyword[$token])) {
+      return $keyword[$token][0];
+    } else if (is_numeric($token)) {
+      return $token > PHP_INT_MAX || $token < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
+        ? (double)$token
+        : (int)$token
+      ;
+    } else {
+      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading value');
     }
 
     throw new FormatException('Empty input');
@@ -192,8 +180,8 @@ abstract class JsonReader extends \lang\Object {
   public function read() {
     $value= $this->nextValue();
 
-    while ($this->tokenizer->hasMoreTokens()) {
-      $token= $this->tokenizer->nextToken();
+    while ($this->tokenizer->hasNext()) {
+      $token= $this->tokenizer->next();
       if (strpos(self::WHITESPACE, $token) === false) {
         throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');
       }
