@@ -7,6 +7,11 @@ use lang\FormatException;
  * Base class for JSON readers
  */
 abstract class JsonReader extends \lang\Object {
+  protected $bytes;
+  protected $len;
+  protected $pos;
+  protected $encoding;
+
   protected static $escapes= [
     '"'  => "\"",
     'b'  => "\x08",
@@ -17,6 +22,19 @@ abstract class JsonReader extends \lang\Object {
     '\\' => "\\",
     '/'  => '/'
   ];
+
+  /**
+   * Creates a new instance
+   *
+   * @param  string $source
+   * @param  string $encoding
+   */
+  public function __construct($source, $encoding= \xp::ENCODING) {
+    $this->bytes= $source;
+    $this->len= strlen($this->bytes);
+    $this->pos= 0;
+    $this->encoding= $encoding;
+  }
 
   /**
    * Reads an object
@@ -77,12 +95,14 @@ abstract class JsonReader extends \lang\Object {
   }
 
   /**
-   * Pushes back a given byte sequence to be retokenized
+   * Backs up a couple of couple of bytes
    *
    * @param  string $bytes
    * @return void
    */
-  public abstract function pushBack($bytes);
+  public function pushBack($bytes) {
+    $this->pos-= strlen($bytes);
+  }
 
   /**
    * Returns next token
@@ -124,7 +144,7 @@ abstract class JsonReader extends \lang\Object {
   }
 
   /**
-   * Reads a value from an input stream
+   * Reads a value
    *
    * @return var
    */
@@ -141,7 +161,7 @@ abstract class JsonReader extends \lang\Object {
   /**
    * Reads elements from an input stream sequentially
    *
-   * @return var
+   * @return php.Iterator
    */
   public function elements() {
     return new Elements($this);
@@ -150,7 +170,7 @@ abstract class JsonReader extends \lang\Object {
   /**
    * Reads key/value pairs from an input stream sequentially
    *
-   * @return var
+   * @return php.Iterator
    */
   public function pairs() {
     return new Pairs($this);

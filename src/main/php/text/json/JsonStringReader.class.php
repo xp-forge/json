@@ -12,33 +12,6 @@ use lang\FormatException;
  * ```
  */
 class JsonStringReader extends JsonReader {
-  protected $bytes;
-  protected $len;
-  protected $pos;
-  protected $encoding;
-
-  /**
-   * Creates a new instance
-   *
-   * @param  string $in
-   * @param  string $encoding
-   */
-  public function __construct($in, $encoding= \xp::ENCODING) {
-    $this->bytes= $in;
-    $this->len= strlen($this->bytes);
-    $this->pos= 0;
-    $this->encoding= $encoding;
-  }
-
-  /**
-   * Pushes back a given byte sequence to be retokenized
-   *
-   * @param  string $bytes
-   * @return void
-   */
-  public function pushBack($bytes) {
-    $this->pos-= strlen($bytes);
-  }
 
   /**
    * Returns next token

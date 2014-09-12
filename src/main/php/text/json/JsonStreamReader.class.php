@@ -13,10 +13,6 @@ use lang\FormatException;
  */
 class JsonStreamReader extends JsonReader {
   protected $in;
-  protected $bytes;
-  protected $len;
-  protected $pos;
-  protected $encoding;
 
   /**
    * Creates a new instance
@@ -25,11 +21,8 @@ class JsonStreamReader extends JsonReader {
    * @param  string $encoding
    */
   public function __construct(InputStream $in, $encoding= \xp::ENCODING) {
+    parent::__construct($in->read(), $encoding);
     $this->in= $in;
-    $this->bytes= $this->in->read();
-    $this->len= strlen($this->bytes);
-    $this->pos= 0;
-    $this->encoding= $encoding;
   }
 
   /**
@@ -39,7 +32,14 @@ class JsonStreamReader extends JsonReader {
    * @return void
    */
   public function pushBack($bytes) {
-    $this->pos-= strlen($bytes);
+    $l= strlen($bytes);
+    if ($l < $this->pos) {
+      $this->pos-= $l;
+    } else {
+      $this->bytes= $bytes.substr($this->bytes, $this->pos);
+      $this->pos= 0;
+      $this->len= strlen($this->bytes);
+    }
   }
 
   /**
