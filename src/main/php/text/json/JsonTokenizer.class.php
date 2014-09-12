@@ -53,23 +53,30 @@ class JsonTokenizer extends \lang\Object {
     while ($pos < $this->len) {
       $c= $this->bytes{$pos};
       if ('"' === $c) {
+        $token= '"@';
         $o= 1;
         do {
           $span= strcspn($bytes, '"\\', $pos + $o) + $o;
-          if ($pos + $span < $len && '\\' === $bytes{$pos + $span}) {
-            $o= $span + 1 + 1;
-            continue;
+          if ($pos + $span < $len) {
+            if ('\\' === $bytes{$pos + $span}) {
+              $o= $span + 1 + 1;
+              continue;
+            } else if ('"' === $bytes{$pos + $span}) {
+              $token= substr($bytes, $pos, ++$span);
+              break;
+            }
           }
           break;
         } while ($o);
-        $span++;
       } else if (false !== strpos('{[:]},', $c)) {
         $span= 1;
+        $token= $c;
       } else if (false !== strpos(" \r\n\t", $c)) {
         $pos+= strspn($bytes, " \r\n\t", $pos + 1) + 1;
         continue;
       } else {
         $span= strcspn($bytes, "{[:]},\" \r\n\t", $pos);
+        $token= substr($bytes, $pos, $span);
       }
 
       if ($pos + $span >= $len) {
@@ -82,7 +89,6 @@ class JsonTokenizer extends \lang\Object {
       }
 
       //echo "bytes[$pos..", $span + $pos ,"/$this->len]= '", addcslashes(substr($this->bytes, $pos, $span), "\0..\17"), "'\n";
-      $token= substr($bytes, $pos, $span);
       $this->pos= $pos + $span;
       return $token;
     }
