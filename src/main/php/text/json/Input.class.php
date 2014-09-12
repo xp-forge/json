@@ -1,12 +1,14 @@
 <?php namespace text\json;
 
-use text\Tokenizer;
 use lang\FormatException;
 
 /**
- * Base class for JSON readers
+ * Base class for JSON input implementations
+ *
+ * @see  xp://text.json.JsonString
+ * @see  xp://text.json.JsonStream
  */
-abstract class JsonReader extends \lang\Object {
+abstract class Input extends \lang\Object {
   protected $bytes;
   protected $len;
   protected $pos;

@@ -4,35 +4,35 @@ use lang\FormatException;
 
 /**
  * Reads key/value pairs from a JSON representation sequentially, that is,
- * parses an element from the underlying reader, then returns it immediately 
+ * parses an element from the underlying input, then returns it immediately 
  * for further processing instead of parsing the entire representation first.
  */
 class Pairs extends \lang\Object implements \Iterator {
-  protected $reader;
+  protected $input;
   protected $key= null;
   protected $value= null;
 
   /**
    * Creates a new elements iterator
    *
-   * @param  text.json.JsonReader
+   * @param  text.json.Input $input
    */
-  public function __construct(JsonReader $reader) {
-    $this->reader= $reader;
+  public function __construct(Input $input) {
+    $this->input= $input;
   }
   
   /** @return void */
   public function rewind() {
-    $token= $this->reader->nextToken();
+    $token= $this->input->nextToken();
     if ('{' === $token) {
-      $token= $this->reader->nextToken();
+      $token= $this->input->nextToken();
       if ('}' === $token) {
         $this->key= null;
       } else {
-        $this->reader->pushBack($token);
-        $this->key= $this->reader->nextValue();
-        if (':' === ($token= $this->reader->nextToken())) {
-          $this->value= $this->reader->nextValue();
+        $this->input->pushBack($token);
+        $this->key= $this->input->nextValue();
+        if (':' === ($token= $this->input->nextToken())) {
+          $this->value= $this->input->nextValue();
         } else {
           $this->key= null;
           throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
@@ -55,11 +55,11 @@ class Pairs extends \lang\Object implements \Iterator {
 
   /** @return void */
   public function next() {
-    $token= $this->reader->nextToken();
+    $token= $this->input->nextToken();
     if (',' === $token) {
-      $this->key= $this->reader->nextValue();
-      if (':' === ($token= $this->reader->nextToken())) {
-        $this->value= $this->reader->nextValue();
+      $this->key= $this->input->nextValue();
+      if (':' === ($token= $this->input->nextToken())) {
+        $this->value= $this->input->nextValue();
       } else {
         $this->key= null;
         throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');

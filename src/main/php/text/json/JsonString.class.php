@@ -1,17 +1,16 @@
 <?php namespace text\json;
 
-use io\streams\InputStream;
 use lang\FormatException;
 
 /**
- * Reads JSON from a given input stream
+ * Reads JSON from a given string
  *
  * ```php
- * $json= new JsonStreamReader((new File('input.json'))->getInputStream()));
+ * $json= new JsonString('{"Hello" : "World"}');
  * $value= $json->read();
  * ```
  */
-class JsonStringReader extends JsonReader {
+class JsonString extends Input {
 
   /**
    * Returns next token

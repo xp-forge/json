@@ -4,23 +4,23 @@ use io\streams\MemoryInputStream;
 use util\collections\Pair;
 
 /**
- * Test JSON reader
+ * Test JSON input
  *
  * @see   https://bugs.php.net/bug.php?id=41504
  * @see   https://bugs.php.net/bug.php?id=45791
  * @see   https://bugs.php.net/bug.php?id=54484
  * @see   https://github.com/xp-framework/xp-framework/issues/189
  */
-abstract class JsonReaderTest extends \unittest\TestCase {
+abstract class JsonInputTest extends \unittest\TestCase {
 
   /**
-   * Returns the reader implementation
+   * Returns the input implementation
    *
    * @param  string $source
    * @param  string $encoding
-   * @return text.json.JsonReader
+   * @return text.json.Input
    */
-  protected abstract function reader($source, $encoding= 'utf-8');
+  protected abstract function input($source, $encoding= 'utf-8');
 
   /**
    * Helper
@@ -30,7 +30,7 @@ abstract class JsonReaderTest extends \unittest\TestCase {
    * @return var
    */
   protected function read($source, $encoding= 'utf-8') {
-    return $this->reader($source, $encoding)->read();
+    return $this->input($source, $encoding)->read();
   }
 
   #[@test, @values([
@@ -333,7 +333,7 @@ abstract class JsonReaderTest extends \unittest\TestCase {
   #[@test, @values(['[1, 2, 3]', '[1,2,3]', '[ 1, 2, 3 ]'])]
   public function can_read_array_sequentially($source) {
     $r= [];
-    foreach ($this->reader($source)->elements() as $element) {
+    foreach ($this->input($source)->elements() as $element) {
       $r[]= $element;
     }
     $this->assertEquals([1, 2, 3], $r);
@@ -341,7 +341,7 @@ abstract class JsonReaderTest extends \unittest\TestCase {
 
   #[@test]
   public function can_read_empty_array_sequentially() {
-    foreach ($this->reader('[ ]')->elements() as $element) {
+    foreach ($this->input('[ ]')->elements() as $element) {
       $this->fail('Should not be reached', null, $element);
     }
   }
@@ -353,21 +353,21 @@ abstract class JsonReaderTest extends \unittest\TestCase {
   #  '{}'
   #])]
   public function cannot_read_other_values_than_arrays_sequentially($source) {
-    foreach ($this->reader($source)->elements() as $element) {
+    foreach ($this->input($source)->elements() as $element) {
       $this->fail('Should raise before first element is returned', null, 'lang.FormatException');
     }
   }
 
   #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "," or "\]"/')]
   public function reading_malformed_array_sequentially() {
-    foreach ($this->reader('[1 2]')->elements() as $element) {
+    foreach ($this->input('[1 2]')->elements() as $element) {
     }
   }
 
   #[@test, @values(['{"a":"v1","b":"v2"}', '{"a": "v1", "b": "v2"}'])]
   public function can_read_map_sequentially($source) {
     $r= [];
-    foreach ($this->reader($source)->pairs() as $key => $value) {
+    foreach ($this->input($source)->pairs() as $key => $value) {
       $r[$key]= $value;
     }
     $this->assertEquals(['a' => 'v1', 'b' => 'v2'], $r);
@@ -375,7 +375,7 @@ abstract class JsonReaderTest extends \unittest\TestCase {
 
   #[@test]
   public function can_read_empty_map_sequentially() {
-    foreach ($this->reader('{ }')->pairs() as $key => $value) {
+    foreach ($this->input('{ }')->pairs() as $key => $value) {
       $this->fail('Should not be reached', null, new Pair($key, $value));
     }
   }
@@ -387,14 +387,14 @@ abstract class JsonReaderTest extends \unittest\TestCase {
   #  '[]'
   #])]
   public function cannot_read_other_values_than_pairs_sequentially($source) {
-    foreach ($this->reader($source)->pairs() as $element) {
+    foreach ($this->input($source)->pairs() as $element) {
       $this->fail('Should raise before first element is returned', null, 'lang.FormatException');
     }
   }
 
   #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting ":"/')]
   public function reading_malformed_pairs_sequentially() {
-    foreach ($this->reader('{"key" "value"}')->pairs() as $element) {
+    foreach ($this->input('{"key" "value"}')->pairs() as $element) {
     }
   }
 
