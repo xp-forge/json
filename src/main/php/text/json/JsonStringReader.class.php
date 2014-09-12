@@ -22,6 +22,7 @@ class JsonStringReader extends JsonReader {
     $pos= $this->pos;
     $len= $this->len;
     $bytes= $this->bytes;
+
     while ($pos < $len) {
       $c= $this->bytes{$pos};
       if ('"' === $c) {
@@ -57,9 +58,8 @@ class JsonStringReader extends JsonReader {
         continue;
       } else {
         $span= strcspn($bytes, "{[:]},\" \r\n\t", $pos);
-        $token= substr($bytes, $pos, $span);
         $this->pos= $pos + $span;
-        return $token;
+        return substr($bytes, $pos, $span);
       }
     }
 

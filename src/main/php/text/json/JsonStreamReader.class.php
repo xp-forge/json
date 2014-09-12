@@ -51,6 +51,7 @@ class JsonStreamReader extends JsonReader {
     $pos= $this->pos;
     $len= $this->len;
     $bytes= $this->bytes;
+
     while ($pos < $len) {
       $c= $this->bytes{$pos};
       if ('"' === $c) {
