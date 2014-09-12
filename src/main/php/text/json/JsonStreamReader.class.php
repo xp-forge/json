@@ -73,7 +73,6 @@ class JsonStreamReader extends JsonReader {
               continue;
             } else if ('"' === $bytes{$end}) {
               $string.= substr($bytes, $pos + $o, $span + 1 - $o);
-              // echo "STRING<$this->encoding> = '", addcslashes($string, "\0..\17"), "'\n";
               $token= iconv($this->encoding, \xp::ENCODING, $string);
               if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
                 $e= new FormatException('Illegal encoding');
