@@ -67,20 +67,6 @@ abstract class JsonReader extends \lang\Object {
   }
 
   /**
-   * Reads a string
-   *
-   * @return string
-   * @throws lang.FormatException
-   */
-  protected function expand($str) {
-    if ('"' !== $str{strlen($str) - 1}) {
-      throw new FormatException('Unclosed string');
-    }
-
-    return substr($str, 1, -1);
-  }
-
-  /**
    * Pushes back a given byte sequence to be retokenized
    *
    * @param  string $bytes
@@ -114,7 +100,7 @@ abstract class JsonReader extends \lang\Object {
     } else if ('[' === $token) {
       return $this->readList();
     } else if ('"' === $token{0}) {
-      return $this->expand($token);
+      return substr($token, 1, -1);
     } else if (isset($keyword[$token])) {
       return $keyword[$token][0];
     } else if (is_numeric($token)) {
