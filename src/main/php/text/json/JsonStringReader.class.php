@@ -47,7 +47,7 @@ class JsonStringReader extends JsonReader {
               return $token;
             }
           }
-          throw new FormatException('Unclosed string');
+          throw new FormatException('Unclosed string '.$string);
         } while ($o);
       } else if (1 === strspn($c, '{[:]},')) {
         $this->pos= $pos + 1;

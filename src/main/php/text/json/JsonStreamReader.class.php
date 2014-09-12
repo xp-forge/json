@@ -108,7 +108,7 @@ class JsonStreamReader extends JsonReader {
       } else {
         $this->pos= $len;
         if (null === $token) {
-          throw new FormatException('Unclosed string');
+          throw new FormatException('Unclosed string '.$string);
         }
         return $token;
       }
