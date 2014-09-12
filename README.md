@@ -29,4 +29,4 @@ foreach ($json->elements() as $element) {
 
 Performance
 -----------
-The JSON reader's performance is twice that of the implementation in xp-framework/webservices.
+The JSON reader's performance is roughly 8 times that of the implementation in xp-framework/webservices, while it also uses less memory.
