@@ -394,4 +394,13 @@ abstract class JsonReaderTest extends \unittest\TestCase {
     $str= str_repeat('*', 0xFFFF);
     $this->assertEquals([$str, $str], $this->read('["'.$str.'", "'.$str.'"]'));
   }
+
+  #[@test, @values([
+  #  ['"', '\\"'],
+  #  ['ü', '\u00fc']
+  #])]
+  public function read_long_text_with_escape_at_end_of_chunk($escaped, $source) {
+    $str= str_repeat('*', 8190);
+    $this->assertEquals($str.$escaped, $this->read('"'.$str.$source.'"'));
+  }
 }

@@ -76,6 +76,13 @@ class JsonTokenizer extends \lang\Object {
           if ($pos + $span < $len) {
             if ('\\' === $bytes{$pos + $span}) {
               $string.= substr($bytes, $pos + $o, $span - $o);
+
+              while ($pos + $span + 4 >= $len && $this->in->available()) {
+                $bytes.= $this->in->read(4);
+                $this->bytes= $bytes;
+                $len= $this->len= strlen($bytes);
+              }
+
               $escape= $bytes{$pos + $span + 1};
               if (isset($escapes[$escape])) {
                 $string.= $escapes[$escape];
