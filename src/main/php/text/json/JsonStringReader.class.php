@@ -38,7 +38,7 @@ class JsonStringReader extends JsonReader {
             } else if ('"' === $bytes{$end}) {
               $string.= substr($bytes, $pos + $o, $span + 1 - $o);
               $token= iconv($this->encoding, \xp::ENCODING, $string);
-              if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
+              if (false === $token) {
                 $e= new FormatException('Illegal encoding');
                 \xp::gc(__FILE__);
                 throw $e;
