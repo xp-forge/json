@@ -65,7 +65,7 @@ class JsonTokenizer extends \lang\Object {
     $pos= $this->pos;
     $len= $this->len;
     $bytes= $this->bytes;
-    while ($pos < $this->len) {
+    while ($pos < $len) {
       $c= $this->bytes{$pos};
       if ('"' === $c) {
         $token= null;
