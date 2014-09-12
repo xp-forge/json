@@ -19,6 +19,6 @@ class JsonStreamReader extends JsonReader {
    * @param  string $encoding
    */
   public function __construct(InputStream $in, $encoding= \xp::ENCODING) {
-    parent::__construct(new JsonTokenizer($in), $encoding);
+    parent::__construct(new JsonTokenizer($in, $encoding));
   }
 }

@@ -1,23 +1,27 @@
 <?php namespace text\json;
 
 use io\streams\InputStream;
-use lang\IllegalStateException;
+use lang\FormatException;
 
 class JsonTokenizer extends \lang\Object {
   protected $in;
-  protected $tokens= null;
+  protected $bytes;
+  protected $len;
+  protected $pos;
+  protected $encoding;
 
   /**
    * Creates a new instance
    *
    * @param  io.streams.InputStream $in
+   * @param  string $encoding
    */
-  public function __construct(InputStream $in) {
+  public function __construct(InputStream $in, $encoding= \xp::ENCODING) {
     $this->in= $in;
     $this->bytes= $this->in->read();
     $this->len= strlen($this->bytes);
     $this->pos= 0;
-    $this->eof= false;
+    $this->encoding= $encoding;
   }
 
   /**
@@ -47,22 +51,53 @@ class JsonTokenizer extends \lang\Object {
    * @return string
    */
   public function next() {
+    static $escapes= [
+      '"'  => "\"",
+      'b'  => "\x08",
+      'f'  => "\x0c",
+      'n'  => "\x0a",
+      'r'  => "\x0d",
+      't'  => "\x09",
+      '\\' => "\\",
+      '/'  => '/'
+    ];
+
     $pos= $this->pos;
     $len= $this->len;
     $bytes= $this->bytes;
     while ($pos < $this->len) {
       $c= $this->bytes{$pos};
       if ('"' === $c) {
-        $token= '"@';
+        $token= null;
+        $string= '"';
         $o= 1;
         do {
           $span= strcspn($bytes, '"\\', $pos + $o) + $o;
           if ($pos + $span < $len) {
             if ('\\' === $bytes{$pos + $span}) {
+              $string.= substr($bytes, $pos + $o, $span - $o);
+              $escape= $bytes{$pos + $span + 1};
+              if (isset($escapes[$escape])) {
+                $string.= $escapes[$escape];
+              } else if ('u' === $escape) {
+                $hex= substr($bytes, $pos + $span + 1 + 1, 4);
+                $string.= iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
+                $span+= 4;
+              } else {
+                throw new FormatException('Illegal escape sequence \\'.$escape.'...');
+              }
+
               $o= $span + 1 + 1;
               continue;
             } else if ('"' === $bytes{$pos + $span}) {
-              $token= substr($bytes, $pos, ++$span);
+              $string.= substr($bytes, $pos + $o, ++$span - $o);
+              // echo "STRING<$this->encoding> = '", addcslashes($string, "\0..\17"), "'\n";
+              $token= iconv($this->encoding, \xp::ENCODING, $string);
+              if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
+                $e= new FormatException('Illegal encoding');
+                \xp::gc(__FILE__);
+                throw $e;
+              }
               break;
             }
           }

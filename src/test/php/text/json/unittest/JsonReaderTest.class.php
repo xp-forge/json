@@ -36,13 +36,14 @@ abstract class JsonReaderTest extends \unittest\TestCase {
   #  ['', '""'],
   #  ['Test', '"Test"'],
   #  ['Test the "west"', '"Test the \"west\""'],
+  #  ['Test "the" west', '"Test \"the\" west"'],
   #  ['€uro', '"\u20acuro"'], ['€uro', '"\u20ACuro"'],
   #  ['Knüper', '"Knüper"'], ['Knüper', '"Kn\u00fcper"'],
-  #  ["Test\b", '"Test\b"'],
-  #  ["Test\f", '"Test\f"'],
-  #  ["Test\n", '"Test\n"'],
-  #  ["Test\r", '"Test\r"'],
-  #  ["Test\t", '"Test\t"'],
+  #  ["Test\x08", '"Test\b"'],
+  #  ["Test\x0c", '"Test\f"'],
+  #  ["Test\x0a", '"Test\n"'],
+  #  ["Test\x0d", '"Test\r"'],
+  #  ["Test\x09", '"Test\t"'],
   #  ["Test\\", '"Test\\\\"'],
   #  ["Test/", '"Test\/"']
   #])]
@@ -63,6 +64,11 @@ abstract class JsonReaderTest extends \unittest\TestCase {
   #[@test]
   public function read_iso_8859_1() {
     $this->assertEquals('ü', $this->read("\"\xfc\"", 'iso-8859-1'));
+  }
+
+  #[@test]
+  public function read_iso_8859_15() {
+    $this->assertEquals('ü€', $this->read("\"\xfc\u20ac\"", 'iso-8859-15'));
   }
 
   #[@test, @expect('lang.FormatException'), @values([

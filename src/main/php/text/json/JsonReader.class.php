@@ -13,11 +13,9 @@ abstract class JsonReader extends \lang\Object {
    * Creates a new stream reader to read from a stream
    *
    * @param  text.Tokenizer $tokenizer
-   * @param  string $encoding
    */
-  public function __construct($tokenizer, $encoding= \xp::ENCODING) {
+  public function __construct($tokenizer) {
     $this->tokenizer= $tokenizer;
-    $this->encoding= $encoding;
   }
 
   /**
@@ -89,35 +87,7 @@ abstract class JsonReader extends \lang\Object {
       throw new FormatException('Unclosed string');
     }
 
-    $escape= function($matches) {
-      static $escapes= [
-        '"'  => "\"",
-        'b'  => "\b",
-        'f'  => "\f",
-        'n'  => "\n",
-        'r'  => "\r",
-        't'  => "\t",
-        '\\' => "\\",
-        '/'  => '/'
-      ];
-
-      $escape= $matches[1];
-      if (isset($escapes[$escape])) {
-        return $escapes[$escape];
-      } else if ('u' === $escape{0}) {
-        return iconv('ucs-4be', $this->encoding, pack('N', hexdec(substr($escape, 1))));
-      } else {
-        throw new FormatException('Illegal escape sequence \\'.$escape.'...');
-      }
-    };
-
-    $encoded= iconv($this->encoding, \xp::ENCODING, preg_replace_callback('/\\\\(u[0-9a-fA-F]{4}|.)/', $escape, substr($str, 1, -1)));
-    if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
-      $e= new FormatException('Illegal encoding');
-      \xp::gc(__FILE__);
-      throw $e;
-    }
-    return $encoded;
+    return substr($str, 1, -1);
   }
 
   /**
