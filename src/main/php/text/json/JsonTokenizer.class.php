@@ -78,7 +78,7 @@ class JsonTokenizer extends \lang\Object {
               $string.= substr($bytes, $pos + $o, $span - $o);
 
               while ($pos + $span + 4 >= $len && $this->in->available()) {
-                $bytes.= $this->in->read(4);
+                $bytes.= $this->in->read();
                 $this->bytes= $bytes;
                 $len= $this->len= strlen($bytes);
               }
