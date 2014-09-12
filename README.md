@@ -48,7 +48,7 @@ If you get a huge object, you can also process it sequentially using the `pairs(
 
 ```php
 $conn= new HttpConnection(...);
-$json= new JsonStream($conn->get('/resource?expand=*')->getInputStream());
+$json= new JsonStream($conn->get('/resources/4711?expand=*')->getInputStream());
 foreach ($json->pairs() as $key => $value) {
   // Process
 }
