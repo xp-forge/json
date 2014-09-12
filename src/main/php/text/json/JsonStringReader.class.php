@@ -37,9 +37,7 @@ class JsonStringReader extends JsonReader {
    * @return void
    */
   public function pushBack($bytes) {
-    $this->bytes= $bytes.substr($this->bytes, $this->pos);
-    $this->pos= 0;
-    $this->len= strlen($this->bytes);
+    $this->pos-= strlen($bytes);
   }
 
   /**
@@ -65,7 +63,6 @@ class JsonStringReader extends JsonReader {
     while ($pos < $len) {
       $c= $this->bytes{$pos};
       if ('"' === $c) {
-        $token= null;
         $string= '"';
         $o= 1;
         do {
@@ -95,32 +92,22 @@ class JsonStringReader extends JsonReader {
                 \xp::gc(__FILE__);
                 throw $e;
               }
-              $end++;
-              break;
+              $this->pos= ++$end;
+              return $token;
             }
           }
-          break;
+          throw new FormatException('Unclosed string');
         } while ($o);
       } else if (1 === strspn($c, '{[:]},')) {
-        $end= $pos + 1;
-        $token= $c;
+        $this->pos= $pos + 1;
+        return $c;
       } else if (1 === strspn($c, " \r\n\t")) {
         $pos+= strspn($bytes, " \r\n\t", $pos);
         continue;
       } else {
         $span= strcspn($bytes, "{[:]},\" \r\n\t", $pos);
         $token= substr($bytes, $pos, $span);
-        $end= $pos + $span;
-      }
-
-      if ($end < $len) {
-        $this->pos= $end;
-        return $token;
-      } else {
-        $this->pos= $len;
-        if (null === $token) {
-          throw new FormatException('Unclosed string');
-        }
+        $this->pos= $pos + $span;
         return $token;
       }
     }
