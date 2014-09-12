@@ -33,8 +33,8 @@ $value= $json->read();
 
 Sequential processing
 ---------------------
-Reading elements sequentially doesn't load the entire file into memory. You can
-use the `elements()` method to receive an iterator.
+Reading elements sequentially doesn't load the entire source into memory before prcoessing it. You can
+use the `elements()` method to receive an iterator over a JSON array.
 
 ```php
 $conn= new HttpConnection(...);
@@ -43,6 +43,17 @@ foreach ($json->elements() as $element) {
   // Process
 }
 ```
+
+If you get a huge object, you can also process it sequentially using the `pairs()` method:
+
+```php
+$conn= new HttpConnection(...);
+$json= new JsonStream($conn->get('/resource?expand=*')->getInputStream());
+foreach ($json->pairs() as $key => $value) {
+  // Process
+}
+```
+
 
 Performance
 -----------
