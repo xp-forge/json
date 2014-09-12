@@ -69,6 +69,7 @@ class JsonTokenizer extends \lang\Object {
         }
       };
       $this->tokens= $f();
+      $this->current= null;
     }
   }
 
@@ -90,10 +91,10 @@ class JsonTokenizer extends \lang\Object {
   public function hasNext() {
     return $this->tokens->valid();
   }
+
   /**
    * Returns next token
    *
-   * @param  string $delim If passed, uses the delimiters instead of the global ones.
    * @return string
    */
   public function next() {
