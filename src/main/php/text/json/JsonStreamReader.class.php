@@ -37,8 +37,8 @@ class JsonStreamReader extends JsonReader {
       $this->pos-= $l;
     } else {
       $this->bytes= $bytes.substr($this->bytes, $this->pos);
+      $this->len+= $l - $this->pos;
       $this->pos= 0;
-      $this->len= strlen($this->bytes);
     }
   }
 
