@@ -88,12 +88,6 @@ abstract class JsonReader extends \lang\Object {
    * @throws lang.FormatException
    */
   public function nextValue() {
-    static $keyword= [
-      'true'   => [true],
-      'false'  => [false],
-      'null'   => [null],
-    ];
-
     $token= $this->nextToken();
     if ('{' === $token) {
       return $this->readObject();
@@ -101,8 +95,12 @@ abstract class JsonReader extends \lang\Object {
       return $this->readList();
     } else if ('"' === $token{0}) {
       return substr($token, 1, -1);
-    } else if (isset($keyword[$token])) {
-      return $keyword[$token][0];
+    } else if ('true' === $token) {
+      return true;
+    } else if ('false' === $token) {
+      return false;
+    } else if ('null' === $token) {
+      return null;
     } else if (is_numeric($token)) {
       return $token > PHP_INT_MAX || $token < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
         ? (double)$token
