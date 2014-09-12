@@ -23,8 +23,26 @@ class JsonStream extends Input {
    * @param  string $encoding
    */
   public function __construct(InputStream $in, $encoding= \xp::ENCODING) {
-    parent::__construct($in->read(), $encoding);
-    $this->in= $in;
+    $initial= '';
+    $bom= $in->read(2);
+    if ("\376\377" === $bom) {
+      $encoding= \xp::ENCODING;
+      $this->in= new MultiByteSource($in, 'utf-16be');
+    } else if ("\377\376" === $bom) {
+      $encoding= \xp::ENCODING;
+      $this->in= new MultiByteSource($in, 'utf-16le');
+    } else {
+      $bom.= $in->read(1);
+      if ("\357\273\277" === $bom) {
+        $encoding= 'utf-8';
+        $this->in= $in;
+      } else {
+        $this->in= $in;
+        $initial= $bom;
+      }
+    }
+
+    parent::__construct($initial.$this->in->read(), $encoding);
   }
 
   /**
@@ -61,7 +79,7 @@ class JsonStream extends Input {
               $string.= substr($bytes, $pos + $o, $span + 1 - $o);
               $token= iconv($this->encoding, \xp::ENCODING, $string);
               if (false === $token) {
-                $e= new FormatException('Illegal encoding');
+                $e= new FormatException('Illegal '.$this->encoding.' encoding');
                 \xp::gc(__FILE__);
                 throw $e;
               }

@@ -41,7 +41,7 @@ class JsonString extends Input {
               $string.= substr($bytes, $pos + $o, $span + 1 - $o);
               $token= iconv($this->encoding, \xp::ENCODING, $string);
               if (false === $token) {
-                $e= new FormatException('Illegal encoding');
+                $e= new FormatException('Illegal '.$this->encoding.' encoding');
                 \xp::gc(__FILE__);
                 throw $e;
               }
