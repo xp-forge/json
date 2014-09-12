@@ -432,7 +432,19 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #  ['ü', '\u00fc']
   #])]
   public function read_long_text_with_escape_at_end_of_chunk($escaped, $source) {
-    $str= str_repeat('*', 8190);
+    $str= str_repeat('*', 8193);
     $this->assertEquals($str.$escaped, $this->read('"'.$str.$source.'"'));
+  }
+
+  #[@test]
+  public function read_long_text_with_ws_at_end_of_chunk() {
+    $str= str_repeat('*', 8193);
+    $this->assertEquals($str.' ', $this->read('"'.$str.' "'));
+  }
+
+  #[@test]
+  public function read_ws_at_end_of_token() {
+    $str= str_repeat('*', 8190);
+    $this->assertEquals([$str, 2], $this->read('["'.$str.'", 2]'));
   }
 }

@@ -94,7 +94,9 @@ class JsonStream extends Input {
         $token= $c;
       } else if (1 === strspn($c, " \r\n\t")) {
         $pos+= strspn($bytes, " \r\n\t", $pos);
-        continue;
+        if ($pos < $len) continue;
+        $end= $len;
+        $token= $string= null;
       } else {
         $span= strcspn($bytes, "{[:]},\" \r\n\t", $pos);
         $token= substr($bytes, $pos, $span);
@@ -111,7 +113,7 @@ class JsonStream extends Input {
         continue;
       } else {
         $this->pos= $len;
-        if (null === $token) {
+        if (null === $token && null !== $string) {
           throw new FormatException('Unclosed string '.$string);
         }
         return $token;
