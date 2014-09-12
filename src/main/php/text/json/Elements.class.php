@@ -23,7 +23,6 @@ class Elements extends \lang\Object implements \Iterator {
   
   /** @return void */
   public function rewind() {
-    $this->reader->reset();
     $token= $this->reader->nextToken();
     if ('[' === $token) {
       $this->current= $this->reader->nextValue();

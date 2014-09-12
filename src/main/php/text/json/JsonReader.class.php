@@ -7,16 +7,6 @@ use lang\FormatException;
  * Base class for JSON readers
  */
 abstract class JsonReader extends \lang\Object {
-  const WHITESPACE = " \n\r\t";
-
-  /**
-   * Creates a new stream reader to read from a stream
-   *
-   * @param  text.Tokenizer $tokenizer
-   */
-  public function __construct($tokenizer) {
-    $this->tokenizer= $tokenizer;
-  }
 
   /**
    * Reads an object
@@ -25,11 +15,11 @@ abstract class JsonReader extends \lang\Object {
    * @throws lang.FormatException
    */
   protected function readObject() {
-    $token= $this->tokenizer->next();
+    $token= $this->nextToken();
     if ('}' === $token) {
       return [];
     } else if (null !== $token) {
-      $this->tokenizer->backup($token);
+      $this->backup($token);
 
       $result= [];
       do {
@@ -37,12 +27,12 @@ abstract class JsonReader extends \lang\Object {
         if (!is_string($key)) {
           throw new FormatException('Illegal key type '.typeof($key).', expecting string');
         }
-        if (':' === ($token= $this->tokenizer->next())) {
+        if (':' === ($token= $this->nextToken())) {
           $result[$key]= $this->nextValue();
         } else {
           throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading object, expecting ":"');
         }
-        if ('}' === ($token= $this->tokenizer->next())) {
+        if ('}' === ($token= $this->nextToken())) {
           return $result;
         }
       } while (',' === $token);
@@ -58,16 +48,16 @@ abstract class JsonReader extends \lang\Object {
    * @throws lang.FormatException
    */
   protected function readList() {
-    $token= $this->tokenizer->next();
+    $token= $this->nextToken();
     if (']' === $token) {
       return [];
     } else if (null !== $token) {
-      $this->tokenizer->backup($token);
+      $this->backup($token);
 
       $result= [];
       do {
         $result[]= $this->nextValue();
-        if (']' === ($token= $this->tokenizer->next())) {
+        if (']' === ($token= $this->nextToken())) {
           return $result;
         }
       } while (',' === $token);
@@ -91,22 +81,19 @@ abstract class JsonReader extends \lang\Object {
   }
 
   /**
-   * Resets tokenizer
+   * Pushes back a given byte sequence to be retokenized
    *
+   * @param  string $bytes
    * @return void
    */
-  public function reset() {
-    $this->tokenizer->reset();
-  }
+  public abstract function backup($bytes);
 
   /**
-   * Fetches next token
+   * Returns next token
    *
    * @return string
    */
-  public function nextToken() {
-    return $this->tokenizer->next();
-  }
+  public abstract function nextToken();
 
   /**
    * Reads a value
@@ -121,7 +108,7 @@ abstract class JsonReader extends \lang\Object {
       'null'   => [null],
     ];
 
-    $token= $this->tokenizer->next();
+    $token= $this->nextToken();
     if ('{' === $token) {
       return $this->readObject();
     } else if ('[' === $token) {
@@ -150,7 +137,7 @@ abstract class JsonReader extends \lang\Object {
   public function read() {
     $value= $this->nextValue();
 
-    if (null !== ($token= $this->tokenizer->next())) {
+    if (null !== ($token= $this->nextToken())) {
       throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');
     }
 
