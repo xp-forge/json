@@ -25,12 +25,18 @@ class Pairs extends \lang\Object implements \Iterator {
   public function rewind() {
     $token= $this->reader->nextToken();
     if ('{' === $token) {
-      $this->key= $this->reader->nextValue();
-      if (':' === ($token= $this->reader->nextToken())) {
-        $this->value= $this->reader->nextValue();
-      } else {
+      $token= $this->reader->nextToken();
+      if ('}' === $token) {
         $this->key= null;
-        throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
+      } else {
+        $this->reader->pushBack($token);
+        $this->key= $this->reader->nextValue();
+        if (':' === ($token= $this->reader->nextToken())) {
+          $this->value= $this->reader->nextValue();
+        } else {
+          $this->key= null;
+          throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
+        }
       }
     } else {
       throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting "{"');

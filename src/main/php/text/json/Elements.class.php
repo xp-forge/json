@@ -25,8 +25,14 @@ class Elements extends \lang\Object implements \Iterator {
   public function rewind() {
     $token= $this->reader->nextToken();
     if ('[' === $token) {
-      $this->current= $this->reader->nextValue();
-      $this->id= 0;
+      $token= $this->reader->nextToken();
+      if (']' === $token) {
+        $this->id= -1;
+      } else {
+        $this->reader->pushBack($token);
+        $this->current= $this->reader->nextValue();
+        $this->id= 0;
+      }
     } else {
       throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading elements, expecting "["');
     }

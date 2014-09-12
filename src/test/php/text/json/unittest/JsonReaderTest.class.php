@@ -1,6 +1,7 @@
 <?php namespace text\json\unittest;
 
 use io\streams\MemoryInputStream;
+use util\collections\Pair;
 
 /**
  * Test JSON reader
@@ -338,6 +339,13 @@ abstract class JsonReaderTest extends \unittest\TestCase {
     $this->assertEquals([1, 2, 3], $r);
   }
 
+  #[@test]
+  public function can_read_empty_array_sequentially() {
+    foreach ($this->reader('[ ]')->elements() as $element) {
+      $this->fail('Should not be reached', null, $element);
+    }
+  }
+
   #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "\["/'), @values([
   #  'null', 'false', 'true',
   #  '""', '"Test"',
@@ -363,6 +371,13 @@ abstract class JsonReaderTest extends \unittest\TestCase {
       $r[$key]= $value;
     }
     $this->assertEquals(['a' => 'v1', 'b' => 'v2'], $r);
+  }
+
+  #[@test]
+  public function can_read_empty_map_sequentially() {
+    foreach ($this->reader('{ }')->pairs() as $key => $value) {
+      $this->fail('Should not be reached', null, new Pair($key, $value));
+    }
   }
 
   #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "\{"/'), @values([
