@@ -73,31 +73,31 @@ class JsonTokenizer extends \lang\Object {
         $o= 1;
         do {
           $span= strcspn($bytes, '"\\', $pos + $o) + $o;
-          if ($pos + $span < $len) {
-            if ('\\' === $bytes{$pos + $span}) {
+          $end= $pos + $span;
+          if ($end < $len) {
+            if ('\\' === $bytes{$end}) {
               $string.= substr($bytes, $pos + $o, $span - $o);
 
-              while ($pos + $span + 4 >= $len && $this->in->available()) {
+              while ($end + 4 >= $len && $this->in->available()) {
                 $bytes.= $this->in->read();
                 $this->bytes= $bytes;
                 $len= $this->len= strlen($bytes);
               }
 
-              $escape= $bytes{$pos + $span + 1};
+              $escape= $bytes{$end + 1};
               if (isset($escapes[$escape])) {
                 $string.= $escapes[$escape];
+                $o= $span + 2;
               } else if ('u' === $escape) {
-                $hex= substr($bytes, $pos + $span + 1 + 1, 4);
+                $hex= substr($bytes, $end + 2, 4);
                 $string.= iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
-                $span+= 4;
+                $o= $span + 6;
               } else {
                 throw new FormatException('Illegal escape sequence \\'.$escape.'...');
               }
-
-              $o= $span + 1 + 1;
               continue;
-            } else if ('"' === $bytes{$pos + $span}) {
-              $string.= substr($bytes, $pos + $o, ++$span - $o);
+            } else if ('"' === $bytes{$end}) {
+              $string.= substr($bytes, $pos + $o, $span + 1 - $o);
               // echo "STRING<$this->encoding> = '", addcslashes($string, "\0..\17"), "'\n";
               $token= iconv($this->encoding, \xp::ENCODING, $string);
               if (\xp::errorAt(__FILE__, __LINE__ - 1)) {
@@ -105,13 +105,14 @@ class JsonTokenizer extends \lang\Object {
                 \xp::gc(__FILE__);
                 throw $e;
               }
+              $end++;
               break;
             }
           }
           break;
         } while ($o);
       } else if (1 === strspn($c, '{[:]},')) {
-        $span= 1;
+        $end= $pos + 1;
         $token= $c;
       } else if (1 === strspn($c, " \r\n\t")) {
         $pos+= strspn($bytes, " \r\n\t", $pos);
@@ -119,20 +120,21 @@ class JsonTokenizer extends \lang\Object {
       } else {
         $span= strcspn($bytes, "{[:]},\" \r\n\t", $pos);
         $token= substr($bytes, $pos, $span);
+        $end= $pos + $span;
       }
 
-      if ($pos + $span >= $len) {
-        if ($this->in->available()) {
-          $bytes= $this->bytes= substr($bytes, $pos).$this->in->read();
-          $len= $this->len= strlen($bytes);
-          $pos= 0;
-          continue;
-        }
+      if ($end < $len) {
+        $this->pos= $end;
+        return $token;
+      } else if ($this->in->available()) {
+        $bytes= $this->bytes= substr($bytes, $pos).$this->in->read();
+        $len= $this->len= strlen($bytes);
+        $pos= 0;
+        continue;
+      } else {
+        $this->pos= $len;
+        return $token;
       }
-
-      //echo "bytes[$pos..", $span + $pos ,"/$this->len]= '", addcslashes(substr($this->bytes, $pos, $span), "\0..\17"), "'\n";
-      $this->pos= $pos + $span;
-      return $token;
     }
 
     return null;
