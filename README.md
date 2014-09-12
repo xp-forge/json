@@ -13,7 +13,7 @@ Examples
 Reading a JSON file:
 
 ```php
-$json= new JsonStream((new File('input.json'))->getInputStream()));
+$json= new JsonFile(new File('input.json'));
 $value= $json->read();
 ```
 
@@ -21,7 +21,8 @@ Reading elements sequentially doesn't load the entire file into memory. You can
 use the `elements()` method to receive an iterator.
 
 ```php
-$json= new JsonStream((new File('large-list.json'))->getInputStream()));
+$conn= new HttpConnection(...);
+$json= new JsonStream($conn->get('/search?q=example&limit=1000')->getInputStream());
 foreach ($json->elements() as $element) {
   // Process
 }

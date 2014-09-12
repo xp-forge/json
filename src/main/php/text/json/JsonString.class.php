@@ -9,6 +9,8 @@ use lang\FormatException;
  * $json= new JsonString('{"Hello" : "World"}');
  * $value= $json->read();
  * ```
+ *
+ * @test  xp://text.json.unittest.JsonStringTest
  */
 class JsonString extends Input {
 

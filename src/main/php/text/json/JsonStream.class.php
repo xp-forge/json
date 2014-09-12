@@ -10,6 +10,8 @@ use lang\FormatException;
  * $json= new JsonStream((new File('input.json'))->getInputStream()));
  * $value= $json->read();
  * ```
+ *
+ * @test  xp://text.json.unittest.JsonStreamTest
  */
 class JsonStream extends Input {
   protected $in;
