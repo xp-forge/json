@@ -62,23 +62,17 @@ class JsonTokenizer extends \lang\Object {
           }
           break;
         } while ($o);
-        //echo "STR: ";
         $span++;
       } else if (false !== strpos('{[:]},', $c)) {
         $span= 1;
-        //echo "TOK: ";
       } else if (false !== strpos(" \r\n\t", $c)) {
-        $span= strspn($bytes, " \r\n\t", $pos + 1) + 1;
-        $pos+= $span;
+        $pos+= strspn($bytes, " \r\n\t", $pos + 1) + 1;
         continue;
-        //echo "W/S: ";
       } else {
         $span= strcspn($bytes, "{[:]},\" \r\n\t", $pos);
-        //echo "WRD: ";
       }
 
       if ($pos + $span >= $len) {
-        //echo "underrun\n";
         if ($this->in->available()) {
           $bytes= $this->bytes= substr($bytes, $pos).$this->in->read();
           $len= $this->len= strlen($bytes);
