@@ -6,8 +6,10 @@ use util\collections\Pair;
 /**
  * Test JSON input
  *
+ * @see   php://json_decode
  * @see   https://bugs.php.net/bug.php?id=41504
  * @see   https://bugs.php.net/bug.php?id=45791
+ * @see   https://bugs.php.net/bug.php?id=45989
  * @see   https://bugs.php.net/bug.php?id=54484
  * @see   https://github.com/xp-framework/xp-framework/issues/189
  */
@@ -46,15 +48,16 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #  ["Test\x0d", '"Test\r"'],
   #  ["Test\x09", '"Test\t"'],
   #  ["Test\\", '"Test\\\\"'],
+  #  ["Test\x14", '"Test\u0014"'],
   #  ["Test/", '"Test\/"']
   #])]
   public function read_string($expected, $source) {
     $this->assertEquals($expected, $this->read($source));
   }
 
-  #[@test, @expect('lang.FormatException')]
-  public function illegal_escape_sequence() {
-    $this->read('"\X"');
+  #[@test, @expect('lang.FormatException'), @values(['"\X"', '[ "\x" ]'])]
+  public function illegal_escape_sequence($source) {
+    $this->read($source);
   }
 
   #[@test, @expect('lang.FormatException')]
@@ -168,6 +171,11 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals(['' => 'value'], $this->read($source));
   }
 
+  #[@test]
+  public function keys_overwrite_each_other() {
+    $this->assertEquals(['key' => 'v2'], $this->read('{"key": "v1", "key": "v2"}'));
+  }
+
   #[@test, @expect('lang.FormatException'), @values([
   #  '{', '{{', '{{}',
   #  '}', '}}'
@@ -204,6 +212,11 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #[@test, @expect('lang.FormatException')]
   public function trailing_comma_in_object() {
     $this->read('{"key": "value",}');
+  }
+
+  #[@test, @expect('lang.FormatException')]
+  public function unquoted_key_in_object() {
+    $this->read('{key: "value"}');
   }
 
   #[@test, @expect('lang.FormatException'), @values([
@@ -279,11 +292,15 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #[@test, @expect('lang.FormatException'), @values([
   #  'UNRECOGNIZED_CONSTANT',
   #  "'json does not allow single quoted strings'",
+  #  "`json does not allow strings in backquores`",
   #  '<>',
   #  '0.00.1',
   #  '0-10',
   #  '"a" "b"',
-  #  '"a", "b"'
+  #  '"a", "b"',
+  #  '{error error}', ' {error error}',
+  #  '{}}}',
+  #  '[0-9]{5}'
   #])]
   public function illegal_token($source) {
     $this->read($source);
