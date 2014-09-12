@@ -38,7 +38,7 @@ class JsonStreamReader extends JsonReader {
    * @param  string $bytes
    * @return void
    */
-  public function backup($bytes) {
+  public function pushBack($bytes) {
     $this->bytes= $bytes.substr($this->bytes, $this->pos);
     $this->pos= 0;
     $this->len= strlen($this->bytes);

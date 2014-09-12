@@ -19,7 +19,7 @@ abstract class JsonReader extends \lang\Object {
     if ('}' === $token) {
       return [];
     } else if (null !== $token) {
-      $this->backup($token);
+      $this->pushBack($token);
 
       $result= [];
       do {
@@ -52,7 +52,7 @@ abstract class JsonReader extends \lang\Object {
     if (']' === $token) {
       return [];
     } else if (null !== $token) {
-      $this->backup($token);
+      $this->pushBack($token);
 
       $result= [];
       do {
@@ -86,7 +86,7 @@ abstract class JsonReader extends \lang\Object {
    * @param  string $bytes
    * @return void
    */
-  public abstract function backup($bytes);
+  public abstract function pushBack($bytes);
 
   /**
    * Returns next token
