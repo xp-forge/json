@@ -6,17 +6,33 @@ JSON
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
 [![Required PHP 5.4+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_4plus.png)](http://php.net/)
 
-Reads JSON from input streams.
+Reads JSON from various input source.
 
 Examples
 --------
-Reading a JSON file:
+Reading from a file:
 
 ```php
 $json= new JsonFile(new File('input.json'));
 $value= $json->read();
 ```
 
+Reading from a string:
+
+```php
+$json= new JsonString('{"Hello": "World"}');
+$value= $json->read();
+```
+
+Reading from a stream:
+
+```php
+$json= new JsonStream(new SocketInputStream(...));
+$value= $json->read();
+```
+
+Sequential processing
+---------------------
 Reading elements sequentially doesn't load the entire file into memory. You can
 use the `elements()` method to receive an iterator.
 
