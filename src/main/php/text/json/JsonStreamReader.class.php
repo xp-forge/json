@@ -48,17 +48,6 @@ class JsonStreamReader extends JsonReader {
    * @return string
    */
   public function nextToken() {
-    static $escapes= [
-      '"'  => "\"",
-      'b'  => "\x08",
-      'f'  => "\x0c",
-      'n'  => "\x0a",
-      'r'  => "\x0d",
-      't'  => "\x09",
-      '\\' => "\\",
-      '/'  => '/'
-    ];
-
     $pos= $this->pos;
     $len= $this->len;
     $bytes= $this->bytes;
@@ -82,8 +71,8 @@ class JsonStreamReader extends JsonReader {
               }
 
               $escape= $bytes{$end + 1};
-              if (isset($escapes[$escape])) {
-                $string.= $escapes[$escape];
+              if (isset(self::$escapes[$escape])) {
+                $string.= self::$escapes[$escape];
                 $o= $span + 2;
               } else if ('u' === $escape) {
                 $hex= substr($bytes, $end + 2, 4);

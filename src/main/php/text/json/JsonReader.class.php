@@ -7,6 +7,16 @@ use lang\FormatException;
  * Base class for JSON readers
  */
 abstract class JsonReader extends \lang\Object {
+  protected static $escapes= [
+    '"'  => "\"",
+    'b'  => "\x08",
+    'f'  => "\x0c",
+    'n'  => "\x0a",
+    'r'  => "\x0d",
+    't'  => "\x09",
+    '\\' => "\\",
+    '/'  => '/'
+  ];
 
   /**
    * Reads an object
