@@ -25,49 +25,10 @@ abstract class Output extends \lang\Object {
     $this->encoding= $encoding;
   }
 
-  /**
-   * Escapes escape sequences inside string
-   *
-   * @param   string in utf8-encoded string
-   * @return  string
-   */
-  protected function escape($in) {
-    $out= '';
-    for ($i= 0, $s= strlen($in); $i < $s; $i++) {
-      $c= ord($in{$i});
-      if (isset(self::$escapes[$c])) {
-        $out.= self::$escapes[$c];
-      } else if ($c < 0x20) {
-        $out.= sprintf('\u%04x', $c);
-      } else if ($c < 0x80) {
-        $out.= $in{$i};
-      } else if ($c < 0xE0) {
-        $out.= sprintf('\u%04x', (($c & 0x1F) << 6) | (ord($in{$i+ 1}) & 0x3F));
-        $i+= 1;
-      } else if ($c < 0xF0) {
-        $out.= sprintf('\u%04x', (($c & 0x0F) << 12) | ((ord($in{$i+ 1}) & 0x3F) << 6) | (ord($in{$i+ 2}) & 0x3F));
-        $i+= 2;
-      } else if ($c < 0xF5) {
-        $out.= sprintf('\u%04x', (($c & 0x07) << 18) | ((ord($in{$i+ 1}) & 0x0F) << 12) | ((ord($in{$i+ 2}) & 0x3F) << 6) | (ord($in{$i+ 3}) & 0x3F));
-        $i+= 3;
-      }
-    }
-    
-    return $out;
-  }
-
   protected function representationOf($value) {
-    if (null === $value) {
-      return 'null';
-    } else if (true === $value) {
-      return 'true';
-    } else if (false === $value) {
-      return 'false';
-    }
-
     $t= gettype($value);
     if ('string' === $t) {
-      return '"'.$this->escape($value).'"';
+      return json_encode($value);
     } else if ('integer' === $t) {
       return (string)$value;
     } else if ('double' === $t) {
@@ -101,6 +62,12 @@ abstract class Output extends \lang\Object {
         }
         return $inner.'}';
       }
+    } else if (null === $value) {
+      return 'null';
+    } else if (true === $value) {
+      return 'true';
+    } else if (false === $value) {
+      return 'false';
     } else {
       throw new IllegalArgumentException('Cannot represent instances of '.typeof($value));
     }
