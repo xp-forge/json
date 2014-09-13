@@ -27,7 +27,7 @@ class JsonString extends Input {
     while ($pos < $len) {
       $c= $this->bytes{$pos};
       if ('"' === $c) {
-        $string= '"';
+        $string= '';
         $o= 1;
         do {
           $span= strcspn($bytes, '"\\', $pos + $o) + $o;
@@ -38,15 +38,15 @@ class JsonString extends Input {
               $o= $span + $consumed;
               continue;
             } else if ('"' === $bytes{$end}) {
-              $string.= substr($bytes, $pos + $o, $span + 1 - $o);
-              $token= iconv($this->encoding, \xp::ENCODING, $string);
-              if (false === $token) {
+              $string.= substr($bytes, $pos + $o, $span - $o);
+              $encoded= iconv($this->encoding, \xp::ENCODING, $string);
+              if (false === $encoded) {
                 $e= new FormatException('Illegal '.$this->encoding.' encoding');
                 \xp::gc(__FILE__);
                 throw $e;
               }
               $this->pos= ++$end;
-              return $token;
+              return [true, $encoded];
             }
           }
           throw new FormatException('Unclosed string '.$string);

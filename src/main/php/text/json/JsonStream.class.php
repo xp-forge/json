@@ -59,7 +59,7 @@ class JsonStream extends Input {
       $c= $this->bytes{$pos};
       if ('"' === $c) {
         $token= null;
-        $string= '"';
+        $string= '';
         $o= 1;
         do {
           $span= strcspn($bytes, '"\\', $pos + $o) + $o;
@@ -76,14 +76,15 @@ class JsonStream extends Input {
               $o= $span + $consumed;
               continue;
             } else if ('"' === $bytes{$end}) {
-              $string.= substr($bytes, $pos + $o, $span + 1 - $o);
-              $token= iconv($this->encoding, \xp::ENCODING, $string);
-              if (false === $token) {
+              $string.= substr($bytes, $pos + $o, $span - $o);
+              $encoded= iconv($this->encoding, \xp::ENCODING, $string);
+              if (false === $encoded) {
                 $e= new FormatException('Illegal '.$this->encoding.' encoding');
                 \xp::gc(__FILE__);
                 throw $e;
               }
               $end++;
+              $token= [true, $encoded];
               break;
             }
           }

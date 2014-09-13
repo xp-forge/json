@@ -149,8 +149,8 @@ abstract class Input extends \lang\Object {
    * @throws lang.FormatException
    */
   public function valueOf($token) {
-    if ('"' === $token{0}) {
-      return substr($token, 1, -1);
+    if (true === $token[0]) {
+      return $token[1];
     } else if ('{' === $token) {
       return $this->readObject();
     } else if ('[' === $token) {
@@ -180,7 +180,7 @@ abstract class Input extends \lang\Object {
    */
   public function type() {
     $token= $this->firstToken();
-    if ('"' === $token{0}) {
+    if (true === $token[0]) {
       return Types::$STRING;
     } else if ('{' === $token) {
       return Types::$OBJECT;
