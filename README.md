@@ -59,6 +59,7 @@ Performance
 -----------
 The JSON reader's performance is roughly 8-9 times that of the implementation in xp-framework/webservices, while it also uses less memory. On the other side, PHP's native `json_decode()` function is 7-8 times faster (using current PHP 5.5).
 
+### Raw calls
 Given a test data size of 158791 bytes (inside a file on the local file system) and running parsing for 100 iterations, here is an overview of the results:
 
 | *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
@@ -70,6 +71,7 @@ Given a test data size of 158791 bytes (inside a file on the local file system) 
 
 The overhead for parsing a single 150 Kilobyte JSON file is around 17 milliseconds, which should be mostly acceptable.
 
+### Network reads
 The performance overhead the native `json_decode()` function vanishes when reading from a network socket and parsing the elements sequentially.
 
 ```php
@@ -83,14 +85,20 @@ foreach ($elements as $element) {
 }
 
 // Solution using this implementation's sequential processing
-$j= new JsonStream($r->getInputStream());
+$json= new JsonStream($r->getInputStream());
 foreach ($json->elements() as $element) {
   
 }
 
 // Solution using this implementation's serial processing
-$j= new JsonStream($r->getInputStream());
+$json= new JsonStream($r->getInputStream());
 foreach ($json->read() as $element) {
+  
+}
+
+// Solution using XP Webservices
+$elements= (new JsonDecoder())->decodeFrom($r->getInputStream());
+foreach ($elements as $element) {
   
 }
 ```
@@ -102,3 +110,4 @@ The test data is the same size as above (158791 bytes).
 | PHP Native        | 0.718 seconds         | 0.719 seconds           | 1046.8 kB / 1752.6 kB |
 | This (sequential) | 0.143 seconds         | 0.709 seconds           | 1025.5 kB / 1067.0 kB |
 | This (serial)     | 0.731 seconds         | 0.734 seconds           | 1018.4 kB / 1375.2 kB |
+| XP Webservice     | 0.752 seconds         | 0.752 seconds           | 1210.5 kB / 1635.6 kB |
