@@ -3,16 +3,15 @@
 use io\File;
 
 /**
- * Writes JSON to a given output stream
+ * Writes JSON to a given file
  *
  * ```php
- * $json= new FileOutput(new File('input.json'));
+ * $json= new FileOutput(new File('output.json'));
  * $json->write('Hello World');
  * ```
- *
- * @test  xp://text.json.unittest.StreamOutputTest
  */
-class FileOutput extends StreamOutput {
+class FileOutput extends Output {
+  protected $file;
 
   /**
    * Creates a new instance
@@ -21,6 +20,20 @@ class FileOutput extends StreamOutput {
    * @param  string $encoding
    */
   public function __construct(File $out, $encoding= \xp::ENCODING) {
-    parent::__construct($out->getOutputStream(), $encoding);
+    parent::__construct($encoding);
+    $this->file= $out;
   }
+
+  /**
+   * Writes a given value
+   *
+   * @param  var $value
+   */
+  public function write($value) {
+    $this->file->write($this->representationOf($value));
+    $this->file->close();
+  }
+
+  /** @return io.File */
+  public function file() { return $this->file; }
 }

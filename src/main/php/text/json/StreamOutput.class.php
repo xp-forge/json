@@ -13,17 +13,17 @@ use io\streams\OutputStream;
  * @test  xp://text.json.unittest.StreamOutputTest
  */
 class StreamOutput extends Output {
-  protected $out;
+  protected $stream;
 
   /**
    * Creates a new instance
    *
-   * @param  io.streams.InputStream $out
+   * @param  io.streams.OutputStream $out
    * @param  string $encoding
    */
   public function __construct(OutputStream $out, $encoding= \xp::ENCODING) {
     parent::__construct($encoding);
-    $this->out= $out;
+    $this->stream= $out;
   }
 
   /**
@@ -32,7 +32,10 @@ class StreamOutput extends Output {
    * @param  var $value
    */
   public function write($value) {
-    $this->out->write($this->representationOf($value));
-    $this->out->close();
+    $this->stream->write($this->representationOf($value));
+    $this->stream->close();
   }
+
+  /** @return io.streams.OutputStream */
+  public function stream() { return $this->stream; }
 }

@@ -26,7 +26,16 @@ Writing is done using one of the `Output` implementations:
 $out= new FileOutput(new File('output.json'));
 $out= new StreamOutput(new SocketOuputStream(...));
 
-$out->write();
+$out->write($value);
+```
+
+Writing to strings works a bit differently, the result needs to be fetched via the `bytes()` method.
+
+```php
+$out= new StringOutput();
+$out->write($value);
+
+$json= $out->bytes();
 ```
 
 Sequential processing

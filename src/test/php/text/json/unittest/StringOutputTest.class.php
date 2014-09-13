@@ -1,9 +1,8 @@
 <?php namespace text\json\unittest;
 
-use io\streams\MemoryOutputStream;
-use text\json\StreamOutput;
+use text\json\StringOutput;
 
-class StreamOutputTest extends JsonOutputTest {
+class StringOutputTest extends JsonOutputTest {
 
   /**
    * Helper
@@ -13,8 +12,8 @@ class StreamOutputTest extends JsonOutputTest {
    * @return string
    */
   protected function write($data, $encoding= 'utf-8') {
-    $out= new StreamOutput(new MemoryOutputStream(), $encoding);
+    $out= new StringOutput($encoding);
     $out->write($data);
-    return $out->stream()->getBytes();
+    return $out->bytes();
   }
 }
