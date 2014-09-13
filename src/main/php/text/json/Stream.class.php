@@ -7,5 +7,7 @@ abstract class Stream extends \lang\Object implements \lang\Closeable {
     $this->out= $out;
   }
 
-  public abstract function close();
+  public function close() {
+    $this->out->close();
+  }
 }

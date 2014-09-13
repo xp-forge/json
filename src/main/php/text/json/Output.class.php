@@ -131,4 +131,16 @@ abstract class Output extends \lang\Object {
       throw new IllegalArgumentException('Expecting either an array or an object, '.$t->name().' given');
     }
   }
+
+  /** @return void */
+  public function close() {
+    // Does nothing
+  }
+
+  /**
+   * The destructor takes care of closing this output
+   */
+  public function __destruct() {
+    $this->close();
+  }
 }

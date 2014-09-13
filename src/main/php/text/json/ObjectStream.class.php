@@ -14,5 +14,6 @@ class ObjectStream extends Stream {
 
   public function close() {
     $this->out->appendToken('}');
+    parent::close();
   }
 }

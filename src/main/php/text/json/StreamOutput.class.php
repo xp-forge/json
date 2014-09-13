@@ -27,16 +27,6 @@ class StreamOutput extends Output {
   }
 
   /**
-   * Writes a given value
-   *
-   * @param  var $value
-   */
-  public function write($value) {
-    parent::write($value);
-    $this->stream->close();
-  }
-
-  /**
    * Append a token
    *
    * @param  string $bytes
@@ -45,6 +35,9 @@ class StreamOutput extends Output {
   public function appendToken($bytes) {
     $this->stream->write($bytes);
   }
+
+  /** @return void */
+  public function close() { $this->stream->close(); }
 
   /** @return io.streams.OutputStream */
   public function stream() { return $this->stream; }

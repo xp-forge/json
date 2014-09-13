@@ -26,16 +26,6 @@ class FileOutput extends Output {
   }
 
   /**
-   * Writes a given value
-   *
-   * @param  var $value
-   */
-  public function write($value) {
-    parent::write($value);
-    $this->file->close();
-  }
-
-  /**
    * Append a token
    *
    * @param  string $bytes
@@ -47,4 +37,7 @@ class FileOutput extends Output {
 
   /** @return io.File */
   public function file() { return $this->file; }
+
+  /** @return void */
+  public function close() { $this->file->isOpen() && $this->file->close(); }
 }
