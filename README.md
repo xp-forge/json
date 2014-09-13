@@ -132,3 +132,14 @@ The test data is the same size as above (158791 bytes).
 | This (sequential) | 0.143 seconds         | 0.712 seconds           | 1036.5 kB / 1078.8 kB |
 | This (serial)     | 0.715 seconds         | 0.717 seconds           | 1027.0 kB / 1383.6 kB |
 | XP Webservice     | 0.752 seconds         | 0.752 seconds           | 1210.5 kB / 1635.6 kB |
+
+### Writing
+
+Using the test data from above, written to a file 100 times:
+
+| *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
+| ----------------- | --------------: | --------------: | --------------------: | ---------: |
+| PHP Native        | 0.390 seconds   | 3.9 ms          | 1324.4 kB / 1521.9 kB |            |
+| This              | 0.714 seconds   | 7.1 ms          | 1346.5 kB / 1362.9 kB | 3.2 ms     |
+
+The overhead for writing a structure which results in a 150 Kilobyte JSON file is around 3 milliseconds, which should be mostly acceptable.
