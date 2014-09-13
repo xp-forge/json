@@ -33,9 +33,9 @@ Writing to strings works a bit differently, the result needs to be fetched via t
 
 ```php
 $out= new StringOutput();
-$out->write($value);
+$out->write('"Hello", he said.');
 
-$json= $out->bytes();
+$json= $out->bytes();   // "\"Hello\", he said."
 ```
 
 Sequential processing
