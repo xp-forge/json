@@ -5,17 +5,6 @@ use lang\IllegalArgumentException;
 abstract class Output extends \lang\Object {
   protected $encoding;
 
-  protected static $escapes= [
-    0x08 => '\\b',
-    0x09 => '\\t',
-    0x0A => '\\n', 
-    0x0C => '\\f', 
-    0x0D => '\\r', 
-    0x22 => '\\"', 
-    0x2F => '\\/', 
-    0x5C => '\\\\'
-  ];
-
   /**
    * Creates a new instance
    *
@@ -25,6 +14,12 @@ abstract class Output extends \lang\Object {
     $this->encoding= $encoding;
   }
 
+  /**
+   * Creates a representation of a given value
+   *
+   * @param  string $value
+   * @return string
+   */
   protected function representationOf($value) {
     $t= gettype($value);
     if ('string' === $t) {

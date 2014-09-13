@@ -16,13 +16,33 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   }
 
   /**
+   * Returns the implementation
+   *
+   * @param  string $encoding
+   * @return text.json.Output
+   */
+  protected abstract function output($encoding= 'utf-8');
+
+  /**
+   * Returns the result
+   *
+   * @param  text.json.Output $out
+   * @return string
+   */
+  protected abstract function result($out);
+
+  /**
    * Helper
    *
    * @param  var $value
    * @param  string $encoding
    * @return string
    */
-  protected abstract function write($value, $encoding= 'utf-8');
+  protected function write($value, $encoding= 'utf-8') {
+    $out= $this->output($encoding);
+    $out->write($value);
+    return $this->result($out);
+  }
 
   #[@test, @values([
   #  ['""', ''],

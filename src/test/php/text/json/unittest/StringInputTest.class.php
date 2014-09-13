@@ -8,7 +8,7 @@ use text\json\StringInput;
 class StringInputTest extends JsonInputTest {
 
   /**
-   * Returns the  implementation
+   * Returns the implementation
    *
    * @param  string $source
    * @param  string $encoding

@@ -6,15 +6,22 @@ use text\json\StreamOutput;
 class StreamOutputTest extends JsonOutputTest {
 
   /**
-   * Helper
+   * Returns the implementation
    *
-   * @param  var $data
    * @param  string $encoding
+   * @return text.json.Output
+   */
+  protected function output($encoding= 'utf-8') {
+    return new StreamOutput(new MemoryOutputStream(), $encoding);
+  }
+
+  /**
+   * Returns the result
+   *
+   * @param  text.json.Output $out
    * @return string
    */
-  protected function write($data, $encoding= 'utf-8') {
-    $out= new StreamOutput(new MemoryOutputStream(), $encoding);
-    $out->write($data);
+  protected function result($out) {
     return $out->stream()->getBytes();
   }
 }
