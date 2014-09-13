@@ -195,9 +195,9 @@ while ($record= $csv->read()) {
 
 The test data downloaded is 169602 bytes, and results in a roughly 500 kB large JSON file.
 
-| *Implementation*  | *Time to process*     | *Memory usage / peak* |
-| ----------------- | --------------------: | --------------------: |
-| PHP Native        | 0.947 seconds         | 1259.1 kB / 5367.9 kB |
-| This (sequential) | 0.946 seconds         | 1299.6 kB / 1421.5 kB |
-| This (serial)     | 0.940 seconds         | 1284.2 kB / 4729.2 kB |
-| XP Webservices    | 0.940 seconds         | 1454.9 kB / 4709.9 kB |
+| *Implementation*  | *Time to process*     | *Generated file size* | *Memory usage / peak* |
+| ----------------- | --------------------: | --------------------: | --------------------: |
+| PHP Native        | 0.947 seconds         | 438121 bytes          | 1259.1 kB / 5367.9 kB |
+| This (sequential) | 0.946 seconds         | 516450 bytes          | 1299.6 kB / 1421.5 kB |
+| This (serial)     | 0.941 seconds         | 516450 bytes          | 1284.2 kB / 4729.2 kB |
+| XP Webservices    | 1.129 seconds         | 550021 bytes          | 1459.7 kB / 5014.5 kB |
