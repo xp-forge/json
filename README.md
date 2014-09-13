@@ -90,10 +90,10 @@ Given a test data size of 158791 bytes (inside a file on the local file system) 
 | This (serial)     | 1.923 seconds   | 19.2 ms         | 848.1 kB / 1253.1 kB  | 16.8 ms    |
 | XP Webservices    | 16.854 seconds  | 168.5 ms        | 1026.7 kB / 1510.7 kB | 166.1 ms   |
 
-The overhead for parsing a single 150 Kilobyte JSON file is around 17 milliseconds, which should be mostly acceptable.
+*The overhead for parsing a single 150 Kilobyte JSON file is around 17 milliseconds, which should be mostly acceptable.*
 
 ### Writing
-Using the test data from above, written to a file 100 times:
+Using the test data from above, written to a file on the local file system 100 times:
 
 | *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
 | ----------------- | --------------: | --------------: | --------------------: | ---------: |
@@ -101,7 +101,7 @@ Using the test data from above, written to a file 100 times:
 | This              | 0.714 seconds   | 7.1 ms          | 1346.5 kB / 1362.9 kB | 3.2 ms     |
 | XP Webservices    | 5.318 seconds   | 53.2 ms         | 1523.3 kB / 1544.6 kB | 49.3 ms    |
 
-The overhead for writing a structure which results in a 150 Kilobyte JSON file is around 3 milliseconds, which should be mostly acceptable.
+*The overhead is around 3 milliseconds, which should be mostly acceptable.*
 
 ### Network I/O
 The performance benefit vanishes when reading from a network socket and parsing the elements sequentially.
