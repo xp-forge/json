@@ -427,10 +427,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals([$str, $str], $this->read('["'.$str.'", "'.$str.'"]'));
   }
 
-  #[@test, @values([
-  #  ['"', '\\"'],
-  #  ['ü', '\u00fc']
-  #])]
+  #[@test, @values([['"', '\\"'], ['ü', '\u00fc']])]
   public function read_long_text_with_escape_at_end_of_chunk($escaped, $source) {
     $str= str_repeat('*', 8193);
     $this->assertEquals($str.$escaped, $this->read('"'.$str.$source.'"'));
@@ -446,5 +443,87 @@ abstract class JsonInputTest extends \unittest\TestCase {
   public function read_whitespace_longer_than_chunk_size() {
     $ws= str_repeat(' ', 8193);
     $this->assertEquals(['Test', 2], $this->read('["Test",'.$ws.'2]'));
+  }
+
+  #[@test, @values(['""', '"Test"'])]
+  public function detect_string_type($source) {
+    $this->assertEquals('string', $this->input($source)->type());
+  }
+
+  #[@test, @values(['[]', '[1, 2, 3]'])]
+  public function detect_array_type($source) {
+    $this->assertEquals('array', $this->input($source)->type());
+  }
+
+  #[@test, @values(['{}', '{"key": "value"}'])]
+  public function detect_object_type($source) {
+    $this->assertEquals('object', $this->input($source)->type());
+  }
+
+  #[@test, @values(['1', '-1', '0'])]
+  public function detect_int_type($source) {
+    $this->assertEquals('int', $this->input($source)->type());
+  }
+
+  #[@test, @values(['1.0', '-1.0', '0.0', '1e10'])]
+  public function detect_double_type($source) {
+    $this->assertEquals('double', $this->input($source)->type());
+  }
+
+  #[@test, @values(['null', 'false', 'true'])]
+  public function detect_constant_type($source) {
+    $this->assertEquals($source, $this->input($source)->type());
+  }
+
+  #[@test]
+  public function type_for_empty_input() {
+    $this->assertNull($this->input('')->type());
+  }
+
+  #[@test]
+  public function type_for_invalid_input() {
+    $this->assertNull($this->input('@invalid@')->type());
+  }
+
+  #[@test]
+  public function reading_after_detecting_type() {
+    $input= $this->input('"Test"');
+    $input->type();
+    $this->assertEquals('Test', $input->read());
+  }
+
+  #[@test]
+  public function detecting_type_after_reading() {
+    $input= $this->input('"Test"');
+    $input->read();
+    $this->assertEquals('string', $input->type());
+  }
+
+  #[@test]
+  public function elements_after_detecting_type() {
+    $input= $this->input('[1]');
+    $input->type();
+    $this->assertEquals([1], iterator_to_array($input->elements()));
+  }
+
+  #[@test]
+  public function detecting_type_after_elements() {
+    $input= $this->input('[1]');
+    iterator_to_array($input->elements());
+    $this->assertEquals('array', $input->type());
+  }
+
+  #[@test]
+  public function pairs_after_detecting_type() {
+    $input= $this->input('{"key" : "value"}');
+    $input->type();
+    $this->assertEquals(['key' => 'value'], iterator_to_array($input->pairs()));
+  }
+
+  #[@test]
+  public function detecting_type_after_pairs() {
+    $input= $this->input('{"key" : "value"}');
+    iterator_to_array($input->pairs());
+    $this->assertEquals('object', $input->type());
   }
 }

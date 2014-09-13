@@ -23,7 +23,7 @@ class Pairs extends \lang\Object implements \Iterator {
   
   /** @return void */
   public function rewind() {
-    $token= $this->input->nextToken();
+    $token= $this->input->firstToken();
     if ('{' === $token) {
       $token= $this->input->nextToken();
       if ('}' === $token) {

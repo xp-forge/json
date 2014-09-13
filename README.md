@@ -54,6 +54,20 @@ foreach ($json->pairs() as $key => $value) {
 }
 ```
 
+To detect the type of the data on the stream (again, without reading it completely), you can use the `type()` method.
+
+```php
+$conn= new HttpConnection(...);
+$json= new JsonStream($conn->get($resource)->getInputStream());
+$type= $json->type();
+if ('array' === $type) {
+  // Handle arrays
+} else if ('object' === $type) {
+  // Handle objects
+} else {
+  // Handle primitives
+}
+```
 
 Performance
 -----------
@@ -72,7 +86,7 @@ Given a test data size of 158791 bytes (inside a file on the local file system) 
 The overhead for parsing a single 150 Kilobyte JSON file is around 17 milliseconds, which should be mostly acceptable.
 
 ### Network reads
-The performance overhead the native `json_decode()` function vanishes when reading from a network socket and parsing the elements sequentially.
+The performance overhead vanishes when reading from a network socket and parsing the elements sequentially.
 
 ```php
 $c= new HttpConnection('https://api.github.com/orgs/xp-framework/repos');

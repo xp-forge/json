@@ -13,6 +13,7 @@ abstract class Input extends \lang\Object {
   protected $len;
   protected $pos;
   protected $encoding;
+  protected $firstToken= null;
 
   protected static $escapes= [
     '"'  => "\"",
@@ -122,6 +123,18 @@ abstract class Input extends \lang\Object {
   }
 
   /**
+   * Returns first token
+   *
+   * @return string
+   */
+  public function firstToken() {
+    if (null === $this->firstToken) {
+      $this->firstToken= $this->nextToken();
+    }
+    return $this->firstToken;
+  }
+
+  /**
    * Returns next token
    *
    * @return string
@@ -161,12 +174,41 @@ abstract class Input extends \lang\Object {
   }
 
   /**
+   * Returns the data type
+   *
+   * @return string
+   */
+  public function type() {
+    $token= $this->firstToken();
+    if ('"' === $token{0}) {
+      return 'string';
+    } else if ('{' === $token) {
+      return 'object';
+    } else if ('[' === $token) {
+      return 'array';
+    } else if ('true' === $token) {
+      return 'true';
+    } else if ('false' === $token) {
+      return 'false';
+    } else if ('null' === $token) {
+      return 'null';
+    } else if (is_numeric($token)) {
+      return $token > PHP_INT_MAX || $token < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
+        ? 'double'
+        : 'int'
+      ;
+    } else {
+      return null;
+    }
+  }
+
+  /**
    * Reads a value
    *
    * @return var
    */
   public function read() {
-    $value= $this->nextValue();
+    $value= $this->nextValue($this->firstToken());
 
     if (null !== ($token= $this->nextToken())) {
       throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');
