@@ -101,7 +101,7 @@ Using the test data from above, written to a file on the local file system 100 t
 | This              | 0.714 seconds   | 7.1 ms          | 1346.5 kB / 1362.9 kB | 3.2 ms     |
 | XP Webservices    | 5.318 seconds   | 53.2 ms         | 1523.3 kB / 1544.6 kB | 49.3 ms    |
 
-*The overhead is around 3 milliseconds, which should be mostly acceptable.*
+*The overhead is around 3 milliseconds, which is near to nothing.*
 
 ### Network I/O
 The performance benefit vanishes when reading from a network socket and parsing the elements sequentially.
