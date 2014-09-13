@@ -78,9 +78,9 @@ if ($type->isArray()) {
 
 Performance
 -----------
-The JSON reader's performance is roughly 8-9 times that of the implementation in xp-framework/webservices, while it also uses less memory. On the other side, PHP's native `json_decode()` function is 7-8 times faster (using current PHP 5.5).
+The JSON reader's performance is roughly 8-9 times that of the implementation in xp-framework/webservices, while it also uses less memory. On the other side, PHP's native `json_decode()` function is 7-8 times faster (using current PHP 5.5). The figures for writing are 7-8 times better than xp-framework/webservices, and around twice as slow as PHP's native `json_encode()`.
 
-### Raw calls
+### Reading
 Given a test data size of 158791 bytes (inside a file on the local file system) and running parsing for 100 iterations, here is an overview of the results:
 
 | *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
@@ -92,7 +92,18 @@ Given a test data size of 158791 bytes (inside a file on the local file system) 
 
 The overhead for parsing a single 150 Kilobyte JSON file is around 17 milliseconds, which should be mostly acceptable.
 
-### Network reads
+### Writing
+Using the test data from above, written to a file 100 times:
+
+| *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
+| ----------------- | --------------: | --------------: | --------------------: | ---------: |
+| PHP Native        | 0.390 seconds   | 3.9 ms          | 1324.4 kB / 1521.9 kB |            |
+| This              | 0.714 seconds   | 7.1 ms          | 1346.5 kB / 1362.9 kB | 3.2 ms     |
+| XP Webservices    | 5.318 seconds   | 53.2 ms         | 1523.3 kB / 1544.6 kB | 49.3 ms    |
+
+The overhead for writing a structure which results in a 150 Kilobyte JSON file is around 3 milliseconds, which should be mostly acceptable.
+
+### Network I/O
 The performance benefit vanishes when reading from a network socket and parsing the elements sequentially.
 
 ```php
@@ -132,14 +143,3 @@ The test data is the same size as above (158791 bytes).
 | This (sequential) | 0.143 seconds         | 0.712 seconds           | 1036.5 kB / 1078.8 kB |
 | This (serial)     | 0.715 seconds         | 0.717 seconds           | 1027.0 kB / 1383.6 kB |
 | XP Webservice     | 0.752 seconds         | 0.752 seconds           | 1210.5 kB / 1635.6 kB |
-
-### Writing
-
-Using the test data from above, written to a file 100 times:
-
-| *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
-| ----------------- | --------------: | --------------: | --------------------: | ---------: |
-| PHP Native        | 0.390 seconds   | 3.9 ms          | 1324.4 kB / 1521.9 kB |            |
-| This              | 0.714 seconds   | 7.1 ms          | 1346.5 kB / 1362.9 kB | 3.2 ms     |
-
-The overhead for writing a structure which results in a 150 Kilobyte JSON file is around 3 milliseconds, which should be mostly acceptable.
