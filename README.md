@@ -60,9 +60,9 @@ To detect the type of the data on the stream (again, without reading it complete
 $conn= new HttpConnection(...);
 $json= new JsonStream($conn->get($resource)->getInputStream());
 $type= $json->type();
-if ('array' === $type) {
+if ($type->isArray()) {
   // Handle arrays
-} else if ('object' === $type) {
+} else if ($type->isObject()) {
   // Handle objects
 } else {
   // Handle primitives

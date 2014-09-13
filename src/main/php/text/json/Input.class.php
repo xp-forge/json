@@ -181,21 +181,21 @@ abstract class Input extends \lang\Object {
   public function type() {
     $token= $this->firstToken();
     if ('"' === $token{0}) {
-      return 'string';
+      return Types::$STRING;
     } else if ('{' === $token) {
-      return 'object';
+      return Types::$OBJECT;
     } else if ('[' === $token) {
-      return 'array';
+      return Types::$ARRAY;
     } else if ('true' === $token) {
-      return 'true';
+      return Types::$TRUE;
     } else if ('false' === $token) {
-      return 'false';
+      return Types::$FALSE;
     } else if ('null' === $token) {
-      return 'null';
+      return Types::$NULL;
     } else if (is_numeric($token)) {
       return $token > PHP_INT_MAX || $token < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
-        ? 'double'
-        : 'int'
+        ? Types::$DOUBLE
+        : Types::$INT
       ;
     } else {
       return null;

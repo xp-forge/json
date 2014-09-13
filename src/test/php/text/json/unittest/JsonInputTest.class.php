@@ -2,6 +2,7 @@
 
 use io\streams\MemoryInputStream;
 use util\collections\Pair;
+use text\json\Types;
 
 /**
  * Test JSON input
@@ -447,32 +448,36 @@ abstract class JsonInputTest extends \unittest\TestCase {
 
   #[@test, @values(['""', '"Test"'])]
   public function detect_string_type($source) {
-    $this->assertEquals('string', $this->input($source)->type());
+    $this->assertEquals(Types::$STRING, $this->input($source)->type());
   }
 
   #[@test, @values(['[]', '[1, 2, 3]'])]
   public function detect_array_type($source) {
-    $this->assertEquals('array', $this->input($source)->type());
+    $this->assertEquals(Types::$ARRAY, $this->input($source)->type());
   }
 
   #[@test, @values(['{}', '{"key": "value"}'])]
   public function detect_object_type($source) {
-    $this->assertEquals('object', $this->input($source)->type());
+    $this->assertEquals(Types::$OBJECT, $this->input($source)->type());
   }
 
   #[@test, @values(['1', '-1', '0'])]
   public function detect_int_type($source) {
-    $this->assertEquals('int', $this->input($source)->type());
+    $this->assertEquals(Types::$INT, $this->input($source)->type());
   }
 
   #[@test, @values(['1.0', '-1.0', '0.0', '1e10'])]
   public function detect_double_type($source) {
-    $this->assertEquals('double', $this->input($source)->type());
+    $this->assertEquals(Types::$DOUBLE, $this->input($source)->type());
   }
 
-  #[@test, @values(['null', 'false', 'true'])]
-  public function detect_constant_type($source) {
-    $this->assertEquals($source, $this->input($source)->type());
+  #[@test, @values([
+  #  [Types::$NULL, 'null'],
+  #  [Types::$FALSE, 'false'],
+  #  [Types::$TRUE, 'true']
+  #])]
+  public function detect_constant_type($type, $source) {
+    $this->assertEquals($type, $this->input($source)->type());
   }
 
   #[@test]
@@ -496,7 +501,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
   public function detecting_type_after_reading() {
     $input= $this->input('"Test"');
     $input->read();
-    $this->assertEquals('string', $input->type());
+    $this->assertEquals(Types::$STRING, $input->type());
   }
 
   #[@test]
@@ -510,7 +515,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
   public function detecting_type_after_elements() {
     $input= $this->input('[1]');
     iterator_to_array($input->elements());
-    $this->assertEquals('array', $input->type());
+    $this->assertEquals(Types::$ARRAY, $input->type());
   }
 
   #[@test]
@@ -524,6 +529,6 @@ abstract class JsonInputTest extends \unittest\TestCase {
   public function detecting_type_after_pairs() {
     $input= $this->input('{"key" : "value"}');
     iterator_to_array($input->pairs());
-    $this->assertEquals('object', $input->type());
+    $this->assertEquals(Types::$OBJECT, $input->type());
   }
 }
