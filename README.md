@@ -45,8 +45,8 @@ use the `elements()` method to receive an iterator over a JSON array.
 
 ```php
 $conn= new HttpConnection(...);
-$json= new StreamInput($conn->get('/search?q=example&limit=1000')->getInputStream());
-foreach ($json->elements() as $element) {
+$in= new StreamInput($conn->get('/search?q=example&limit=1000')->getInputStream());
+foreach ($in->elements() as $element) {
   // Process
 }
 ```
@@ -55,8 +55,8 @@ If you get a huge object, you can also process it sequentially using the `pairs(
 
 ```php
 $conn= new HttpConnection(...);
-$json= new StreamInput($conn->get('/resources/4711?expand=*')->getInputStream());
-foreach ($json->pairs() as $key => $value) {
+$in= new StreamInput($conn->get('/resources/4711?expand=*')->getInputStream());
+foreach ($in->pairs() as $key => $value) {
   // Process
 }
 ```
@@ -65,8 +65,8 @@ To detect the type of the data on the stream (again, without reading it complete
 
 ```php
 $conn= new HttpConnection(...);
-$json= new StreamInput($conn->get($resource)->getInputStream());
-$type= $json->type();
+$in= new StreamInput($conn->get($resource)->getInputStream());
+$type= $in->type();
 if ($type->isArray()) {
   // Handle arrays
 } else if ($type->isObject()) {
