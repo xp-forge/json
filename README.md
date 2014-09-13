@@ -78,7 +78,7 @@ if ($type->isArray()) {
 
 Performance
 -----------
-The JSON reader's performance is roughly 8-9 times that of the implementation in xp-framework/webservices, while it also uses less memory. On the other side, PHP's native `json_decode()` function is 7-8 times faster (using current PHP 5.5). The figures for writing are 7-8 times better than xp-framework/webservices, and around twice as slow as PHP's native `json_encode()`.
+The JSON reader's performance is roughly 8-9 times that of the implementation in [xp-framework/webservices](https://github.com/xp-framework/webservices), while it also uses less memory. On the other side, PHP's native `json_decode()` function is 7-8 times faster (using current PHP 5.5). The figures for writing are 7-8 times better than xp-framework/webservices, and around twice as slow as PHP's native `json_encode()`.
 
 ### Reading
 Given a test data size of 158791 bytes (inside a file on the local file system) and running parsing for 100 iterations, here is an overview of the results:
