@@ -40,8 +40,10 @@ $json= $out->bytes();   // "\"Hello\", he said."
 
 Sequential processing
 ---------------------
-Reading elements sequentially doesn't load the entire source into memory before prcoessing it. You can
-use the `elements()` method to receive an iterator over a JSON array.
+Processing elements sequentially can save you memory and give a better performance in certain situations.
+
+### Reading
+You can use the `elements()` method to receive an iterator over a JSON array. Instead of loading the entire source into memory and then returning the parsed array, it will parse one array element at a time, yielding them while going.
 
 ```php
 $conn= new HttpConnection(...);
@@ -51,7 +53,7 @@ foreach ($in->elements() as $element) {
 }
 ```
 
-If you get a huge object, you can also process it sequentially using the `pairs()` method:
+If you get a huge object, you can also process it sequentially using the `pairs()` method. This will parse a single key/value pair at a time.
 
 ```php
 $conn= new HttpConnection(...);
@@ -76,6 +78,7 @@ if ($type->isArray()) {
 }
 ```
 
+### Writing
 To write data sequentially, you can use the `begin()` method and the stream it returns. This makes sense when the source offers a way to read data sequentially, if you already have the entire data in memory, using `write()` has the same effect.
 
 ```php
