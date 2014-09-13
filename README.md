@@ -184,6 +184,13 @@ with ($f->begin(Types::$ARRAY), function($stream) use($csv) {
     $stream->element($record);
   }
 });
+
+// Solution using this implementation's serial processing
+$struct= [];
+while ($record= $csv->read()) {
+  $struct[]= $record;
+}
+(new FileOutput(new File('finance.json')))->write($struct);
 ```
 
 The test data downloaded is 169602 bytes, and results in a roughly 500 kB large JSON file.
