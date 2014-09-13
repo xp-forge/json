@@ -86,7 +86,7 @@ Given a test data size of 158791 bytes (inside a file on the local file system) 
 The overhead for parsing a single 150 Kilobyte JSON file is around 17 milliseconds, which should be mostly acceptable.
 
 ### Network reads
-The performance overhead vanishes when reading from a network socket and parsing the elements sequentially.
+The performance benefit vanishes when reading from a network socket and parsing the elements sequentially.
 
 ```php
 $c= new HttpConnection('https://api.github.com/orgs/xp-framework/repos');
