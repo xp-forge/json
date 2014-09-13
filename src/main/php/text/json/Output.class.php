@@ -78,34 +78,33 @@ abstract class Output extends \lang\Object {
       if (empty($value)) {
         $this->appendToken('[]');
       } else if (0 === key($value)) {
-        $this->appendToken('[');
         $next= false;
         foreach ($value as $element) {
           if ($next) {
-            $this->appendToken(', ');
+            $t= ', ';
           } else {
+            $t= '[';
             $next= true;
           }
-          $this->appendToken($this->representationOf($element));
+          $this->appendToken($t.$this->representationOf($element));
         }
         $this->appendToken(']');
       } else {
-        $this->appendToken('{');
         $next= false;
         foreach ($value as $key => $mapped) {
           if ($next) {
-            $this->appendToken(', ');
+            $t= ', ';
           } else {
+            $t= '{';
             $next= true;
           }
-          $this->appendToken($this->representationOf($key).' : '.$this->representationOf($mapped));
+          $this->appendToken($t.$this->representationOf($key).' : '.$this->representationOf($mapped));
         }
         $this->appendToken('}');
       }
     } else {
       $this->appendToken($this->representationOf($value));
     }
-    $this->file->close();
   }
 
   /**

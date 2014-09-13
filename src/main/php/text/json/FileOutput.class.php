@@ -26,6 +26,16 @@ class FileOutput extends Output {
   }
 
   /**
+   * Writes a given value
+   *
+   * @param  var $value
+   */
+  public function write($value) {
+    parent::write($value);
+    $this->file->close();
+  }
+
+  /**
    * Append a token
    *
    * @param  string $bytes
