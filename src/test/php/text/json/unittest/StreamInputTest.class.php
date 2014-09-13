@@ -1,12 +1,12 @@
 <?php namespace text\json\unittest;
 
-use text\json\JsonStream;
+use text\json\StreamInput;
 use io\streams\MemoryInputStream;
 
 /**
- * Tests the JsonStream implementation
+ * Tests the StreamInput implementation
  */
-class JsonStreamTest extends JsonInputTest {
+class StreamInputTest extends JsonInputTest {
 
   /**
    * Returns the  implementation
@@ -16,7 +16,7 @@ class JsonStreamTest extends JsonInputTest {
    * @return text.json.Input
    */
   protected function input($source, $encoding= 'utf-8') {
-    return new JsonStream(new MemoryInputStream($source), $encoding);
+    return new StreamInput(new MemoryInputStream($source), $encoding);
   }
 
   #[@test]

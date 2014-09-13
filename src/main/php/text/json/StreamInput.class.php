@@ -7,13 +7,13 @@ use lang\FormatException;
  * Reads JSON from a given input stream
  *
  * ```php
- * $json= new JsonStream((new File('input.json'))->getInputStream()));
+ * $json= new StreamInput((new File('input.json'))->getInputStream()));
  * $value= $json->read();
  * ```
  *
- * @test  xp://text.json.unittest.JsonStreamTest
+ * @test  xp://text.json.unittest.StreamInputTest
  */
-class JsonStream extends Input {
+class StreamInput extends Input {
   protected $in;
 
   /**

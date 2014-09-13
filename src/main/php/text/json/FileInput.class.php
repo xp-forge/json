@@ -3,14 +3,14 @@
 use io\File;
 
 /**
- * Reads JSON from a given input stream
+ * Reads JSON from a given file
  *
  * ```php
- * $json= new JsonFile(new File('input.json'));
+ * $json= new FileInput(new File('input.json'));
  * $value= $json->read();
  * ```
  */
-class JsonFile extends JsonStream {
+class FileInput extends StreamInput {
   protected $in;
 
   /**

@@ -6,28 +6,28 @@ JSON
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
 [![Required PHP 5.4+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_4plus.png)](http://php.net/)
 
-Reads JSON from various input source.
+Reads and writes JSON to and from various input source.
 
 Examples
 --------
 Reading from a file:
 
 ```php
-$json= new JsonFile(new File('input.json'));
+$json= new FileInput(new File('input.json'));
 $value= $json->read();
 ```
 
 Reading from a string:
 
 ```php
-$json= new JsonString('{"Hello": "World"}');
+$json= new StringInput('{"Hello": "World"}');
 $value= $json->read();
 ```
 
 Reading from a stream:
 
 ```php
-$json= new JsonStream(new SocketInputStream(...));
+$json= new StreamInput(new SocketInputStream(...));
 $value= $json->read();
 ```
 
@@ -38,7 +38,7 @@ use the `elements()` method to receive an iterator over a JSON array.
 
 ```php
 $conn= new HttpConnection(...);
-$json= new JsonStream($conn->get('/search?q=example&limit=1000')->getInputStream());
+$json= new StreamInput($conn->get('/search?q=example&limit=1000')->getInputStream());
 foreach ($json->elements() as $element) {
   // Process
 }
@@ -48,7 +48,7 @@ If you get a huge object, you can also process it sequentially using the `pairs(
 
 ```php
 $conn= new HttpConnection(...);
-$json= new JsonStream($conn->get('/resources/4711?expand=*')->getInputStream());
+$json= new StreamInput($conn->get('/resources/4711?expand=*')->getInputStream());
 foreach ($json->pairs() as $key => $value) {
   // Process
 }
@@ -58,7 +58,7 @@ To detect the type of the data on the stream (again, without reading it complete
 
 ```php
 $conn= new HttpConnection(...);
-$json= new JsonStream($conn->get($resource)->getInputStream());
+$json= new StreamInput($conn->get($resource)->getInputStream());
 $type= $json->type();
 if ($type->isArray()) {
   // Handle arrays
@@ -99,13 +99,13 @@ foreach ($elements as $element) {
 }
 
 // Solution using this implementation's sequential processing
-$json= new JsonStream($r->getInputStream());
+$json= new StreamInput($r->getInputStream());
 foreach ($json->elements() as $element) {
   
 }
 
 // Solution using this implementation's serial processing
-$json= new JsonStream($r->getInputStream());
+$json= new StreamInput($r->getInputStream());
 foreach ($json->read() as $element) {
   
 }

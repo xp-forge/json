@@ -6,13 +6,13 @@ use lang\FormatException;
  * Reads JSON from a given string
  *
  * ```php
- * $json= new JsonString('{"Hello" : "World"}');
+ * $json= new StringInput('{"Hello" : "World"}');
  * $value= $json->read();
  * ```
  *
- * @test  xp://text.json.unittest.JsonStringTest
+ * @test  xp://text.json.unittest.StringInputTest
  */
-class JsonString extends Input {
+class StringInput extends Input {
 
   /**
    * Returns next token

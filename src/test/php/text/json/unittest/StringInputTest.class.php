@@ -1,11 +1,11 @@
 <?php namespace text\json\unittest;
 
-use text\json\JsonString;
+use text\json\StringInput;
 
 /**
  * Tests the JsonString implementation
  */
-class JsonStringTest extends JsonInputTest {
+class StringInputTest extends JsonInputTest {
 
   /**
    * Returns the  implementation
@@ -15,6 +15,6 @@ class JsonStringTest extends JsonInputTest {
    * @return text.json.Input
    */
   protected function input($source, $encoding= 'utf-8') {
-    return new JsonString($source, $encoding);
+    return new StringInput($source, $encoding);
   }
 }
