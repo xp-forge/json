@@ -84,12 +84,11 @@ To write data sequentially, you can use the `begin()` method and the stream it r
 ```php
 $query= $conn->query('select * from person');
 
-$out= new StreamOutput(...);
-with ($out->begin(Types::$ARRAY), function($stream) use($query) {
-  while ($record= $query->next()) {
-    $stream->element($record);
-  }
-});
+$stream= new StreamOutput(...)->begin(Types::$ARRAY);
+while ($record= $query->next()) {
+  $stream->element($record);
+}
+$stream->close();
 ```
 
 Performance
@@ -159,4 +158,39 @@ The test data is the same size as above (158791 bytes).
 | PHP Native        | 0.718 seconds         | 0.719 seconds           | 1046.8 kB / 1752.6 kB |
 | This (sequential) | 0.143 seconds         | 0.712 seconds           | 1036.5 kB / 1078.8 kB |
 | This (serial)     | 0.715 seconds         | 0.717 seconds           | 1027.0 kB / 1383.6 kB |
-| XP Webservice     | 0.752 seconds         | 0.752 seconds           | 1210.5 kB / 1635.6 kB |
+| XP Webservices    | 0.752 seconds         | 0.752 seconds           | 1210.5 kB / 1635.6 kB |
+
+### Sequential writing
+The memory saving when writing sequentially is most visible when working with streamed input data:
+
+```php
+$c= new HttpConnection('http://real-chart.finance.yahoo.com/table.csv?s=UTDI.DE');
+$r= $c->get([], ['User-Agent' => 'xp-forge/json']);
+
+$csv= new CsvMapReader(new TextReader($r->getInputStream(), null), [], CsvFormat::$COMMAS);
+$csv->setKeys($csv->getHeaders());
+
+// Native solution
+$struct= [];
+while ($record= $csv->read()) {
+  $struct[]= $record;
+}
+FileUtil::setContents(new File('finance.json'), json_encode($struct, true));
+
+// Solution using this implementation's sequential processing
+$f= new FileOutput(new File('finance.json'));
+with ($f->begin(Types::$ARRAY), function($stream) use($csv) {
+  while ($record= $csv->read()) {
+    $stream->element($record);
+  }
+});
+```
+
+The test data downloaded is 169602 bytes, and results in a roughly 500 kB large JSON file.
+
+| *Implementation*  | *Time to process*     | *Memory usage / peak* |
+| ----------------- | --------------------: | --------------------: |
+| PHP Native        | 0.947 seconds         | 1259.1 kB / 5367.9 kB |
+| This (sequential) | 0.946 seconds         | 1299.6 kB / 1421.5 kB |
+| This (serial)     | 0.940 seconds         | 1284.2 kB / 4729.2 kB |
+| XP Webservices    | 0.940 seconds         | 1454.9 kB / 4709.9 kB |
