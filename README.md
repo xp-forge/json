@@ -122,6 +122,6 @@ The test data is the same size as above (158791 bytes).
 | *Implementation*  | *Time to 1st element* | *Time for all elements* | *Memory usage / peak* |
 | ----------------- | --------------------: | ----------------------: | --------------------: |
 | PHP Native        | 0.718 seconds         | 0.719 seconds           | 1046.8 kB / 1752.6 kB |
-| This (sequential) | 0.143 seconds         | 0.709 seconds           | 1025.5 kB / 1067.0 kB |
-| This (serial)     | 0.731 seconds         | 0.734 seconds           | 1018.4 kB / 1375.2 kB |
+| This (sequential) | 0.143 seconds         | 0.712 seconds           | 1036.5 kB / 1078.8 kB |
+| This (serial)     | 0.715 seconds         | 0.717 seconds           | 1027.0 kB / 1383.6 kB |
 | XP Webservice     | 0.752 seconds         | 0.752 seconds           | 1210.5 kB / 1635.6 kB |
