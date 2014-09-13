@@ -3,10 +3,10 @@
 use io\streams\OutputStream;
 
 /**
- * Writes JSON to a given input stream
+ * Writes JSON to a given output stream
  *
  * ```php
- * $json= new StreamOutput((new File('input.json'))->getOutputStream()));
+ * $json= new StreamOutput((new File('output.json'))->getOutputStream()));
  * $json->write('Hello World');
  * ```
  *

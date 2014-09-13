@@ -3,7 +3,7 @@
 use io\File;
 
 /**
- * Writes JSON to a given input stream
+ * Writes JSON to a given output stream
  *
  * ```php
  * $json= new FileOutput(new File('input.json'));
