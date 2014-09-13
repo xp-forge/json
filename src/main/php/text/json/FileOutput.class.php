@@ -22,6 +22,7 @@ class FileOutput extends Output {
   public function __construct(File $out, $encoding= \xp::ENCODING) {
     parent::__construct($encoding);
     $this->file= $out;
+    $this->file->open(FILE_MODE_WRITE);
   }
 
   /**
