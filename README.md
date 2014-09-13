@@ -61,12 +61,12 @@ The JSON reader's performance is roughly 8-9 times that of the implementation in
 
 Given a test data size of 158791 bytes (inside a file on the local file system) and running parsing for 100 iterations, here is an overview of the results:
 
-| *Implementation*  | *Time*          | *Per iteration* | *Memory usage*             |
-| ----------------- | --------------: | --------------: | -------------------------: | 
-| PHP Native        | 0.239 seconds   | 2.3 ms          | 867.8 kB / 1616.4 kB peak  |
-| This (sequential) | 1.905 seconds   | 19.1 ms         | 852.5 kB / 883.6 kB peak   |
-| This (serial)     | 1.940 seconds   | 19.4 ms         | 843.5 kB / 1167.0 kB peak  |
-| XP Webservices    | 16.854 seconds  | 168.5 ms        | 1026.7 kB / 1510.7 kB peak |
+| *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* |
+| ----------------- | --------------: | --------------: | --------------------: | 
+| PHP Native        | 0.239 seconds   | 2.3 ms          | 867.8 kB / 1616.4 kB  |
+| This (sequential) | 1.905 seconds   | 19.1 ms         | 852.5 kB / 883.6 kB   |
+| This (serial)     | 1.940 seconds   | 19.4 ms         | 843.5 kB / 1167.0 kB  |
+| XP Webservices    | 16.854 seconds  | 168.5 ms        | 1026.7 kB / 1510.7 kB |
 
 The performance overhead the native `json_decode()` function vanishes when reading from a network socket and parsing the elements sequentially.
 
@@ -95,8 +95,8 @@ foreach ($json->read() as $element) {
 
 The test data is the same size as above (158791 bytes).
 
-| *Implementation*  | *Time to 1st element* | *Time for all elements* | *Memory usage*             |
-| ----------------- | --------------------: | ----------------------: | -------------------------: |
-| PHP Native        | 0.718 seconds         | 0.719 seconds           | 1046.8 kB / 1752.6 kB peak |
-| This (sequential) | 0.143 seconds         | 0.709 seconds           | 1025.5 kB / 1067.0 kB peak |
-| This (serial)     | 0.731 seconds         | 0.734 seconds           | 1018.4 kB / 1375.2 kB peak |
+| *Implementation*  | *Time to 1st element* | *Time for all elements* | *Memory usage / peak* |
+| ----------------- | --------------------: | ----------------------: | --------------------: |
+| PHP Native        | 0.718 seconds         | 0.719 seconds           | 1046.8 kB / 1752.6 kB |
+| This (sequential) | 0.143 seconds         | 0.709 seconds           | 1025.5 kB / 1067.0 kB |
+| This (serial)     | 0.731 seconds         | 0.734 seconds           | 1018.4 kB / 1375.2 kB |
