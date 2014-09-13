@@ -73,7 +73,40 @@ abstract class Output extends \lang\Object {
    *
    * @param  var $value
    */
-  public abstract function write($value);
+  public function write($value) {
+    if (is_array($value)) {
+      if (empty($value)) {
+        $this->appendToken('[]');
+      } else if (0 === key($value)) {
+        $this->appendToken('[');
+        $next= false;
+        foreach ($value as $element) {
+          if ($next) {
+            $this->appendToken(', ');
+          } else {
+            $next= true;
+          }
+          $this->appendToken($this->representationOf($element));
+        }
+        $this->appendToken(']');
+      } else {
+        $this->appendToken('{');
+        $next= false;
+        foreach ($value as $key => $mapped) {
+          if ($next) {
+            $this->appendToken(', ');
+          } else {
+            $next= true;
+          }
+          $this->appendToken($this->representationOf($key).' : '.$this->representationOf($mapped));
+        }
+        $this->appendToken('}');
+      }
+    } else {
+      $this->appendToken($this->representationOf($value));
+    }
+    $this->file->close();
+  }
 
   /**
    * Append a token

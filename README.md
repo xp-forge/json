@@ -111,8 +111,8 @@ Using the test data from above, written to a file on the local file system 100 t
 | *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
 | ----------------- | --------------: | --------------: | --------------------: | ---------: |
 | PHP Native        | 0.390 seconds   | 3.9 ms          | 1324.4 kB / 1521.9 kB |            |
-| This (sequential) | 0.703 seconds   | 7.0 ms          | 1382.5 kB / 1398.9 kB | 3.1 ms     |
-| This (serial)     | 0.706 seconds   | 7.1 ms          | 1353.9 kB / 1370.4 kB | 3.2 ms     |
+| This (sequential) | 0.709 seconds   | 7.1 ms          | 1384.7 kB / 1401.0 kB | 3.2 ms     |
+| This (serial)     | 0.705 seconds   | 7.0 ms          | 1353.9 kB / 1370.4 kB | 3.1 ms     |
 | XP Webservices    | 5.318 seconds   | 53.2 ms         | 1523.3 kB / 1544.6 kB | 49.3 ms    |
 
 *The overhead is around 3 milliseconds, which is near to nothing.*

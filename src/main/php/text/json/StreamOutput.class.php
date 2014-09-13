@@ -36,46 +36,6 @@ class StreamOutput extends Output {
     $this->stream->write($bytes);
   }
 
-  /**
-   * Writes a given value
-   *
-   * @param  var $value
-   */
-  public function write($value) {
-    if (is_array($value)) {
-      if (empty($value)) {
-        $this->stream->write('[]');
-      } else if (0 === key($value)) {
-        $this->stream->write('[');
-        $next= false;
-        foreach ($value as $element) {
-          if ($next) {
-            $this->stream->write(', ');
-          } else {
-            $next= true;
-          }
-          $this->stream->write($this->representationOf($element));
-        }
-        $this->stream->write(']');
-      } else {
-        $this->stream->write('{');
-        $next= false;
-        foreach ($value as $key => $mapped) {
-          if ($next) {
-            $this->stream->write(', ');
-          } else {
-            $next= true;
-          }
-          $this->stream->write($this->representationOf($key).' : '.$this->representationOf($mapped));
-        }
-        $this->stream->write('}');
-      }
-    } else {
-      $this->stream->write($this->representationOf($value));
-    }
-    $this->stream->close();
-  }
-
   /** @return io.streams.OutputStream */
   public function stream() { return $this->stream; }
 }
