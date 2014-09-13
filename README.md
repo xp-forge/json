@@ -82,11 +82,11 @@ To write data sequentially, you can use the `begin()` method and the stream it r
 $query= $conn->query('select * from person');
 
 $out= new StreamOutput(...);
-$stream= $out->begin(Types::$ARRAY);
-while ($record= $query->next()) {
-  $stream->element($record);
-}
-$stream->close();
+with ($out->begin(Types::$ARRAY), function($stream) use($query) {
+  while ($record= $query->next()) {
+    $stream->element($record);
+  }
+});
 ```
 
 Performance
