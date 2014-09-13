@@ -10,25 +10,23 @@ Reads and writes JSON to and from various input source.
 
 Examples
 --------
-Reading from a file:
+Reading is done using one of the `Input` implementations:
 
 ```php
-$json= new FileInput(new File('input.json'));
-$value= $json->read();
+$in= new FileInput(new File('input.json'));
+$in= new StringInput('{"Hello": "World"}');
+$in= new StreamInput(new SocketInputStream(...));
+
+$value= $in->read();
 ```
 
-Reading from a string:
+Writing is done using one of the `Output` implementations:
 
 ```php
-$json= new StringInput('{"Hello": "World"}');
-$value= $json->read();
-```
+$out= new FileOutput(new File('output.json'));
+$out= new StreamOutput(new SocketOuputStream(...));
 
-Reading from a stream:
-
-```php
-$json= new StreamInput(new SocketInputStream(...));
-$value= $json->read();
+$out->write();
 ```
 
 Sequential processing
