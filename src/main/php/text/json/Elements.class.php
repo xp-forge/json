@@ -29,7 +29,7 @@ class Elements extends \lang\Object implements \Iterator {
       if (']' === $token) {
         $this->id= -1;
       } else {
-        $this->current= $this->input->nextValue($token);
+        $this->current= $this->input->valueOf($token);
         $this->id= 0;
       }
     } else {
@@ -51,7 +51,7 @@ class Elements extends \lang\Object implements \Iterator {
   public function next() {
     $token= $this->input->nextToken();
     if (',' === $token) {
-      $this->current= $this->input->nextValue();
+      $this->current= $this->input->valueOf($this->input->nextToken());
       $this->id++;
     } else if (']' === $token) {
       $this->id= -1;

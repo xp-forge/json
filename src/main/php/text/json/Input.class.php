@@ -74,12 +74,12 @@ abstract class Input extends \lang\Object {
     } else if (null !== $token) {
       $result= [];
       do {
-        $key= $this->nextValue($token);
+        $key= $this->valueOf($token);
         if (!is_string($key)) {
           throw new FormatException('Illegal key type '.typeof($key).', expecting string');
         }
         if (':' === ($token= $this->nextToken())) {
-          $result[$key]= $this->nextValue();
+          $result[$key]= $this->valueOf($this->nextToken());
         } else {
           throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading object, expecting ":"');
         }
@@ -97,19 +97,19 @@ abstract class Input extends \lang\Object {
   }
 
   /**
-   * Reads a list
+   * Reads an array
    *
    * @return [:var]
    * @throws lang.FormatException
    */
-  protected function readList() {
+  protected function readArray() {
     $token= $this->nextToken();
     if (']' === $token) {
       return [];
     } else if (null !== $token) {
       $result= [];
       do {
-        $result[]= $this->nextValue($token);
+        $result[]= $this->valueOf($token);
         $delim= $this->nextToken();
         if (',' === $delim) {
           continue;
@@ -144,17 +144,17 @@ abstract class Input extends \lang\Object {
   /**
    * Reads a value
    *
+   * @param  string $token
    * @return var
    * @throws lang.FormatException
    */
-  public function nextValue($token= null) {
-    $token= null === $token ? $this->nextToken() : $token;
+  public function valueOf($token) {
     if ('"' === $token{0}) {
       return substr($token, 1, -1);
     } else if ('{' === $token) {
       return $this->readObject();
     } else if ('[' === $token) {
-      return $this->readList();
+      return $this->readArray();
     } else if ('true' === $token) {
       return true;
     } else if ('false' === $token) {
@@ -208,7 +208,7 @@ abstract class Input extends \lang\Object {
    * @return var
    */
   public function read() {
-    $value= $this->nextValue($this->firstToken());
+    $value= $this->valueOf($this->firstToken());
 
     if (null !== ($token= $this->nextToken())) {
       throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');

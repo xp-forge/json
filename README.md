@@ -79,8 +79,8 @@ Given a test data size of 158791 bytes (inside a file on the local file system) 
 | *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
 | ----------------- | --------------: | --------------: | --------------------: | ---------: |
 | PHP Native        | 0.239 seconds   | 2.4 ms          | 867.8 kB / 1616.4 kB  |            |
-| This (sequential) | 1.905 seconds   | 19.1 ms         | 852.5 kB / 883.6 kB   | 16.7 ms    |
-| This (serial)     | 1.940 seconds   | 19.4 ms         | 843.5 kB / 1167.0 kB  | 17.0 ms    |
+| This (sequential) | 1.879 seconds   | 18.8 ms         | 857.1 kB / 889.6 kB   | 16.4 ms    |
+| This (serial)     | 1.924 seconds   | 19.2 ms         | 847.9 kB / 1170.0 kB  | 16.8 ms    |
 | XP Webservices    | 16.854 seconds  | 168.5 ms        | 1026.7 kB / 1510.7 kB | 166.1 ms   |
 
 The overhead for parsing a single 150 Kilobyte JSON file is around 17 milliseconds, which should be mostly acceptable.

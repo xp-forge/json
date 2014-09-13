@@ -29,9 +29,9 @@ class Pairs extends \lang\Object implements \Iterator {
       if ('}' === $token) {
         $this->key= null;
       } else {
-        $this->key= $this->input->nextValue($token);
+        $this->key= $this->input->valueOf($token);
         if (':' === ($token= $this->input->nextToken())) {
-          $this->value= $this->input->nextValue();
+          $this->value= $this->input->valueOf($this->input->nextToken());
         } else {
           $this->key= null;
           throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
@@ -56,9 +56,9 @@ class Pairs extends \lang\Object implements \Iterator {
   public function next() {
     $token= $this->input->nextToken();
     if (',' === $token) {
-      $this->key= $this->input->nextValue();
+      $this->key= $this->input->valueOf($this->input->nextToken());
       if (':' === ($token= $this->input->nextToken())) {
-        $this->value= $this->input->nextValue();
+        $this->value= $this->input->valueOf($this->input->nextToken());
       } else {
         $this->key= null;
         throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
