@@ -63,28 +63,43 @@ abstract class Output extends \lang\Object {
       return 'true';
     } else if (false === $value) {
       return 'false';
-    } else if (is_string($value)) {
+    }
+
+    $t= gettype($value);
+    if ('string' === $t) {
       return '"'.$this->escape($value).'"';
-    } else if (is_int($value)) {
+    } else if ('integer' === $t) {
       return (string)$value;
-    } else if (is_double($value)) {
+    } else if ('double' === $t) {
       $string= (string)$value;
       return strpos($string, '.') ? $string : $string.'.0';
-    } else if (is_array($value)) {
+    } else if ('array' === $t) {
       if (empty($value)) {
         return '[]';
       } else if (0 === key($value)) {
-        $inner= '';
+        $inner= '[';
+        $next= false;
         foreach ($value as $element) {
-          $inner.= ', '.$this->representationOf($element);
+          if ($next) {
+            $inner.= ', ';
+          } else {
+            $next= true;
+          }
+          $inner.= $this->representationOf($element);
         }
-        return '['.substr($inner, 2).']';
+        return $inner.']';
       } else {
-        $inner= '';
+        $inner= '{';
+        $next= false;
         foreach ($value as $key => $mapped) {
-          $inner.= ', '.$this->representationOf($key).' : '.$this->representationOf($mapped);
+          if ($next) {
+            $inner.= ', ';
+          } else {
+            $next= true;
+          }
+          $inner.= $this->representationOf($key).' : '.$this->representationOf($mapped);
         }
-        return '{'.substr($inner, 2).'}';
+        return $inner.'}';
       }
     } else {
       throw new IllegalArgumentException('Cannot represent instances of '.typeof($value));

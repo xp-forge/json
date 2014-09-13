@@ -31,7 +31,37 @@ class FileOutput extends Output {
    * @param  var $value
    */
   public function write($value) {
-    $this->file->write($this->representationOf($value));
+    if (is_array($value)) {
+      if (empty($value)) {
+        $this->file->write('[]');
+      } else if (0 === key($value)) {
+        $this->file->write('[');
+        $next= false;
+        foreach ($value as $element) {
+          if ($next) {
+            $this->file->write(', ');
+          } else {
+            $next= true;
+          }
+          $this->file->write($this->representationOf($element));
+        }
+        $this->file->write(']');
+      } else {
+        $this->file->write('{');
+        $next= false;
+        foreach ($value as $key => $mapped) {
+          if ($next) {
+            $this->file->write(', ');
+          } else {
+            $next= true;
+          }
+          $this->file->write($this->representationOf($key).' : '.$this->representationOf($mapped));
+        }
+        $this->file->write('}');
+      }
+    } else {
+      $this->file->write($this->representationOf($value));
+    }
     $this->file->close();
   }
 
