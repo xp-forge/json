@@ -26,6 +26,16 @@ class FileOutput extends Output {
   }
 
   /**
+   * Append a token
+   *
+   * @param  string $bytes
+   * @return void
+   */
+  public function appendToken($bytes) {
+    $this->file->write($bytes);
+  }
+
+  /**
    * Writes a given value
    *
    * @param  var $value

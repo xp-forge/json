@@ -76,6 +76,19 @@ if ($type->isArray()) {
 }
 ```
 
+To write data sequentially, you can use the `begin()` method and the stream it returns. This makes sense when the source offers a way to read data sequentially, if you already have the entire data in memory, using `write()` has the same effect.
+
+```php
+$query= $conn->query('select * from person');
+
+$out= new StreamOutput(...);
+$stream= $out->begin(Types::$ARRAY);
+while ($record= $query->next()) {
+  $stream->element($record);
+}
+$stream->close();
+```
+
 Performance
 -----------
 The JSON reader's performance is roughly 8-9 times that of the implementation in [xp-framework/webservices](https://github.com/xp-framework/webservices), while it also uses less memory. On the other side, PHP's native `json_decode()` function is 7-8 times faster (using current PHP 5.5). The figures for writing are 7-8 times better than xp-framework/webservices, and around twice as slow as PHP's native `json_encode()`.
@@ -98,7 +111,8 @@ Using the test data from above, written to a file on the local file system 100 t
 | *Implementation*  | *Time*          | *Per iteration* | *Memory usage / peak* | *Overhead* |
 | ----------------- | --------------: | --------------: | --------------------: | ---------: |
 | PHP Native        | 0.390 seconds   | 3.9 ms          | 1324.4 kB / 1521.9 kB |            |
-| This              | 0.714 seconds   | 7.1 ms          | 1346.5 kB / 1362.9 kB | 3.2 ms     |
+| This (sequential) | 0.703 seconds   | 7.0 ms          | 1382.5 kB / 1398.9 kB | 3.1 ms     |
+| This (serial)     | 0.706 seconds   | 7.1 ms          | 1353.9 kB / 1370.4 kB | 3.2 ms     |
 | XP Webservices    | 5.318 seconds   | 53.2 ms         | 1523.3 kB / 1544.6 kB | 49.3 ms    |
 
 *The overhead is around 3 milliseconds, which is near to nothing.*

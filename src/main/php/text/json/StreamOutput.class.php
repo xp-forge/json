@@ -27,6 +27,16 @@ class StreamOutput extends Output {
   }
 
   /**
+   * Append a token
+   *
+   * @param  string $bytes
+   * @return void
+   */
+  public function appendToken($bytes) {
+    $this->stream->write($bytes);
+  }
+
+  /**
    * Writes a given value
    *
    * @param  var $value

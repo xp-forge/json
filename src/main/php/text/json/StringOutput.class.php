@@ -29,6 +29,16 @@ class StringOutput extends Output {
     }
   }
 
+  /**
+   * Append a token
+   *
+   * @param  string $bytes
+   * @return void
+   */
+  public function appendToken($bytes) {
+    $this->bytes.= $bytes;
+  }
+
   /** @return string */
   public function bytes() { return $this->bytes; }
 

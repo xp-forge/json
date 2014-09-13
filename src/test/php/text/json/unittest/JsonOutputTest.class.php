@@ -1,5 +1,7 @@
 <?php namespace text\json\unittest;
 
+use text\json\Types;
+
 abstract class JsonOutputTest extends \unittest\TestCase {
   private static $precision;
 
@@ -132,5 +134,48 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   #[@test, @expect('lang.IllegalArgumentException')]
   public function cannot_write_closures() {
     $this->write(function() { });
+  }
+
+  #[@test]
+  public function begin_an_array() {
+    $this->output()->begin(Types::$ARRAY);
+  }
+
+  #[@test]
+  public function begin_an_object() {
+    $this->output()->begin(Types::$OBJECT);
+  }
+
+  #[@test, @expect('lang.IllegalArgumentException'), @values([
+  #  Types::$STRING,
+  #  Types::$DOUBLE,
+  #  Types::$INT,
+  #  Types::$NULL,
+  #  Types::$FALSE,
+  #  Types::$TRUE
+  #])]
+  public function begin_another_type_raises_an_exception($type) {
+    $this->output()->begin($type);
+  }
+
+  #[@test]
+  public function write_array_sequentially() {
+    $out= $this->output();
+    with ($out->begin(Types::$ARRAY), function($array) {
+      $array->element(1);
+      $array->element(2);
+      $array->element(3);
+    });
+    $this->assertEquals('[1, 2, 3]', $this->result($out));
+  }
+
+  #[@test]
+  public function write_object_sequentially() {
+    $out= $this->output();
+    with ($out->begin(Types::$OBJECT), function($array) {
+      $array->pair('a', 'v1');
+      $array->pair('b', 'v2');
+    });
+    $this->assertEquals('{"a" : "v1", "b" : "v2"}', $this->result($out));
   }
 }
