@@ -166,11 +166,11 @@ abstract class Input extends \lang\Object {
         ? (double)$token
         : (int)$token
       ;
+    } else if (null === $token) {
+      throw new FormatException('Empty input');
     } else {
       throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading value');
     }
-
-    throw new FormatException('Empty input');
   }
 
   /**
@@ -213,7 +213,6 @@ abstract class Input extends \lang\Object {
     if (null !== ($token= $this->nextToken())) {
       throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');
     }
-
     return $value;
   }
 
