@@ -122,11 +122,23 @@ To write data sequentially, you can use the `begin()` method and the stream it r
 ```php
 $query= $conn->query('select * from person');
 
-$stream= new StreamOutput(...)->begin(Types::$ARRAY);
+$stream= (new StreamOutput(...))->begin(Types::$ARRAY);
 while ($record= $query->next()) {
   $stream->element($record);
 }
 $stream->close();
+```
+
+As the `Stream` class implements the Closeable interface, it can be used in the `with` statement:
+
+```php
+$query= $conn->query('select * from person');
+
+with ((new StreamOutput(...))->begin(Types::$ARRAY), function($stream) use($query) {
+  while ($record= $query->next()) {
+    $stream->element($record);
+  }
+});
 ```
 
 Further reading
