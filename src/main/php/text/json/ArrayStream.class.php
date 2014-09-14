@@ -10,12 +10,12 @@ class ArrayStream extends Stream {
    */
   public function element($element) {
     if ($this->next) {
-      $this->out->appendToken($this->out->format->comma);
+      $t= $this->out->format->comma;
     } else {
-      $this->out->appendToken($this->out->format->open('['));
+      $t= $this->out->format->open('[');
       $this->next= true;
     }
-    $this->out->appendToken($this->out->format->representationOf($element));
+    $this->out->appendToken($t.$this->out->format->representationOf($element));
   }
 
   /**

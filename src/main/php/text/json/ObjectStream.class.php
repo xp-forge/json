@@ -11,13 +11,13 @@ class ObjectStream extends Stream {
    */
   public function pair($key, $value) {
     if ($this->next) {
-      $this->out->appendToken(', ');
+      $t= $this->out->format->comma;
     } else {
-      $this->out->appendToken('{');
+      $t= $this->out->format->open('{');
       $this->next= true;
     }
     $f= $this->out->format;
-    $this->out->appendToken($f->representationOf($key).' : '.$f->representationOf($value));
+    $this->out->appendToken($t.$f->representationOf($key).$this->out->format->colon.$f->representationOf($value));
   }
 
   /**
@@ -26,7 +26,7 @@ class ObjectStream extends Stream {
    * @return void
    */
   public function close() {
-    $this->out->appendToken('}');
+    $this->out->appendToken($this->out->format->close('}'));
     parent::close();
   }
 }
