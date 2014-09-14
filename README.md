@@ -93,4 +93,4 @@ $stream->close();
 
 Further reading
 ---------------
-* [Performance figures](/xp-forge/json/wiki/performance)
+* [Performance figures](https://github.com/xp-forge/json/wiki/Performance-overview)
