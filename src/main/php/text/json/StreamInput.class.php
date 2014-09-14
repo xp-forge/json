@@ -35,11 +35,10 @@ class StreamInput extends Input {
       $bom.= $in->read(1);
       if ("\357\273\277" === $bom) {
         $encoding= 'utf-8';
-        $this->in= $in;
       } else {
-        $this->in= $in;
         $initial= $bom;
       }
+      $this->in= $in;
     }
 
     parent::__construct($initial.$this->in->read(), $encoding);
