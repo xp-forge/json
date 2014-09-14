@@ -2,10 +2,10 @@
 
 use text\json\Format;
 
-class DefaultFormatTest extends FormatTest {
+class DenseFormatTest extends FormatTest {
 
   /** @return text.json.Format */
-  protected function format() { return Format::$DEFAULT; }
+  protected function format() { return Format::$DENSE; }
 
   #[@test]
   public function array_with_one_element() {
@@ -14,16 +14,16 @@ class DefaultFormatTest extends FormatTest {
 
   #[@test]
   public function array_with_multiple_elements() {
-    $this->assertEquals('[1, 2, 3]', $this->format()->representationOf([1, 2, 3]));
+    $this->assertEquals('[1,2,3]', $this->format()->representationOf([1, 2, 3]));
   }
 
   #[@test]
   public function object_with_one_pair() {
-    $this->assertEquals('{"key" : "value"}', $this->format()->representationOf(['key' => 'value']));
+    $this->assertEquals('{"key":"value"}', $this->format()->representationOf(['key' => 'value']));
   }
 
   #[@test]
   public function object_with_multiple_pairs() {
-    $this->assertEquals('{"a" : "v1", "b" : "v2"}', $this->format()->representationOf(['a' => 'v1', 'b' => 'v2']));
+    $this->assertEquals('{"a":"v1","b":"v2"}', $this->format()->representationOf(['a' => 'v1', 'b' => 'v2']));
   }
 }

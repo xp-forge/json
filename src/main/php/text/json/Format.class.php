@@ -7,11 +7,12 @@ use lang\IllegalArgumentException;
  *
  * @test  xp://text.json.unittest.DefaultFormatTest
  */
-class Format extends \lang\Object {
-  public static $DEFAULT;
+abstract class Format extends \lang\Object {
+  public static $DEFAULT, $DENSE;
 
   static function __static() {
-    self::$DEFAULT= new self();
+    self::$DEFAULT= new DefaultFormat();
+    self::$DENSE= new DenseFormat();
   }
 
   /**
@@ -20,19 +21,7 @@ class Format extends \lang\Object {
    * @param  var[] $value
    * @return string
    */
-  protected function formatArray($value) {
-    $r= '[';
-    $next= false;
-    foreach ($value as $element) {
-      if ($next) {
-        $r.= ', ';
-      } else {
-        $next= true;
-      }
-      $r.= $this->representationOf($element);
-    }
-    return $r.']';
-  }
+  protected abstract function formatArray($value);
 
   /**
    * Formats an object
@@ -40,19 +29,7 @@ class Format extends \lang\Object {
    * @param  [:var] $value
    * @return string
    */
-  protected function formatObject($value) {
-    $r= '{';
-    $next= false;
-    foreach ($value as $key => $mapped) {
-      if ($next) {
-        $r.= ', ';
-      } else {
-        $next= true;
-      }
-      $r.= $this->representationOf($key).' : '.$this->representationOf($mapped);
-    }
-    return $r.'}';
-  }
+  protected abstract function formatObject($value);
 
   /**
    * Creates a representation of a given value
