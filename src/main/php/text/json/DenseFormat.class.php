@@ -11,6 +11,13 @@ class DenseFormat extends Format {
   static function __static() { }
 
   /**
+   * Creates a new dense format
+   */
+  public function __construct() {
+    parent::__construct(',', ':');
+  }
+
+  /**
    * Formats an array
    *
    * @param  var[] $value

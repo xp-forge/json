@@ -9,10 +9,23 @@ use lang\IllegalArgumentException;
  */
 abstract class Format extends \lang\Object {
   public static $DEFAULT, $DENSE;
+  public $comma;
+  public $colon;
 
   static function __static() {
     self::$DEFAULT= new DefaultFormat();
     self::$DENSE= new DenseFormat();
+  }
+
+  /**
+   * Creates a new wrapped format
+   *
+   * @param  string $comma
+   * @param  string $comma
+   */
+  public function __construct($comma, $colon) {
+    $this->comma= $comma;
+    $this->colon= $colon;
   }
 
   /**
@@ -30,6 +43,26 @@ abstract class Format extends \lang\Object {
    * @return string
    */
   protected abstract function formatObject($value);
+
+  /**
+   * Open an array or object
+   *
+   * @param  string $token either `[` or `{`
+   * @param  string
+   */
+  public function open($token) {
+    return $token;
+  }
+
+  /**
+   * Close an array or object
+   *
+   * @param  string $token either `]` or `}`
+   * @param  string
+   */
+  public function close($token) {
+    return $token;
+  }
 
   /**
    * Creates a representation of a given value

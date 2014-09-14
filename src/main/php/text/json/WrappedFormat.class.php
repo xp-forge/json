@@ -1,9 +1,9 @@
 <?php namespace text\json;
 
 /**
- * Wrapped JSON format - indents objects
+ * Wrapped JSON format - indents objects and first-level arrays.
  *
- * @test  xp://text.json.unittest.PrettyFormatTest
+ * @test  xp://text.json.unittest.WrappedFormatTest
  */
 class WrappedFormat extends Format {
   protected $indent;
@@ -17,6 +17,7 @@ class WrappedFormat extends Format {
    * @param  string $indent If omitted, uses 2 spaces
    */
   public function __construct($indent= '  ') {
+    parent::__construct(",\n".$indent, ' : ');
     $this->indent= $indent;
   }
 
@@ -48,11 +49,12 @@ class WrappedFormat extends Format {
    */
   protected function formatObject($value) {
     $indent= str_repeat($this->indent, $this->level);
+    $this->comma= ",\n".$indent;
     $r= "{\n".$indent;
     $next= false;
     foreach ($value as $key => $mapped) {
       if ($next) {
-        $r.= ",\n".$indent;
+        $r.= $this->comma;
       } else {
         $next= true;
       }
@@ -61,6 +63,17 @@ class WrappedFormat extends Format {
       $r.= $this->representationOf($mapped);
       $this->level--;
     }
-    return $r."\n".str_repeat($this->indent, $this->level - 1)."}";
+    $indent= str_repeat($this->indent, $this->level - 1);
+    $this->comma= ",\n".$indent;
+    return $r."\n".$indent.'}';
+  }
+
+  public function open($token) {
+    return $token."\n".str_repeat($this->indent, $this->level++);
+  }
+
+  public function close($token) {
+    $this->level--;
+    return "\n".str_repeat($this->indent, $this->level - 1).$token;
   }
 }

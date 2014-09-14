@@ -38,6 +38,24 @@ $out->write('"Hello", he said.');
 $json= $out->bytes();   // "\"Hello\", he said."
 ```
 
+To change the output format, pass a `Format` instance to the output's constructor. The formats available are:
+
+* DenseFormat: Best for network I/O, no unsignificant whitespace.
+* DefaultFormat: Like above, but with whitespace after commas and around colons
+* WrappedFormat: Wraps objects and first-level arrays, whitespace after commas and around colons
+
+```php
+$out= new FileOutput(new File('glue.json'), new WrappedFormat('   '));
+$out->write([
+  'name'    => 'example/package',
+  'version' => '1.0.0',
+  'require' => [
+    'xp-forge/json'     => '~1.0',
+    'xp-framework/core' => '~6.0'
+  ]
+]);
+```
+
 Sequential processing
 ---------------------
 Processing elements sequentially can save you memory and give a better performance in certain situations.

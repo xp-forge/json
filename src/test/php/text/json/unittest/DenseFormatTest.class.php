@@ -1,11 +1,11 @@
 <?php namespace text\json\unittest;
 
-use text\json\Format;
+use text\json\DenseFormat;
 
 class DenseFormatTest extends FormatTest {
 
   /** @return text.json.Format */
-  protected function format() { return Format::$DENSE; }
+  protected function format() { return new DenseFormat(); }
 
   #[@test]
   public function array_with_one_element() {

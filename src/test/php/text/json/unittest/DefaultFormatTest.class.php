@@ -1,11 +1,11 @@
 <?php namespace text\json\unittest;
 
-use text\json\Format;
+use text\json\DefaultFormat;
 
 class DefaultFormatTest extends FormatTest {
 
   /** @return text.json.Format */
-  protected function format() { return Format::$DEFAULT; }
+  protected function format() { return new DefaultFormat(); }
 
   #[@test]
   public function array_with_one_element() {

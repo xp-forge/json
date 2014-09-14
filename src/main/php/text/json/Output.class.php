@@ -29,26 +29,26 @@ abstract class Output extends \lang\Object {
         $next= false;
         foreach ($value as $element) {
           if ($next) {
-            $t= ', ';
+            $t= $f->comma;
           } else {
-            $t= '[';
+            $t= $f->open('[');
             $next= true;
           }
           $this->appendToken($t.$f->representationOf($element));
         }
-        $this->appendToken(']');
+        $this->appendToken($f->close(']'));
       } else {
         $next= false;
         foreach ($value as $key => $mapped) {
           if ($next) {
-            $t= ', ';
+            $t= $f->comma;
           } else {
-            $t= '{';
+            $t= $f->open('{');
             $next= true;
           }
-          $this->appendToken($t.$f->representationOf($key).' : '.$f->representationOf($mapped));
+          $this->appendToken($t.$f->representationOf($key).$f->colon.$f->representationOf($mapped));
         }
-        $this->appendToken('}');
+        $this->appendToken($f->close('}'));
       }
     } else {
       $this->appendToken($f->representationOf($value));
