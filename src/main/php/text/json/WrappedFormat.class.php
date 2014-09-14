@@ -18,7 +18,7 @@ class WrappedFormat extends Format {
    * @param  int $options
    */
   public function __construct($indent= '  ', $options= 0) {
-    parent::__construct(",\n".$indent, ' : ', $options);
+    parent::__construct(",\n".$indent, ': ', $options);
     $this->indent= $indent;
   }
 
@@ -59,7 +59,7 @@ class WrappedFormat extends Format {
       } else {
         $next= true;
       }
-      $r.= $this->representationOf($key).' : ';
+      $r.= $this->representationOf($key).': ';
       $this->level++;
       $r.= $this->representationOf($mapped);
       $this->level--;

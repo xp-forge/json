@@ -41,9 +41,8 @@ $json= $out->bytes();   // "\"Hello\", he said."
 ### Formatted output
 To change the output format, pass a `Format` instance to the output's constructor. The formats available are:
 
-* `DenseFormat($options)`: Best for network I/O, no unsignificant whitespace.
-* `DefaultFormat($options)`: Like above, but with whitespace after commas and around colons
-* `WrappedFormat($indent, $options)`: Wraps objects and first-level arrays, whitespace after commas and around colons.
+* `DenseFormat($options)`: Best for network I/O, no unsignificant whitespace, default if nothing given and accessible via `Format::$DEFAULT`.
+* `WrappedFormat($indent, $options)`: Wraps first-level arrays and all objects, uses whitespace after commas colons. An instance of this format using 4 spaces for indentation and per default leaving forward slashes unescaped is available via `Format::$NATURAL`.
 
 The available options that can be or'ed together are:
 
@@ -67,11 +66,11 @@ The above code will yield the following output:
 
 ```json
 {
-    "name" : "example/package",
-    "version" : "1.0.0'",
-    "require" : {
-        "xp-forge/json" : "~1.0",
-        "xp-framework/core" : "~6.0"
+    "name": "example/package",
+    "version": "1.0.0'",
+    "require": {
+        "xp-forge/json": "~1.0",
+        "xp-framework/core": "~6.0"
     }
 }
 ```

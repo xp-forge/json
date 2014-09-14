@@ -27,7 +27,7 @@ class WrappedFormatTest extends FormatTest {
   #[@test]
   public function object_with_one_pair() {
     $this->assertEquals(
-      "{\n  \"key\" : \"value\"\n}",
+      "{\n  \"key\": \"value\"\n}",
       $this->format()->representationOf(['key' => 'value'])
     );
   }
@@ -35,7 +35,7 @@ class WrappedFormatTest extends FormatTest {
   #[@test]
   public function object_with_multiple_pairs() {
     $this->assertEquals(
-      "{\n  \"a\" : \"v1\",\n  \"b\" : \"v2\"\n}",
+      "{\n  \"a\": \"v1\",\n  \"b\": \"v2\"\n}",
       $this->format()->representationOf(['a' => 'v1', 'b' => 'v2'])
     );
   }
@@ -43,7 +43,7 @@ class WrappedFormatTest extends FormatTest {
   #[@test]
   public function object_with_nested_objects() {
     $this->assertEquals(
-      "{\n  \"a\" : \"v1\",\n  \"b\" : {\n    \"v2\" : {\n      \"key\" : \"value\"\n    }\n  }\n}",
+      "{\n  \"a\": \"v1\",\n  \"b\": {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  }\n}",
       $this->format()->representationOf(['a' => 'v1', 'b' => ['v2' => ['key' => 'value']]])
     );
   }
@@ -60,7 +60,7 @@ class WrappedFormatTest extends FormatTest {
     $repr.= $format->representationOf('b');
     $repr.= $format->close(']');
     $this->assertEquals(
-      "[\n  \"a\",\n  {\n    \"v2\" : {\n      \"key\" : \"value\"\n    }\n  },\n  \"b\"\n]",
+      "[\n  \"a\",\n  {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  },\n  \"b\"\n]",
       $repr
     );
   }
@@ -79,7 +79,7 @@ class WrappedFormatTest extends FormatTest {
     $repr.= $format->representationOf(['v2' => ['key' => 'value']]);
     $repr.= $format->close('}');
     $this->assertEquals(
-      "{\n  \"a\" : \"v1\",\n  \"b\" : {\n    \"v2\" : {\n      \"key\" : \"value\"\n    }\n  }\n}",
+      "{\n  \"a\": \"v1\",\n  \"b\": {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  }\n}",
       $repr
     );
   }

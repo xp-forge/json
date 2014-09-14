@@ -12,13 +12,13 @@ abstract class Format extends \lang\Object {
   const ESCAPE_UNICODE = -257; // ~JSON_UNESCAPED_UNICODE
   const ESCAPE_ENTITIES = 11;  // JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT
 
-  public static $DEFAULT, $DENSE;
+  public static $DEFAULT, $NATURAL;
   public $comma;
   public $colon;
 
   static function __static() {
-    self::$DEFAULT= new DefaultFormat();
-    self::$DENSE= new DenseFormat();
+    self::$DEFAULT= new DenseFormat();
+    self::$NATURAL= new WrappedFormat('    ', ~self::ESCAPE_SLASHES);
   }
 
   /**

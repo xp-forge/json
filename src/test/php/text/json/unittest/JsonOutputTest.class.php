@@ -113,17 +113,17 @@ abstract class JsonOutputTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  ['[1]', [1]],
-  #  ['[1, 2]', [1, 2]],
-  #  ['[[1], [2, 3]]', [[1], [2, 3]]]
+  #  ['[1,2]', [1, 2]],
+  #  ['[[1],[2,3]]', [[1], [2, 3]]]
   #])]
   public function write_array($expected, $write) {
     $this->assertEquals($expected, $this->write($write));
   }
 
   #[@test, @values([
-  #  ['{"" : "value"}', ['' => 'value']],
-  #  ['{"key" : "value"}', ['key' => 'value']],
-  #  ['{"a" : "v1", "b" : "v2"}', ['a' => 'v1', 'b' => 'v2']]
+  #  ['{"":"value"}', ['' => 'value']],
+  #  ['{"key":"value"}', ['key' => 'value']],
+  #  ['{"a":"v1","b":"v2"}', ['a' => 'v1', 'b' => 'v2']]
   #])]
   public function write_object($expected, $write) {
     $this->assertEquals($expected, $this->write($write));
@@ -164,7 +164,7 @@ abstract class JsonOutputTest extends \unittest\TestCase {
       $array->element(2);
       $array->element(3);
     });
-    $this->assertEquals('[1, 2, 3]', $this->result($out));
+    $this->assertEquals('[1,2,3]', $this->result($out));
   }
 
   #[@test]
@@ -174,6 +174,6 @@ abstract class JsonOutputTest extends \unittest\TestCase {
       $array->pair('a', 'v1');
       $array->pair('b', 'v2');
     });
-    $this->assertEquals('{"a" : "v1", "b" : "v2"}', $this->result($out));
+    $this->assertEquals('{"a":"v1","b":"v2"}', $this->result($out));
   }
 }
