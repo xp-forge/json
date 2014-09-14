@@ -15,6 +15,46 @@ class Format extends \lang\Object {
   }
 
   /**
+   * Formats an array
+   *
+   * @param  var[] $value
+   * @return string
+   */
+  protected function formatArray($value) {
+    $r= '[';
+    $next= false;
+    foreach ($value as $element) {
+      if ($next) {
+        $r.= ', ';
+      } else {
+        $next= true;
+      }
+      $r.= $this->representationOf($element);
+    }
+    return $r.']';
+  }
+
+  /**
+   * Formats an object
+   *
+   * @param  [:var] $value
+   * @return string
+   */
+  protected function formatObject($value) {
+    $r= '{';
+    $next= false;
+    foreach ($value as $key => $mapped) {
+      if ($next) {
+        $r.= ', ';
+      } else {
+        $next= true;
+      }
+      $r.= $this->representationOf($key).' : '.$this->representationOf($mapped);
+    }
+    return $r.'}';
+  }
+
+  /**
    * Creates a representation of a given value
    *
    * @param  string $value
@@ -33,29 +73,9 @@ class Format extends \lang\Object {
       if (empty($value)) {
         return '[]';
       } else if (0 === key($value)) {
-        $inner= '[';
-        $next= false;
-        foreach ($value as $element) {
-          if ($next) {
-            $inner.= ', ';
-          } else {
-            $next= true;
-          }
-          $inner.= $this->representationOf($element);
-        }
-        return $inner.']';
+        return $this->formatArray($value);
       } else {
-        $inner= '{';
-        $next= false;
-        foreach ($value as $key => $mapped) {
-          if ($next) {
-            $inner.= ', ';
-          } else {
-            $next= true;
-          }
-          $inner.= $this->representationOf($key).' : '.$this->representationOf($mapped);
-        }
-        return $inner.'}';
+        return $this->formatObject($value);
       }
     } else if (null === $value) {
       return 'null';
