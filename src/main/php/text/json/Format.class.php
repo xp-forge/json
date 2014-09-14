@@ -83,8 +83,8 @@ abstract class Format extends \lang\Object {
     } else if ('integer' === $t) {
       return (string)$value;
     } else if ('double' === $t) {
-      $string= (string)$value;
-      return strpos($string, '.') ? $string : $string.'.0';
+      $cast= (string)$value;
+      return strpos($cast, '.') ? $cast : $cast.'.0';
     } else if ('array' === $t) {
       if (empty($value)) {
         return '[]';
@@ -99,6 +99,13 @@ abstract class Format extends \lang\Object {
       return 'true';
     } else if (false === $value) {
       return 'false';
+    } else if ($value instanceof \stdclass) {
+      $cast= (array)$value;
+      if (empty($cast)) {
+        return '{}';
+      } else {
+        return $this->formatObject($cast);
+      }
     } else {
       throw new IllegalArgumentException('Cannot represent instances of '.typeof($value));
     }

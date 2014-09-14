@@ -120,6 +120,11 @@ abstract class JsonOutputTest extends \unittest\TestCase {
     $this->assertEquals($expected, $this->write($write));
   }
 
+  #[@test]
+  public function write_empty_object() {
+    $this->assertEquals('{}', $this->write((object)[]));
+  }
+
   #[@test, @values([
   #  ['{"":"value"}', ['' => 'value']],
   #  ['{"key":"value"}', ['key' => 'value']],
