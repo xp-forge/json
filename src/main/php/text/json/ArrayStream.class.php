@@ -9,7 +9,7 @@ class ArrayStream extends Stream {
       $this->out->appendToken('[');
       $this->next= true;
     }
-    $this->out->appendToken($this->out->representationOf($element));
+    $this->out->appendToken($this->out->format->representationOf($element));
   }
 
   public function close() {

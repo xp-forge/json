@@ -9,7 +9,8 @@ class ObjectStream extends Stream {
       $this->out->appendToken('{');
       $this->next= true;
     }
-    $this->out->appendToken($this->out->representationOf($key).' : '.$this->out->representationOf($value));
+    $f= $this->out->format;
+    $this->out->appendToken($f->representationOf($key).' : '.$f->representationOf($value));
   }
 
   public function close() {

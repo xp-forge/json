@@ -23,7 +23,7 @@ class StringOutput extends Output {
    */
   public function write($value) {
     if (null === $this->bytes) {
-      $this->bytes= $this->representationOf($value);
+      $this->bytes= $this->format->representationOf($value);
     } else {
       throw new IllegalStateException('Already written');
     }

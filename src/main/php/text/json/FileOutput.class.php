@@ -17,10 +17,10 @@ class FileOutput extends Output {
    * Creates a new instance
    *
    * @param  io.File $out
-   * @param  string $encoding
+   * @param  text.json.Format $format
    */
-  public function __construct(File $out, $encoding= \xp::ENCODING) {
-    parent::__construct($encoding);
+  public function __construct(File $out, Format $format= null) {
+    parent::__construct($format);
     $this->file= $out;
     $this->file->open(FILE_MODE_WRITE);
   }

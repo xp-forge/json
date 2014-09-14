@@ -11,7 +11,7 @@ class StringOutputTest extends JsonOutputTest {
    * @return text.json.Output
    */
   protected function output($encoding= 'utf-8') {
-    return new StringOutput($encoding);
+    return new StringOutput();
   }
 
   /**

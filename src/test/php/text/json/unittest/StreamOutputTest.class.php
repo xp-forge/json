@@ -12,7 +12,7 @@ class StreamOutputTest extends JsonOutputTest {
    * @return text.json.Output
    */
   protected function output($encoding= 'utf-8') {
-    return new StreamOutput(new MemoryOutputStream(), $encoding);
+    return new StreamOutput(new MemoryOutputStream());
   }
 
   /**
