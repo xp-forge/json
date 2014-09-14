@@ -45,10 +45,11 @@ To change the output format, pass a `Format` instance to the output's constructo
 * `DefaultFormat($options)`: Like above, but with whitespace after commas and around colons
 * `WrappedFormat($indent, $options)`: Wraps objects and first-level arrays, whitespace after commas and around colons.
 
-The two options available are:
+The available options that can be or'ed together are:
 
 * `Format::ESCAPE_SLASHES`: Escape forward-slashes with "\" - default behavior.
-* `Format::ESCAPE_UNICE`: Escape unicode with "\uXXXX" - default behavior.
+* `Format::ESCAPE_UNICODE`: Escape unicode with "\uXXXX" - default behavior.
+* `Format::ESCAPE_ENTITIES`: Escape XML entities `&`, `"`, `<` and `>`. Per default, these are represented in their literal form.
 
 ```php
 $out= new FileOutput(new File('glue.json'), new WrappedFormat('   ', ~Format::ESCAPE_SLASHES));

@@ -38,6 +38,16 @@ abstract class FormatTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function entities_are_not_escaped_per_default() {
+    $this->assertEquals('"<a href=\"#top\">&Top<\/a>"', $this->format()->representationOf('<a href="#top">&Top</a>'));
+  }
+
+  #[@test]
+  public function escaped_entities() {
+    $this->assertEquals('"\u003Ca href=\u0022#top\u0022\u003E\u0026Top\u003C\/a\u003E"', $this->format(Format::ESCAPE_ENTITIES)->representationOf('<a href="#top">&Top</a>'));
+  }
+
+  #[@test]
   public function int() {
     $this->assertEquals('0', $this->format()->representationOf(0));
   }

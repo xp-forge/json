@@ -10,6 +10,7 @@ use lang\IllegalArgumentException;
 abstract class Format extends \lang\Object {
   const ESCAPE_SLASHES = -65;  // ~JSON_UNESCAPED_SLASHES
   const ESCAPE_UNICODE = -257; // ~JSON_UNESCAPED_UNICODE
+  const ESCAPE_ENTITIES = 11;  // JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT
 
   public static $DEFAULT, $DENSE;
   public $comma;
