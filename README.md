@@ -51,7 +51,7 @@ The available options that can be or'ed together are:
 * `Format::ESCAPE_ENTITIES`: Escape XML entities `&`, `"`, `<` and `>`. Per default, these are represented in their literal form.
 
 ```php
-$out= new FileOutput(new File('glue.json'), new WrappedFormat('   ', ~Format::ESCAPE_SLASHES));
+$out= new FileOutput(new File('glue.json'), Format::$NATURAL);
 $out->write([
   'name'    => 'example/package',
   'version' => '1.0.0',
