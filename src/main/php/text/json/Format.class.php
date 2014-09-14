@@ -4,6 +4,8 @@ use lang\IllegalArgumentException;
 
 /**
  * JSON format
+ *
+ * @test  xp://text.json.unittest.DefaultFormatTest
  */
 class Format extends \lang\Object {
   public static $DEFAULT;
