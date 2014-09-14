@@ -8,6 +8,9 @@ use lang\IllegalArgumentException;
  * @test  xp://text.json.unittest.DefaultFormatTest
  */
 abstract class Format extends \lang\Object {
+  const ESCAPE_SLASHES = -65;  // ~JSON_UNESCAPED_SLASHES
+  const ESCAPE_UNICODE = -257; // ~JSON_UNESCAPED_UNICODE
+
   public static $DEFAULT, $DENSE;
   public $comma;
   public $colon;
@@ -22,10 +25,12 @@ abstract class Format extends \lang\Object {
    *
    * @param  string $comma
    * @param  string $comma
+   * @param  int $options
    */
-  public function __construct($comma, $colon) {
+  public function __construct($comma, $colon, $options= 0) {
     $this->comma= $comma;
     $this->colon= $colon;
+    $this->options= $options;
   }
 
   /**
@@ -73,7 +78,7 @@ abstract class Format extends \lang\Object {
   public function representationOf($value) {
     $t= gettype($value);
     if ('string' === $t) {
-      return json_encode($value);
+      return json_encode($value, $this->options);
     } else if ('integer' === $t) {
       return (string)$value;
     } else if ('double' === $t) {

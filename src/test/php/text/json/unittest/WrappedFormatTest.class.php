@@ -4,8 +4,15 @@ use text\json\WrappedFormat;
 
 class WrappedFormatTest extends FormatTest {
 
-  /** @return text.json.Format */
-  protected function format() { return new WrappedFormat('  '); }
+  /**
+   * Returns a `Format` instance
+   *
+   * @param  int $options
+   * @return text.json.Format
+   */
+  protected function format($options= 0) {
+    return new WrappedFormat('  ', $options);
+  }
 
   #[@test]
   public function array_with_one_element() {

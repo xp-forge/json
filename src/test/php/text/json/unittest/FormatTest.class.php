@@ -1,13 +1,40 @@
 <?php namespace text\json\unittest;
 
+use text\json\Format;
+
 abstract class FormatTest extends \unittest\TestCase {
 
-  /** @return text.json.Format */
-  protected abstract function format();
+  /**
+   * Returns a `Format` instance
+   *
+   * @param  int $options
+   * @return text.json.Format
+   */
+  protected abstract function format($options= 0);
 
   #[@test]
   public function string() {
     $this->assertEquals('"Test"', $this->format()->representationOf('Test'));
+  }
+
+  #[@test]
+  public function slash_is_escaped_per_default() {
+    $this->assertEquals('"xp-framework\/core"', $this->format()->representationOf('xp-framework/core'));
+  }
+
+  #[@test]
+  public function unescaped_slash() {
+    $this->assertEquals('"xp-framework/core"', $this->format(~Format::ESCAPE_SLASHES)->representationOf('xp-framework/core'));
+  }
+
+  #[@test]
+  public function unicode_is_escaped_per_default() {
+    $this->assertEquals('"\u00dcbercoder"', $this->format()->representationOf('Übercoder'));
+  }
+
+  #[@test]
+  public function unescaped_unicode() {
+    $this->assertEquals('"Übercoder"', $this->format(~Format::ESCAPE_UNICODE)->representationOf('Übercoder'));
   }
 
   #[@test]

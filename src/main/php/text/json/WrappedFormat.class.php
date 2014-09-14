@@ -15,9 +15,10 @@ class WrappedFormat extends Format {
    * Creates a new wrapped format
    *
    * @param  string $indent If omitted, uses 2 spaces
+   * @param  int $options
    */
-  public function __construct($indent= '  ') {
-    parent::__construct(",\n".$indent, ' : ');
+  public function __construct($indent= '  ', $options= 0) {
+    parent::__construct(",\n".$indent, ' : ', $options);
     $this->indent= $indent;
   }
 

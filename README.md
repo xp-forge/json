@@ -38,6 +38,7 @@ $out->write('"Hello", he said.');
 $json= $out->bytes();   // "\"Hello\", he said."
 ```
 
+### Formatted output
 To change the output format, pass a `Format` instance to the output's constructor. The formats available are:
 
 * DenseFormat: Best for network I/O, no unsignificant whitespace.
@@ -45,7 +46,7 @@ To change the output format, pass a `Format` instance to the output's constructo
 * WrappedFormat: Wraps objects and first-level arrays, whitespace after commas and around colons
 
 ```php
-$out= new FileOutput(new File('glue.json'), new WrappedFormat('   '));
+$out= new FileOutput(new File('glue.json'), new WrappedFormat('   ', ~Format::ESCAPE_SLASHES));
 $out->write([
   'name'    => 'example/package',
   'version' => '1.0.0',
@@ -54,6 +55,19 @@ $out->write([
     'xp-framework/core' => '~6.0'
   ]
 ]);
+```
+
+The above code will yield the following output:
+
+```json
+{
+    "name" : "example/package",
+    "version" : "1.0.0'",
+    "require" : {
+        "xp-forge/json" : "~1.0",
+        "xp-framework/core" : "~6.0"
+    }
+}
 ```
 
 Sequential processing

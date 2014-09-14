@@ -12,9 +12,11 @@ class DenseFormat extends Format {
 
   /**
    * Creates a new dense format
+   *
+   * @param  int $options
    */
-  public function __construct() {
-    parent::__construct(',', ':');
+  public function __construct($options= 0) {
+    parent::__construct(',', ':', $options);
   }
 
   /**
