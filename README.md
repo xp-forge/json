@@ -41,9 +41,14 @@ $json= $out->bytes();   // "\"Hello\", he said."
 ### Formatted output
 To change the output format, pass a `Format` instance to the output's constructor. The formats available are:
 
-* DenseFormat: Best for network I/O, no unsignificant whitespace.
-* DefaultFormat: Like above, but with whitespace after commas and around colons
-* WrappedFormat: Wraps objects and first-level arrays, whitespace after commas and around colons
+* `DenseFormat($options)`: Best for network I/O, no unsignificant whitespace.
+* `DefaultFormat($options)`: Like above, but with whitespace after commas and around colons
+* `WrappedFormat($indent, $options)`: Wraps objects and first-level arrays, whitespace after commas and around colons.
+
+The two options available are:
+
+* `Format::ESCAPE_SLASHES`: Escape forward-slashes with "\" - default behavior.
+* `Format::ESCAPE_UNICE`: Escape unicode with "\uXXXX" - default behavior.
 
 ```php
 $out= new FileOutput(new File('glue.json'), new WrappedFormat('   ', ~Format::ESCAPE_SLASHES));
