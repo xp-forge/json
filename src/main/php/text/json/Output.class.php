@@ -18,6 +18,7 @@ abstract class Output extends \lang\Object {
    * Writes a given value
    *
    * @param  var $value
+   * @return self
    */
   public function write($value) {
     $f= $this->format;
@@ -52,6 +53,7 @@ abstract class Output extends \lang\Object {
     } else {
       $this->appendToken($f->representationOf($value));
     }
+    return $this;
   }
 
   /**

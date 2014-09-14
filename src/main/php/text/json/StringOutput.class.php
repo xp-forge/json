@@ -17,19 +17,6 @@ class StringOutput extends Output {
   protected $bytes= null;
 
   /**
-   * Writes a given value
-   *
-   * @param  var $value
-   */
-  public function write($value) {
-    if (null === $this->bytes) {
-      $this->bytes= $this->format->representationOf($value);
-    } else {
-      throw new IllegalStateException('Already written');
-    }
-  }
-
-  /**
    * Append a token
    *
    * @param  string $bytes

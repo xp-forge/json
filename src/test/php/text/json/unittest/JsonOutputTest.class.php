@@ -41,9 +41,7 @@ abstract class JsonOutputTest extends \unittest\TestCase {
    * @return string
    */
   protected function write($value, $encoding= 'utf-8') {
-    $out= $this->output($encoding);
-    $out->write($value);
-    return $this->result($out);
+    return $this->result($this->output($encoding)->write($value));
   }
 
   #[@test, @values([
