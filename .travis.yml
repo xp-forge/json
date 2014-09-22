@@ -16,3 +16,25 @@ before_script:
 
 script:
   - ./unittest src/test/php
+
+before_deploy:
+  - export REL=`echo $TRAVIS_TAG | sed -e 's/^v//g'`
+  - export MOD=`echo $TRAVIS_REPO_SLUG | cut -d '/' -f 2`
+  - wget https://github.com/xp-framework/build/releases/download/v3.0.0alpha2/travis.xar
+  - ./xp -cp travis.xar net.xp_framework.build.Travis . $MOD $REL
+  - cat glue.json
+
+deploy:
+  provider: releases
+  file:
+    - xp-$MOD-$REL.xar
+    - xp-$MOD-test-$REL.xar
+    - glue.json
+  skip_cleanup: true
+  on:
+    repo: $TRAVIS_REPO_SLUG
+    tags: true
+    all_branches: true
+    php: 5.4
+  api_key:
+    secure: "c3sU6DcOMlDbEkeh+09lN23StsO6Q28fVW6VxUeM19tFkxo/cXYpAvno02Jh+pRrgBMDMgYQ+NBnq78XI/al/DlUImpr1KLrWErucJ5ZPqFcdQ2pA0/slF0o4x1IJ1nFsDMp+VFQ8WBM+t0eTlecN8CsJmV8UeVpm9ThI0biFjw="
