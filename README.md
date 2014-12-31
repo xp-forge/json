@@ -6,7 +6,7 @@ JSON
 [![BSD Licence](https://raw.githubusercontent.com/xp-framework/web/master/static/licence-bsd.png)](https://github.com/xp-framework/core/blob/master/LICENCE.md)
 [![Required PHP 5.4+](https://raw.githubusercontent.com/xp-framework/web/master/static/php-5_4plus.png)](http://php.net/)
 
-Reads and writes JSON to and from various input source.
+Reads and writes JSON to and from various input sources.
 
 Examples
 --------

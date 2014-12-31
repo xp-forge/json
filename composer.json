@@ -1,0 +1,15 @@
+{
+  "name" : "xp-forge/json",
+  "type" : "library",
+  "homepage" : "http://xp-framework.net/",
+  "license" : "BSD-3-Clause",
+  "description" : "Reads and writes JSON to and from various input sources",
+  "keywords": ["module", "xp"],
+  "require" : {
+    "xp-framework/core": "dev-master",
+    "php" : ">=5.4.0"
+  },
+  "autoload" : {
+    "files" : ["src/main/php/autoload.php"]
+  }
+}
