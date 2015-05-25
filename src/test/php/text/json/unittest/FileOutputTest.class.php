@@ -14,7 +14,9 @@ class FileOutputTest extends JsonOutputTest {
 
   /** @return text.json.Output */
   protected function output() {
-    return new FileOutput((new File($this->tempName()))->open(FILE_MODE_REWRITE));
+    $file= new File($this->tempName());
+    $file->open(FILE_MODE_REWRITE);
+    return new FileOutput($file);
   }
 
   /**
