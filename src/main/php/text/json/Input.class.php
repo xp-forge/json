@@ -210,9 +210,12 @@ abstract class Input extends \lang\Object {
   public function read() {
     $value= $this->valueOf($this->firstToken());
 
-    if (null !== ($token= $this->nextToken())) {
-      throw new FormatException('Junk after end of value ['.\xp::stringOf($token).']');
+    $test= $this->nextToken();
+    $this->close();
+    if (null !== $test) {
+      throw new FormatException('Junk after end of value ['.\xp::stringOf($test).']');
     }
+
     return $value;
   }
 
@@ -232,5 +235,15 @@ abstract class Input extends \lang\Object {
    */
   public function pairs() {
     return new Pairs($this);
+  }
+
+  /** @return void */
+  public function close() {
+    // Does nothing
+  }
+
+  /** @return void */
+  public function __destruct() {
+    $this->close();
   }
 }

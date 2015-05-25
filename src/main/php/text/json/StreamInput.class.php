@@ -122,4 +122,7 @@ class StreamInput extends Input {
 
     return null;
   }
+
+  /** @return void */
+  public function close() { $this->in->close(); }
 }

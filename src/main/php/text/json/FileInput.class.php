@@ -13,7 +13,7 @@ use io\File;
  * @test  xp://text.json.unittest.FileInputTest
  */
 class FileInput extends StreamInput {
-  protected $file;
+  protected $file, $wasOpen;
 
   /**
    * Creates a new instance
@@ -29,15 +29,17 @@ class FileInput extends StreamInput {
       $this->file= new File($arg);
       $this->wasOpen= false;
     }
+    $this->wasOpen || $this->file->open(FILE_MODE_READ);
     parent::__construct($this->file->getInputStream(), $encoding);
+  }
+
+  /** @return void */
+  public function close() {
+    if (!$this->wasOpen && $this->file->isOpen()) {
+      $this->file->close();
+    }
   }
 
   /** @return io.File */
   public function file() { return $this->file; }
-
-  /** @return void */
-  public function close() { $this->wasOpen || $this->file->close(); }
-
-  /** @return void */
-  public function __destruct() { $this->close(); }
 }

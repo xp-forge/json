@@ -9,13 +9,14 @@ class ArrayStream extends Stream {
    * @return void
    */
   public function element($element) {
+    $f= $this->out->format;
     if ($this->next) {
-      $t= $this->out->format->comma;
+      $t= $f->comma;
     } else {
-      $t= $this->out->format->open('[');
+      $t= $f->open('[');
       $this->next= true;
     }
-    $this->out->appendToken($t.$this->out->format->representationOf($element));
+    $this->out->appendToken($t.$f->representationOf($element));
   }
 
   /**

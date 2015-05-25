@@ -43,12 +43,13 @@ class FileOutput extends Output {
     $this->file->write($bytes);
   }
 
+  /** @return void */
+  public function close() {
+    if (!$this->wasOpen && $this->file->isOpen()) {
+      $this->file->close();
+    }
+  }
+
   /** @return io.File */
   public function file() { return $this->file; }
-
-  /** @return void */
-  public function close() { $this->wasOpen || $this->file->close(); }
-
-  /** @return void */
-  public function __destruct() { $this->close(); }
 }

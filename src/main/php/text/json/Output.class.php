@@ -53,6 +53,7 @@ abstract class Output extends \lang\Object {
     } else {
       $this->appendToken($f->representationOf($value));
     }
+    $this->close();
     return $this;
   }
 
@@ -86,9 +87,7 @@ abstract class Output extends \lang\Object {
     // Does nothing
   }
 
-  /**
-   * The destructor takes care of closing this output
-   */
+  /** @return void */
   public function __destruct() {
     $this->close();
   }

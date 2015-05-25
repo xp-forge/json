@@ -9,7 +9,7 @@ use lang\FormatException;
  */
 class Elements extends \lang\Object implements \Iterator {
   protected $input;
-  protected $id= -1;
+  protected $id= null;
   protected $current= null;
 
   /**
@@ -27,25 +27,25 @@ class Elements extends \lang\Object implements \Iterator {
     if ('[' === $token) {
       $token= $this->input->nextToken();
       if (']' === $token) {
-        $this->id= -1;
+        $this->id= $this->end();
       } else {
         $this->current= $this->input->valueOf($token);
         $this->id= 0;
       }
     } else {
+      $this->id= $this->end();
       throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading elements, expecting "["');
     }
   }
 
   /** @return var */
-  public function current() {
-    return $this->current;
-  }
+  public function current() { return $this->current; }
 
   /** @return var */
-  public function key() {
-    return $this->id;
-  }
+  public function key() { return $this->id; }
+
+  /** @return bool */
+  public function valid() { return null !== $this->id; }
 
   /** @return void */
   public function next() {
@@ -54,14 +54,16 @@ class Elements extends \lang\Object implements \Iterator {
       $this->current= $this->input->valueOf($this->input->nextToken());
       $this->id++;
     } else if (']' === $token) {
-      $this->id= -1;
+      $this->id= $this->end();
     } else {
+      $this->id= $this->end();
       throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading elements, expecting "," or "]"');
     }
   }
 
-  /** @return bool */
-  public function valid() {
-    return -1 !== $this->id;
+  /** @return var */
+  private function end() {
+    $this->input->close();
+    return null;
   }
 }

@@ -10,14 +10,14 @@ class ObjectStream extends Stream {
    * @return void
    */
   public function pair($key, $value) {
+    $f= $this->out->format;
     if ($this->next) {
-      $t= $this->out->format->comma;
+      $t= $f->comma;
     } else {
-      $t= $this->out->format->open('{');
+      $t= $f->open('{');
       $this->next= true;
     }
-    $f= $this->out->format;
-    $this->out->appendToken($t.$f->representationOf($key).$this->out->format->colon.$f->representationOf($value));
+    $this->out->appendToken($t.$f->representationOf($key).$f->colon.$f->representationOf($value));
   }
 
   /**

@@ -20,6 +20,21 @@ class Pairs extends \lang\Object implements \Iterator {
   public function __construct(Input $input) {
     $this->input= $input;
   }
+
+  /**
+   * Reads next value
+   *
+   * @return var
+   * @throws lang.FormatException
+   */
+  private function nextValue() {
+    if (':' === ($token= $this->input->nextToken())) {
+      return $this->input->valueOf($this->input->nextToken());
+    } else {
+      $this->end();
+      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
+    }
+  }
   
   /** @return void */
   public function rewind() {
@@ -27,51 +42,43 @@ class Pairs extends \lang\Object implements \Iterator {
     if ('{' === $token) {
       $token= $this->input->nextToken();
       if ('}' === $token) {
-        $this->key= null;
+        $this->key= $this->end();
       } else {
         $this->key= $this->input->valueOf($token);
-        if (':' === ($token= $this->input->nextToken())) {
-          $this->value= $this->input->valueOf($this->input->nextToken());
-        } else {
-          $this->key= null;
-          throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
-        }
+        $this->value= $this->nextValue();
       }
     } else {
+      $this->key= $this->end();
       throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting "{"');
     }
   }
 
   /** @return var */
-  public function current() {
-    return $this->value;
-  }
+  public function current() { return $this->value; }
 
   /** @return var */
-  public function key() {
-    return $this->key;
-  }
+  public function key() { return $this->key; }
+
+  /** @return bool */
+  public function valid() { return null !== $this->key; }
 
   /** @return void */
   public function next() {
     $token= $this->input->nextToken();
     if (',' === $token) {
       $this->key= $this->input->valueOf($this->input->nextToken());
-      if (':' === ($token= $this->input->nextToken())) {
-        $this->value= $this->input->valueOf($this->input->nextToken());
-      } else {
-        $this->key= null;
-        throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
-      }
+      $this->value= $this->nextValue();
     } else if ('}' === $token) {
-      $this->key= null;
+      $this->key= $this->end();
     } else {
-      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading elements, expecting "," or "]"');
+      $this->key= $this->end();
+      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading elements, expecting "," or "}"');
     }
   }
 
-  /** @return bool */
-  public function valid() {
-    return null !== $this->key;
+  /** @return var */
+  private function end() {
+    $this->input->close();
+    return null;
   }
 }

@@ -16,6 +16,20 @@ class FileInputTest extends JsonInputTest {
   }
 
   /**
+   * Returns a file with a given source opened in the given mode
+   *
+   * @param  string $source
+   * @param  string $mode One of the file open modes
+   * @return io.File
+   */
+  private function fileWith($source, $mode) {
+    $file= new File($this->tempName());
+    $file->open($mode);
+    $file->write($source);
+    return $file;
+  }
+
+  /**
    * Returns the  implementation
    *
    * @param  string $source
@@ -23,9 +37,7 @@ class FileInputTest extends JsonInputTest {
    * @return text.json.Input
    */
   protected function input($source, $encoding= 'utf-8') {
-    $file= new File($this->tempName());
-    $file->open(FILE_MODE_REWRITE);
-    $file->write($source);
+    $file= $this->fileWith($source, FILE_MODE_REWRITE);
     $file->seek(0, SEEK_SET);
     return new FileInput($file, $encoding);
   }
@@ -42,5 +54,37 @@ class FileInputTest extends JsonInputTest {
     $name= $this->tempName();
     touch($name);
     $this->assertEquals(new File($name), (new FileInput($name))->file());
+  }
+
+  #[@test]
+  public function is_closed_after_reading() {
+    $file= $this->fileWith('"test"', FILE_MODE_WRITE);
+    $file->close();
+    (new FileInput($file))->read();
+    $this->assertFalse($file->isOpen());
+  }
+
+  #[@test]
+  public function is_closed_after_elements() {
+    $file= $this->fileWith('[]', FILE_MODE_WRITE);
+    $file->close();
+    (new FileInput($file))->elements();
+    $this->assertFalse($file->isOpen());
+  }
+
+  #[@test]
+  public function is_closed_after_pairs() {
+    $file= $this->fileWith('{}', FILE_MODE_WRITE);
+    $file->close();
+    (new FileInput($file))->elements();
+    $this->assertFalse($file->isOpen());
+  }
+
+  #[@test]
+  public function open_files_are_not_closed() {
+    $file= $this->fileWith('{}', FILE_MODE_REWRITE);
+    $file->seek(0, SEEK_SET);
+    (new FileInput($file))->read();
+    $this->assertTrue($file->isOpen());
   }
 }
