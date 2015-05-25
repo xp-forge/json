@@ -3,6 +3,8 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 0.9.0 / 2015-02-25
+
 * Ensured I/O objects are closed after reading / writing has finished
   (@thekid)
 * Changed text.json.FileOutput and text.json.FileInput to not close open
