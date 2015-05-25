@@ -20,10 +20,9 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   /**
    * Returns the implementation
    *
-   * @param  string $encoding
    * @return text.json.Output
    */
-  protected abstract function output($encoding= 'utf-8');
+  protected abstract function output();
 
   /**
    * Returns the result
@@ -40,8 +39,8 @@ abstract class JsonOutputTest extends \unittest\TestCase {
    * @param  string $encoding
    * @return string
    */
-  protected function write($value, $encoding= 'utf-8') {
-    return $this->result($this->output($encoding)->write($value));
+  protected function write($value) {
+    return $this->result($this->output()->write($value));
   }
 
   #[@test, @values([
@@ -58,7 +57,7 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   #  ['"Test\\\\"', "Test\\"],
   #  ['"Test\/"', "Test/"]
   #])]
-  public function read_string($expected, $value) {
+  public function write_string($expected, $value) {
     $this->assertEquals($expected, $this->write($value));
   }
 

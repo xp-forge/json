@@ -9,20 +9,28 @@ use io\File;
  * $json= new FileOutput(new File('output.json'));
  * $json->write('Hello World');
  * ```
+ *
+ * @test  xp://text.json.unittest.FileOutputTest
  */
 class FileOutput extends Output {
-  protected $file;
+  protected $file, $wasOpen;
 
   /**
    * Creates a new instance
    *
-   * @param  io.File $out
+   * @param  var $arg
    * @param  text.json.Format $format
    */
-  public function __construct(File $out, Format $format= null) {
+  public function __construct($arg, Format $format= null) {
     parent::__construct($format);
-    $this->file= $out;
-    $this->file->open(FILE_MODE_WRITE);
+    if ($arg instanceof File) {
+      $this->file= $arg;
+      $this->wasOpen= $this->file->isOpen();
+    } else {
+      $this->file= new File($arg);
+      $this->wasOpen= false;
+    }
+    $this->wasOpen || $this->file->open(FILE_MODE_WRITE);
   }
 
   /**
@@ -39,5 +47,8 @@ class FileOutput extends Output {
   public function file() { return $this->file; }
 
   /** @return void */
-  public function close() { $this->file->isOpen() && $this->file->close(); }
+  public function close() { $this->wasOpen || $this->file->close(); }
+
+  /** @return void */
+  public function __destruct() { $this->close(); }
 }
