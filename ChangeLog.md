@@ -3,10 +3,11 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-* Changed text.json.FileOutput to not close open files passed to its
-  constructor. This way, we can e.g. pass files opened READ/WRITE.
+* Changed text.json.FileOutput and text.json.FileInput to not close open
+  files passed to its constructor.
   (@thekid)
-* Changed text.json.FileOutput to also accept file names - @thekid
+* Changed text.json.FileOutput and text.json.FileInput to also accept
+  file names - @thekid
 
 ## 0.8.5 / 2015-02-12
 
