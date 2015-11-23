@@ -20,18 +20,24 @@ abstract class Json extends \lang\Object {
    * Writes to an output and returns the output
    *
    * @param  var $value
-   * @param  text.json.Output|text.json.Format $arg
-   * @return text.json.Output The given output, or a StringOutput if a format is given
+   * @param  text.json.Output $output
+   * @return text.json.Output The given output
    */
-  public static function write($value, $arg= null) {
-    if ($arg instanceof Format) {
-      $output= new StringOutput($arg);
-    } else if ($arg instanceof Output) {
-      $output= $arg;
-    } else {
-      $output= new StringOutput(Format::$DEFAULT);
-    }
+  public static function write($value, Output $output) {
     $output->write($value);
     return $output;
+  }
+
+  /**
+   * Returns the output as a string
+   *
+   * @param  var $value
+   * @param  text.json.Format $format
+   * @return string
+   */
+  public static function of($value, Format $format= null) {
+    $output= new StringOutput($format ?: Format::$DEFAULT);
+    $output->write($value);
+    return $output->bytes();
   }
 }

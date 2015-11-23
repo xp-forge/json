@@ -34,17 +34,12 @@ class JsonTest extends \unittest\TestCase {
   }
 
   #[@test]
-  public function write_string() {
-    $this->assertEquals('"Test"', Json::write('Test')->bytes());
+  public function of_string() {
+    $this->assertEquals('"Test"', Json::of('Test'));
   }
 
   #[@test]
-  public function write_output_with_format() {
-    $this->assertEquals('"Test"', Json::write('Test', new StringOutput(Format::$DEFAULT))->bytes());
-  }
-
-  #[@test]
-  public function write_string_with_format() {
-    $this->assertEquals('"Test"', Json::write('Test', Format::$DEFAULT)->bytes());
+  public function of_string_with_format() {
+    $this->assertEquals('"Test"', Json::of('Test', Format::$DEFAULT));
   }
 }
