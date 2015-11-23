@@ -1,5 +1,11 @@
 <?php namespace text\json;
 
+/**
+ * Simple entry point class
+ *
+ * @see   https://github.com/xp-forge/json/issues/3
+ * @test  xp://text.json.unittest.JsonTest
+ */
 abstract class Json extends \lang\Object {
 
   /**
