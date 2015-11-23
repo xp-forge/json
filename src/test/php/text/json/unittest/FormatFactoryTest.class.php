@@ -8,7 +8,7 @@ class FormatFactoryTest extends \unittest\TestCase {
 
   #[@test]
   public function dense() {
-    $this->assertInstanceOf(DenseFormat::class, Format::dense());
+    $this->assertInstanceOf('text.json.DenseFormat', Format::dense());
   }
 
   #[@test]
@@ -23,7 +23,7 @@ class FormatFactoryTest extends \unittest\TestCase {
 
   #[@test]
   public function wrapped() {
-    $this->assertInstanceOf(WrappedFormat::class, Format::wrapped());
+    $this->assertInstanceOf('text.json.WrappedFormat', Format::wrapped());
   }
 
   #[@test]
