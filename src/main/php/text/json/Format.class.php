@@ -5,7 +5,6 @@ use lang\IllegalArgumentException;
 /**
  * JSON format
  *
- * @test  xp://text.json.unittest.DefaultFormatTest
  * @test  xp://text.json.unittest.FormatFactoryTest
  */
 abstract class Format extends \lang\Object {
