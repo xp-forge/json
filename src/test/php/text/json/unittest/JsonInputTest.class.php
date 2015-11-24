@@ -3,6 +3,7 @@
 use io\streams\MemoryInputStream;
 use util\collections\Pair;
 use text\json\Types;
+use lang\FormatException;
 
 /**
  * Test JSON input
@@ -56,12 +57,12 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals($expected, $this->read($source));
   }
 
-  #[@test, @expect('lang.FormatException'), @values(['"\X"', '[ "\x" ]'])]
+  #[@test, @expect(FormatException::class), @values(['"\X"', '[ "\x" ]'])]
   public function illegal_escape_sequence($source) {
     $this->read($source);
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function illegal_encoding() {
     $this->read("\"\xfc\"");
   }
@@ -76,7 +77,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals('ü€', $this->read("\"\xfc\u20ac\"", 'iso-8859-15'));
   }
 
-  #[@test, @expect(class= 'lang.FormatException', withMessage= 'Unclosed string'), @values([
+  #[@test, @expect(class= FormatException::class, withMessage= 'Unclosed string'), @values([
   #  '"', '"abc', '"abc\"'
   #])]
   public function unclosed_string($source) {
@@ -177,7 +178,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals(['key' => 'v2'], $this->read('{"key": "v1", "key": "v2"}'));
   }
 
-  #[@test, @expect('lang.FormatException'), @values([
+  #[@test, @expect(FormatException::class), @values([
   #  '{', '{{', '{{}',
   #  '}', '}}'
   #])]
@@ -185,42 +186,42 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->read($source);
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missing_key() {
     $this->read('{:"value"}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missing_value() {
     $this->read('{"key":}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missing_key_and_value() {
     $this->read('{:}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missing_colon() {
     $this->read('{"key"}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missing_comma_between_key_value_pairs() {
     $this->read('{"a": "v1" "b": "v2"}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function trailing_comma_in_object() {
     $this->read('{"key": "value",}');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function unquoted_key_in_object() {
     $this->read('{key: "value"}');
   }
 
-  #[@test, @expect('lang.FormatException'), @values([
+  #[@test, @expect(FormatException::class), @values([
   #  '{1: "value"}',
   #  '{1.0: "value"}',
   #  '{true: "value"}', '{false: "value"}', '{null: "value"}',
@@ -262,7 +263,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals(['v1', ['v2', 'v3']], $this->read($source));
   }
 
-  #[@test, @expect('lang.FormatException'), @values([
+  #[@test, @expect(FormatException::class), @values([
   #  '[', '[[', '[[]',
   #  ']', ']]'
   #])]
@@ -270,27 +271,27 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->read($source);
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function missing_comma_after_value() {
     $this->read('["v1" "v2"]');
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function trailing_comma_in_array() {
     $this->read('["value",]');
   }
 
-  #[@test, @expect('lang.FormatException'), @values(['', ' ', '  '])]
+  #[@test, @expect(FormatException::class), @values(['', ' ', '  '])]
   public function empty_input($source) {
     $this->read($source);
   }
 
-  #[@test, @expect('lang.FormatException')]
+  #[@test, @expect(FormatException::class)]
   public function xml_input() {
     $this->read('<xml version="1.0"?><document/>');
   }
 
-  #[@test, @expect('lang.FormatException'), @values([
+  #[@test, @expect(FormatException::class), @values([
   #  'UNRECOGNIZED_CONSTANT',
   #  "'json does not allow single quoted strings'",
   #  "`json does not allow strings in backquores`",
@@ -364,7 +365,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "\["/'), @values([
+  #[@test, @expect(class= FormatException::class, withMessage= '/expecting "\["/'), @values([
   #  'null', 'false', 'true',
   #  '""', '"Test"',
   #  '0', '0.0',
@@ -372,11 +373,11 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #])]
   public function cannot_read_other_values_than_arrays_sequentially($source) {
     foreach ($this->input($source)->elements() as $element) {
-      $this->fail('Should raise before first element is returned', null, 'lang.FormatException');
+      $this->fail('Should raise before first element is returned', null, FormatException::class);
     }
   }
 
-  #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "," or "\]"/')]
+  #[@test, @expect(class= FormatException::class, withMessage= '/expecting "," or "\]"/')]
   public function reading_malformed_array_sequentially() {
     foreach ($this->input('[1 2]')->elements() as $element) {
     }
@@ -398,7 +399,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting "\{"/'), @values([
+  #[@test, @expect(class= FormatException::class, withMessage= '/expecting "\{"/'), @values([
   #  'null', 'false', 'true',
   #  '""', '"Test"',
   #  '0', '0.0',
@@ -406,11 +407,11 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #])]
   public function cannot_read_other_values_than_pairs_sequentially($source) {
     foreach ($this->input($source)->pairs() as $element) {
-      $this->fail('Should raise before first element is returned', null, 'lang.FormatException');
+      $this->fail('Should raise before first element is returned', null, FormatException::class);
     }
   }
 
-  #[@test, @expect(class= 'lang.FormatException', withMessage= '/expecting ":"/')]
+  #[@test, @expect(class= FormatException::class, withMessage= '/expecting ":"/')]
   public function reading_malformed_pairs_sequentially() {
     foreach ($this->input('{"key" "value"}')->pairs() as $element) {
     }
