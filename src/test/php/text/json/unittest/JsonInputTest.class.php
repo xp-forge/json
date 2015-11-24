@@ -373,7 +373,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #])]
   public function cannot_read_other_values_than_arrays_sequentially($source) {
     foreach ($this->input($source)->elements() as $element) {
-      $this->fail('Should raise before first element is returned', null, FormatException::class);
+      $this->fail('Should raise before first element is returned', null, 'lang.FormatException');
     }
   }
 
@@ -407,7 +407,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #])]
   public function cannot_read_other_values_than_pairs_sequentially($source) {
     foreach ($this->input($source)->pairs() as $element) {
-      $this->fail('Should raise before first element is returned', null, FormatException::class);
+      $this->fail('Should raise before first element is returned', null, 'lang.FormatException');
     }
   }
 
