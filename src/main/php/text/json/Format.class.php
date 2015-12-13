@@ -5,20 +5,19 @@ use lang\IllegalArgumentException;
 /**
  * JSON format
  *
- * @test  xp://text.json.unittest.DefaultFormatTest
+ * @test  xp://text.json.unittest.FormatFactoryTest
  */
 abstract class Format extends \lang\Object {
   const ESCAPE_SLASHES = -65;  // ~JSON_UNESCAPED_SLASHES
   const ESCAPE_UNICODE = -257; // ~JSON_UNESCAPED_UNICODE
   const ESCAPE_ENTITIES = 11;  // JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT
 
-  public static $DEFAULT, $NATURAL;
+  public static $DEFAULT;
   public $comma;
   public $colon;
 
   static function __static() {
     self::$DEFAULT= new DenseFormat();
-    self::$NATURAL= new WrappedFormat('    ', ~self::ESCAPE_SLASHES);
   }
 
   /**
@@ -32,6 +31,27 @@ abstract class Format extends \lang\Object {
     $this->comma= $comma;
     $this->colon= $colon;
     $this->options= $options;
+  }
+
+  /**
+   * Creates a new dense format
+   *
+   * @param  int $options
+   * @return self
+   */
+  public static function dense($options= 0) {
+    return new DenseFormat($options ?: ~self::ESCAPE_SLASHES);
+  }
+
+  /**
+   * Creates a new wrapped format
+   *
+   * @param  string $indent
+   * @param  int $options
+   * @return self
+   */
+  public static function wrapped($indent= '    ', $options= 0) {
+    return new WrappedFormat($indent, $options ?: ~self::ESCAPE_SLASHES);
   }
 
   /**
