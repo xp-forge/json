@@ -13,39 +13,38 @@ Reads and writes JSON to and from various input sources.
 
 Examples
 --------
-Reading is done using one of the `Input` implementations:
+Reading can be done from a string using one of the `Input` implementations:
 
 ```php
+// Strings
+$value= Json::read('"Test"');
+
+// Input
 $in= new FileInput(new File('input.json'));
 $in= new StringInput('{"Hello": "World"}');
 $in= new StreamInput(new SocketInputStream(...));
 
-$value= $in->read();
+$value= Json::read($in);
 ```
 
-Writing is done using one of the `Output` implementations:
+Writing can be done to a string or using one of the `Output` implementations:
 
 ```php
+// Strings
+$json= Json::of('Test');
+
+// Output
 $out= new FileOutput(new File('output.json'));
 $out= new StreamOutput(new SocketOuputStream(...));
 
 $out->write($value);
 ```
 
-Writing to strings works a bit differently, the result needs to be fetched via the `bytes()` method.
-
-```php
-$out= new StringOutput();
-$out->write('"Hello", he said.');
-
-$json= $out->bytes();   // "\"Hello\", he said."
-```
-
 ### Formatted output
 To change the output format, pass a `Format` instance to the output's constructor. The formats available are:
 
-* `DenseFormat($options)`: Best for network I/O, no unsignificant whitespace, default if nothing given and accessible via `Format::$DEFAULT`.
-* `WrappedFormat($indent, $options)`: Wraps first-level arrays and all objects, uses whitespace after commas colons. An instance of this format using 4 spaces for indentation and per default leaving forward slashes unescaped is available via `Format::$NATURAL`.
+* `DenseFormat($options)`: Best for network I/O, no unsignificant whitespace, default if nothing given and accessible via `Format::dense($options= ~Format::ESCAPE_SLASHES)`.
+* `WrappedFormat($indent, $options)`: Wraps first-level arrays and all objects, uses whitespace after commas colons. An instance of this format using 4 spaces for indentation and per default leaving forward slashes unescaped is available via `Format::wrapped($indent= "    ", $options= ~Format::ESCAPE_SLASHES)`.
 
 The available options that can be or'ed together are:
 
@@ -54,7 +53,7 @@ The available options that can be or'ed together are:
 * `Format::ESCAPE_ENTITIES`: Escape XML entities `&`, `"`, `<` and `>`. Per default, these are represented in their literal form.
 
 ```php
-$out= new FileOutput(new File('glue.json'), Format::$NATURAL);
+$out= new FileOutput(new File('glue.json'), Format::wrapped());
 $out->write([
   'name'    => 'example/package',
   'version' => '1.0.0',
@@ -87,7 +86,7 @@ You can use the `elements()` method to receive an iterator over a JSON array. In
 
 ```php
 $conn= new HttpConnection(...);
-$in= new StreamInput($conn->get('/search?q=example&limit=1000')->getInputStream());
+$in= new StreamInput($conn->get('/search?q=example&limit=1000')->in());
 foreach ($in->elements() as $element) {
   // Process
 }
@@ -97,7 +96,7 @@ If you get a huge object, you can also process it sequentially using the `pairs(
 
 ```php
 $conn= new HttpConnection(...);
-$in= new StreamInput($conn->get('/resources/4711?expand=*')->getInputStream());
+$in= new StreamInput($conn->get('/resources/4711?expand=*')->in());
 foreach ($in->pairs() as $key => $value) {
   // Process
 }
@@ -107,7 +106,7 @@ To detect the type of the data on the stream (again, without reading it complete
 
 ```php
 $conn= new HttpConnection(...);
-$in= new StreamInput($conn->get($resource)->getInputStream());
+$in= new StreamInput($conn->get($resource)->in());
 $type= $in->type();
 if ($type->isArray()) {
   // Handle arrays
