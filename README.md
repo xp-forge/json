@@ -37,7 +37,7 @@ $json= Json::of('Test');
 $out= new FileOutput(new File('output.json'));
 $out= new StreamOutput(new SocketOuputStream(...));
 
-Json::write($value);
+Json::write($value, $out);
 ```
 
 ### Formatted output
