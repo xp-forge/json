@@ -3,6 +3,10 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 1.0.0 / 2015-12-13
+
+* Merged PR #4: Simplify JSON API - @thekid
+
 ## 0.9.0 / 2015-02-25
 
 * Ensured I/O objects are closed after reading / writing has finished
