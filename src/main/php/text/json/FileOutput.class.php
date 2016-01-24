@@ -30,7 +30,7 @@ class FileOutput extends Output {
       $this->file= new File($arg);
       $this->wasOpen= false;
     }
-    $this->wasOpen || $this->file->open(FILE_MODE_WRITE);
+    $this->wasOpen || $this->file->open(File::WRITE);
   }
 
   /**

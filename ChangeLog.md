@@ -3,6 +3,11 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 1.0.1 / 2016-01-24
+
+* Changed code base to no longer use deprecated FILE_MODE_* constants
+  (@thekid)
+
 ## 1.0.0 / 2015-12-13
 
 * Merged PR #4: Simplify JSON API - @thekid

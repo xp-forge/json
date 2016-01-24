@@ -1,6 +1,7 @@
 <?php namespace text\json;
 
 class ObjectStream extends Stream {
+  private $next= false;
 
   /**
    * Writes a key/value pair

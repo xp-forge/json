@@ -1,6 +1,7 @@
 <?php namespace text\json;
 
 class ArrayStream extends Stream {
+  private $next= false;
 
   /**
    * Writes an element

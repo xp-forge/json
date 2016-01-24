@@ -16,7 +16,7 @@ class FileOutputTest extends JsonOutputTest {
   /** @return text.json.Output */
   protected function output() {
     $file= new File($this->tempName());
-    $file->open(FILE_MODE_REWRITE);
+    $file->open(File::REWRITE);
     return new FileOutput($file);
   }
 
@@ -68,7 +68,7 @@ class FileOutputTest extends JsonOutputTest {
   #[@test]
   public function open_files_are_not_closed() {
     $file= new File($this->tempName());
-    $file->open(FILE_MODE_REWRITE);
+    $file->open(File::REWRITE);
     $file->seek(0, SEEK_SET);
     (new FileOutput($file))->write('test');
     $this->assertTrue($file->isOpen());

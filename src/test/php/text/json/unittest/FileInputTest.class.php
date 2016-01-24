@@ -37,7 +37,7 @@ class FileInputTest extends JsonInputTest {
    * @return text.json.Input
    */
   protected function input($source, $encoding= 'utf-8') {
-    $file= $this->fileWith($source, FILE_MODE_REWRITE);
+    $file= $this->fileWith($source, File::REWRITE);
     $file->seek(0, SEEK_SET);
     return new FileInput($file, $encoding);
   }
@@ -58,7 +58,7 @@ class FileInputTest extends JsonInputTest {
 
   #[@test]
   public function is_closed_after_reading() {
-    $file= $this->fileWith('"test"', FILE_MODE_WRITE);
+    $file= $this->fileWith('"test"', File::WRITE);
     $file->close();
     (new FileInput($file))->read();
     $this->assertFalse($file->isOpen());
@@ -66,7 +66,7 @@ class FileInputTest extends JsonInputTest {
 
   #[@test]
   public function is_closed_after_elements() {
-    $file= $this->fileWith('[]', FILE_MODE_WRITE);
+    $file= $this->fileWith('[]', File::WRITE);
     $file->close();
     (new FileInput($file))->elements();
     $this->assertFalse($file->isOpen());
@@ -74,7 +74,7 @@ class FileInputTest extends JsonInputTest {
 
   #[@test]
   public function is_closed_after_pairs() {
-    $file= $this->fileWith('{}', FILE_MODE_WRITE);
+    $file= $this->fileWith('{}', File::WRITE);
     $file->close();
     (new FileInput($file))->elements();
     $this->assertFalse($file->isOpen());
@@ -82,7 +82,7 @@ class FileInputTest extends JsonInputTest {
 
   #[@test]
   public function open_files_are_not_closed() {
-    $file= $this->fileWith('{}', FILE_MODE_REWRITE);
+    $file= $this->fileWith('{}', File::REWRITE);
     $file->seek(0, SEEK_SET);
     (new FileInput($file))->read();
     $this->assertTrue($file->isOpen());

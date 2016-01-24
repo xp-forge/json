@@ -29,7 +29,7 @@ class FileInput extends StreamInput {
       $this->file= new File($arg);
       $this->wasOpen= false;
     }
-    $this->wasOpen || $this->file->open(FILE_MODE_READ);
+    $this->wasOpen || $this->file->open(File::READ);
     parent::__construct($this->file->getInputStream(), $encoding);
   }
 
