@@ -3,6 +3,10 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 2.0.0 / 2016-02-21
+
+* Added version compatibility with XP 7 - @thekid
+
 ## 1.0.1 / 2016-01-24
 
 * Changed code base to no longer use deprecated FILE_MODE_* constants
