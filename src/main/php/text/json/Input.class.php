@@ -48,14 +48,23 @@ abstract class Input extends \lang\Object {
    * @throws lang.FormatException
    */
   protected function escaped($pos, &$offset) {
+    static $SURROGATE_OFFSET= 0x10000 - (0xD800 << 10) - 0xDC00;
+
     $escape= $this->bytes{$pos + 1};
     if (isset(self::$escapes[$escape])) {
       $offset= 2;
       return self::$escapes[$escape];
     } else if ('u' === $escape) {
-      $offset= 6;
-      $hex= substr($this->bytes, $pos + 2, 4);
-      return iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
+      $hex= hexdec(substr($this->bytes, $pos + 2, 4));
+      if ($hex > 0xD800 && $hex < 0xDFFF) {
+        $offset= 12;
+        $surrogate= hexdec(substr($this->bytes, $pos + 8, 4));
+        $char= ($hex << 10) + $surrogate + $SURROGATE_OFFSET;
+        return iconv('ucs-4be', $this->encoding, pack('N', $char));
+      } else {
+        $offset= 6;
+        return iconv('ucs-4be', $this->encoding, pack('N', $hex));
+      }
     } else {
       throw new FormatException('Illegal escape sequence \\'.$escape.'...');
     }

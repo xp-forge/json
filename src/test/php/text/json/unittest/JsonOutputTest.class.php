@@ -47,7 +47,6 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   #  ['""', ''],
   #  ['"Test"', 'Test'],
   #  ['"Test \"the\" west"', 'Test "the" west'],
-  #  ['"\u20acuro"', '€uro'],
   #  ['"Test the \"west\""', 'Test the "west"'],
   #  ['"Test\b"', "Test\x08"],
   #  ['"Test\f"', "Test\x0c"],
@@ -58,6 +57,15 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   #  ['"Test\/"', "Test/"]
   #])]
   public function write_string($expected, $value) {
+    $this->assertEquals($expected, $this->write($value));
+  }
+
+  #[@test, @values([
+  #  ['"\u20acuro"', '€uro'],
+  #  ['"\u00dcbercoder"', 'Übercoder'],
+  #  ['"Poop = \ud83d\udca9"', 'Poop = 💩']
+  #])]
+  public function write_unicode($expected, $value) {
     $this->assertEquals($expected, $this->write($value));
   }
 
