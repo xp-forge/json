@@ -48,8 +48,6 @@ abstract class Input extends \lang\Object {
    * @throws lang.FormatException
    */
   protected function escaped($pos, &$offset) {
-    static $SURROGATE_OFFSET= 0xfca02400; // 0x10000 - (0xd800 << 10) - 0xdc00;
-
     $escape= $this->bytes{$pos + 1};
     if (isset(self::$escapes[$escape])) {
       $offset= 2;
@@ -59,7 +57,7 @@ abstract class Input extends \lang\Object {
       if ($hex > 0xd800 && $hex < 0xdfff) {
         $offset= 12;
         $surrogate= hexdec(substr($this->bytes, $pos + 8, 4));
-        $char= ($hex << 10) + $surrogate + $SURROGATE_OFFSET;
+        $char= ($hex << 10) + $surrogate + 0xfca02400;  // surrogate offset: 0x10000 - (0xd800 << 10) - 0xdc00
         return iconv('ucs-4be', $this->encoding, pack('N', $char));
       } else {
         $offset= 6;
