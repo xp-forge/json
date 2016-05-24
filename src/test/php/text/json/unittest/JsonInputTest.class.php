@@ -428,9 +428,23 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals([$str, $str], $this->read('["'.$str.'", "'.$str.'"]'));
   }
 
-  #[@test, @values([['"', '\\"'], ['ü', '\u00fc']])]
-  public function read_long_text_with_escape_at_end_of_chunk($escaped, $source) {
-    $str= str_repeat('*', 8193);
+  #, [8192, '"', '\\"'], [8193, '"', '\\"'],
+  #  [8187, 'ü', '\u00fc'], [8192, 'ü', '\u00fc'], [8193, 'ü', '\u00fc'],
+  #  [8181, '💩', '\ud83d\udca9'], [8187, '💩', '\ud83d\udca9'], [8192, '💩', '\ud83d\udca9']
+
+  #[@test, @values([
+  #  [8191, '"', '\\"'],
+  #  [8192, '"', '\\"'],
+  #  [8193, '"', '\\"'],
+  #  [8188, 'ä', '\\u00e4'],
+  #  [8189, 'ö', '\\u00f6'],
+  #  [8193, 'ü', '\\u00fc'],
+  #  [8182, '💩', '\ud83d\udca9'],
+  #  [8189, '💩', '\ud83d\udca9'],
+  #  [8193, '💩', '\ud83d\udca9']
+  #])]
+  public function read_long_text_with_escape_at_end_of_chunk($length, $escaped, $source) {
+    $str= str_repeat('*', $length);
     $this->assertEquals($str.$escaped, $this->read('"'.$str.$source.'"'));
   }
 

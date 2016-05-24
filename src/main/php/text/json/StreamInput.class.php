@@ -64,7 +64,9 @@ class StreamInput extends Input {
           $end= strcspn($bytes, '"\\', $o) + $o;
           if ($end < $len) {
             if ('\\' === $bytes{$end}) {
-              while ($end + 4 >= $len && $this->in->available()) {
+
+              // Ensure either EOF or space for a surrogate pair
+              while ($end + 12 > $len && $this->in->available()) {
                 $bytes.= $this->in->read();
                 $this->bytes= $bytes;
                 $len= $this->len= strlen($bytes);
