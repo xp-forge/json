@@ -358,11 +358,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
 
   #[@test, @values(['[1, 2, 3]', '[1,2,3]', '[ 1, 2, 3 ]'])]
   public function can_read_array_sequentially($source) {
-    $r= [];
-    foreach ($this->input($source)->elements() as $element) {
-      $r[]= $element;
-    }
-    $this->assertEquals([1, 2, 3], $r);
+    $this->assertEquals([1, 2, 3], iterator_to_array($this->input($source)->elements()));
   }
 
   #[@test]
@@ -392,11 +388,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
 
   #[@test, @values(['{"a":"v1","b":"v2"}', '{"a": "v1", "b": "v2"}'])]
   public function can_read_map_sequentially($source) {
-    $r= [];
-    foreach ($this->input($source)->pairs() as $key => $value) {
-      $r[$key]= $value;
-    }
-    $this->assertEquals(['a' => 'v1', 'b' => 'v2'], $r);
+    $this->assertEquals(['a' => 'v1', 'b' => 'v2'], iterator_to_array($this->input($source)->pairs()));
   }
 
   #[@test]
