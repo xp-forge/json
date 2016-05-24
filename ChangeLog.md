@@ -3,6 +3,9 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #6: Fix unicode surrogate pairs not being handled correctly
+  (@thekid)
+
 ## 2.0.0 / 2016-02-21
 
 * Added version compatibility with XP 7 - @thekid
