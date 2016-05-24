@@ -25,20 +25,19 @@ class StringInput extends Input {
     $bytes= $this->bytes;
 
     while ($pos < $len) {
-      $c= $this->bytes{$pos};
+      $c= $bytes{$pos};
       if ('"' === $c) {
         $string= '';
-        $o= 1;
+        $o= $pos + 1;
         do {
-          $span= strcspn($bytes, '"\\', $pos + $o) + $o;
-          $end= $pos + $span;
+          $end= strcspn($bytes, '"\\', $o) + $o;
           if ($end < $len) {
             if ('\\' === $bytes{$end}) {
-              $string.= substr($bytes, $pos + $o, $span - $o).$this->escaped($end, $consumed);
-              $o= $span + $consumed;
+              $string.= substr($bytes, $o, $end - $o).$this->escaped($end, $consumed);
+              $o= $end + $consumed;
               continue;
-            } else if ('"' === $bytes{$end}) {
-              $string.= substr($bytes, $pos + $o, $span - $o);
+            } else if ($c === $bytes{$end}) {
+              $string.= substr($bytes, $o, $end - $o);
               $encoded= iconv($this->encoding, \xp::ENCODING, $string);
               if (false === $encoded) {
                 $e= new FormatException('Illegal '.$this->encoding.' encoding');
