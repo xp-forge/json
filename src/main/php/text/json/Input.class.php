@@ -53,9 +53,16 @@ abstract class Input extends \lang\Object {
       $offset= 2;
       return self::$escapes[$escape];
     } else if ('u' === $escape) {
-      $offset= 6;
-      $hex= substr($this->bytes, $pos + 2, 4);
-      return iconv('ucs-4be', $this->encoding, pack('N', hexdec($hex)));
+      $hex= hexdec(substr($this->bytes, $pos + 2, 4));
+      if ($hex > 0xd800 && $hex < 0xdfff) {
+        $offset= 12;
+        $surrogate= hexdec(substr($this->bytes, $pos + 8, 4));
+        $char= ($hex << 10) + $surrogate + 0xfca02400;  // surrogate offset: 0x10000 - (0xd800 << 10) - 0xdc00
+        return iconv('ucs-4be', $this->encoding, pack('N', $char));
+      } else {
+        $offset= 6;
+        return iconv('ucs-4be', $this->encoding, pack('N', $hex));
+      }
     } else {
       throw new FormatException('Illegal escape sequence \\'.$escape.'...');
     }

@@ -42,8 +42,6 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #  ['Test', '"Test"'],
   #  ['Test the "west"', '"Test the \"west\""'],
   #  ['Test "the" west', '"Test \"the\" west"'],
-  #  ['€uro', '"\u20acuro"'], ['€uro', '"\u20ACuro"'],
-  #  ['Knüper', '"Knüper"'], ['Knüper', '"Kn\u00fcper"'],
   #  ["Test\x08", '"Test\b"'],
   #  ["Test\x0c", '"Test\f"'],
   #  ["Test\x0a", '"Test\n"'],
@@ -54,6 +52,15 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #  ["Test/", '"Test\/"']
   #])]
   public function read_string($expected, $source) {
+    $this->assertEquals($expected, $this->read($source));
+  }
+
+  #[@test, @values([
+  #  ['€uro', '"\u20acuro"'], ['€uro', '"\u20ACuro"'], ['€uro', '"€uro"'],
+  #  ['Übercoder', '"\u00dcbercoder"'], ['Übercoder', '"\u00DCbercoder"'], ['Übercoder', '"Übercoder"'],
+  #  ['Poop = 💩', '"Poop = \ud83d\udca9"']
+  #])]
+  public function read_unicode($expected, $source) {
     $this->assertEquals($expected, $this->read($source));
   }
 
@@ -77,7 +84,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals('ü€', $this->read("\"\xfc\u20ac\"", 'iso-8859-15'));
   }
 
-  #[@test, @expect(class= FormatException::class, withMessage= 'Unclosed string'), @values([
+  #[@test, @expect(class= FormatException::class, withMessage= '/Unclosed string/'), @values([
   #  '"', '"abc', '"abc\"'
   #])]
   public function unclosed_string($source) {
