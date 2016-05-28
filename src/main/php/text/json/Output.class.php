@@ -22,31 +22,53 @@ abstract class Output extends \lang\Object {
    */
   public function write($value) {
     $f= $this->format;
-    if (is_array($value)) {
+    if ($value instanceof \Traversable) {
+      $i= 0;
+      $map= null;
+      foreach ($value as $key => $element) {
+        if (0 === $i++) {
+          $map= 0 !== $key;
+          $this->appendToken($f->open($map ? '{' : '['));
+        } else {
+          $this->appendToken($f->comma);
+        }
+
+        if ($map) {
+          $this->appendToken($f->representationOf($key).$f->colon);
+        }
+        $this->write($element);
+      }
+      if (null === $map) {
+        $this->appendToken('[]');
+      } else {
+        $this->appendToken($map ? '}' : ']');
+      }
+    } else if (is_array($value)) {
       if (empty($value)) {
         $this->appendToken('[]');
       } else if (0 === key($value)) {
         $next= false;
         foreach ($value as $element) {
           if ($next) {
-            $t= $f->comma;
+            $this->appendToken($f->comma);
           } else {
-            $t= $f->open('[');
+            $this->appendToken($f->open('['));
             $next= true;
           }
-          $this->appendToken($t.$f->representationOf($element));
+          $this->write($element);
         }
         $this->appendToken($f->close(']'));
       } else {
         $next= false;
         foreach ($value as $key => $mapped) {
           if ($next) {
-            $t= $f->comma;
+            $this->appendToken($f->comma);
           } else {
-            $t= $f->open('{');
+            $this->appendToken($f->open('{'));
             $next= true;
           }
-          $this->appendToken($t.$f->representationOf($key).$f->colon.$f->representationOf($mapped));
+          $this->appendToken($f->representationOf($key).$f->colon);
+          $this->write($mapped);
         }
         $this->appendToken($f->close('}'));
       }

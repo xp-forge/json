@@ -141,6 +141,21 @@ abstract class JsonOutputTest extends \unittest\TestCase {
     $this->assertEquals($expected, $this->write($write));
   }
 
+  #[@test, @values([
+  #  ['[]', new \ArrayIterator([])],
+  #  ['[1]', new \ArrayIterator([1])],
+  #  ['[1,2]', new \ArrayIterator([1, 2])],
+  #  ['{"key":"value"}', new \ArrayIterator(['key' => 'value'])],
+  #  ['{"a":"v1","b":"v2"}', new \ArrayIterator(['a' => 'v1', 'b' => 'v2'])],
+  #  ['[1,[2,3]]', new \ArrayIterator([1, new \ArrayIterator([2, 3])])],
+  #  ['[1,[2,3]]', [1, new \ArrayIterator([2, 3])]],
+  #  ['{"a":"v1","b":{"c":"v2"}}', new \ArrayIterator(['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])])],
+  #  ['{"a":"v1","b":{"c":"v2"}}', ['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])]]
+  #])]
+  public function write_iterable($expected, $write) {
+    $this->assertEquals($expected, $this->write($write));
+  }
+
   #[@test, @expect('lang.IllegalArgumentException')]
   public function cannot_write_closures() {
     $this->write(function() { });
