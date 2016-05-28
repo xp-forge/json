@@ -133,6 +133,7 @@ abstract class Input extends \lang\Object {
    * Resets input
    *
    * @return void
+   * @throws io.IOException If this input cannot be reset
    */
   public abstract function reset();
 

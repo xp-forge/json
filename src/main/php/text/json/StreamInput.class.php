@@ -54,6 +54,7 @@ class StreamInput extends Input {
    * Resets input
    *
    * @return void
+   * @throws io.IOException If this input cannot be reset
    */
   public function reset() {
     if ($this->in instanceof Seekable) {
