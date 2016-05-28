@@ -3,6 +3,8 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 2.0.1 / 2016-05-28
+
 * Merged PR #6: Fix unicode surrogate pairs not being handled correctly
   (@thekid)
 
