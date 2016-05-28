@@ -42,9 +42,23 @@ class StreamInputTest extends JsonInputTest {
   #  "\377\376[\0001\000]\000",
   #  "\376\377\000[\0001\000]"
   #])]
-  public function calling_elements_twice($input) {
+  public function calling_read_after_resetting($input) {
+    $input= $this->input($input);
+    $this->assertEquals([1], $input->read(), '#1');
+    $input->reset();
+    $this->assertEquals([1], $input->read(), '#2');
+  }
+
+  #[@test, @values([
+  #  "[1]",
+  #  "\357\273\277[1]",
+  #  "\377\376[\0001\000]\000",
+  #  "\376\377\000[\0001\000]"
+  #])]
+  public function calling_elements_after_resetting($input) {
     $input= $this->input($input);
     $this->assertEquals([1], iterator_to_array($input->elements()), '#1');
+    $input->reset();
     $this->assertEquals([1], iterator_to_array($input->elements()), '#2');
   }
 
@@ -54,9 +68,10 @@ class StreamInputTest extends JsonInputTest {
   #  "\377\376{\000\"\000k\000e\000y\000\"\000:\000\"\000v\000a\000l\000u\000e\000\"\000}\000",
   #  "\376\377\000{\000\"\000k\000e\000y\000\"\000:\000\"\000v\000a\000l\000u\000e\000\"\000}"
   #])]
-  public function calling_pairs_twice($input) {
+  public function calling_pairs_after_resetting($input) {
     $input= $this->input($input);
     $this->assertEquals(['key' => 'value'], iterator_to_array($input->pairs()), '#1');
+    $input->reset();
     $this->assertEquals(['key' => 'value'], iterator_to_array($input->pairs()), '#2');
   }
 
@@ -69,6 +84,7 @@ class StreamInputTest extends JsonInputTest {
     ]));
     $this->assertEquals([1], iterator_to_array($input->elements()), '#1');
     try {
+      $input->reset();
       iterator_to_array($input->elements());
       $this->fail('Expected exception not caught', null, 'io.IOException');
     } catch (IOException $expected) {

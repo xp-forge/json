@@ -13,7 +13,7 @@ abstract class Input extends \lang\Object {
   protected $len;
   protected $pos;
   protected $encoding;
-  protected $firstToken= null, $elements= null, $pairs= null;
+  protected $firstToken= null;
 
   protected static $escapes= [
     '"'  => "\"",
@@ -239,10 +239,7 @@ abstract class Input extends \lang\Object {
    * @return php.Iterator
    */
   public function elements() {
-    if (null === $this->elements) {
-      $this->elements= new Elements($this);
-    }
-    return $this->elements;
+    return new Elements($this);
   }
 
   /**
@@ -251,10 +248,7 @@ abstract class Input extends \lang\Object {
    * @return php.Iterator
    */
   public function pairs() {
-    if (null === $this->pairs) {
-      $this->pairs= new Pairs($this);
-    }
-    return $this->pairs;
+    return new Pairs($this);
   }
 
   /** @return void */

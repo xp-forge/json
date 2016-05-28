@@ -23,11 +23,6 @@ class Elements extends \lang\Object implements \Iterator {
   
   /** @return void */
   public function rewind() {
-    if (null === $this->id) {
-      $this->input->reset();
-      $this->id= 0;
-    }
-
     $token= $this->input->firstToken();
     if ('[' === $token) {
       $token= $this->input->nextToken();

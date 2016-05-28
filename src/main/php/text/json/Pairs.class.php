@@ -9,7 +9,7 @@ use lang\FormatException;
  */
 class Pairs extends \lang\Object implements \Iterator {
   protected $input;
-  protected $key= true;
+  protected $key= null;
   protected $value= null;
 
   /**
@@ -38,10 +38,6 @@ class Pairs extends \lang\Object implements \Iterator {
   
   /** @return void */
   public function rewind() {
-    if (null === $this->key) {
-      $this->input->reset();
-    }
-
     $token= $this->input->firstToken();
     if ('{' === $token) {
       $token= $this->input->nextToken();
