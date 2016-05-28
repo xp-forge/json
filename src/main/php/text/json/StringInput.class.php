@@ -15,6 +15,16 @@ use lang\FormatException;
 class StringInput extends Input {
 
   /**
+   * Resets input
+   *
+   * @return void
+   */
+  public function reset() {
+    $this->pos= 0;
+    $this->firstToken= null;
+  }
+
+  /**
    * Returns next token
    *
    * @return string

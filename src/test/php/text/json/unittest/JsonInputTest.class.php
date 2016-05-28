@@ -533,6 +533,13 @@ abstract class JsonInputTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function calling_elements_twice() {
+    $input= $this->input('[1]');
+    $this->assertEquals([1], iterator_to_array($input->elements()), '#1');
+    $this->assertEquals([1], iterator_to_array($input->elements()), '#2');
+  }
+
+  #[@test]
   public function pairs_after_detecting_type() {
     $input= $this->input('{"key" : "value"}');
     $input->type();
@@ -544,5 +551,12 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $input= $this->input('{"key" : "value"}');
     iterator_to_array($input->pairs());
     $this->assertEquals(Types::$OBJECT, $input->type());
+  }
+
+  #[@test]
+  public function calling_pairs_twice() {
+    $input= $this->input('{"key" : "value"}');
+    $this->assertEquals(['key' => 'value'], iterator_to_array($input->pairs()), '#1');
+    $this->assertEquals(['key' => 'value'], iterator_to_array($input->pairs()), '#2');
   }
 }

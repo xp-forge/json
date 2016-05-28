@@ -1,10 +1,11 @@
 <?php namespace text\json;
 
 use io\streams\InputStream;
+use io\streams\Seekable;
 use io\streams\Streams;
 use io\IOException;
 
-class MultiByteSource extends \lang\Object implements InputStream {
+class MultiByteSource extends \lang\Object implements InputStream, Seekable {
   protected $in= null;
 
   /**
@@ -27,6 +28,30 @@ class MultiByteSource extends \lang\Object implements InputStream {
    */
   public function available() {
     return $this->in->available();
+  }
+
+  /**
+   * Seek
+   *
+   * @param  int $offset
+   * @param  int $whence
+   * @return void
+   */
+  public function seek($offset, $whence= SEEK_SET) {
+    if ($this->in instanceof Seekable) {
+      $this->in->seek($offset, $whence);
+    } else {
+      throw new IOException('Cannot seek '.$this->in->toString());
+    }
+  }
+
+  /**
+   * Tell
+   *
+   * @return int
+   */
+  public function tell() {
+    return $this->in->tell();
   }
 
   /**
