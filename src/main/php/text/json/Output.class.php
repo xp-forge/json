@@ -22,7 +22,7 @@ abstract class Output extends \lang\Object {
    */
   public function write($value) {
     $f= $this->format;
-    if ($value instanceof \Traversable) {
+    if ($value instanceof \Traversable || is_array($value)) {
       $i= 0;
       $map= null;
       foreach ($value as $key => $element) {
@@ -42,35 +42,6 @@ abstract class Output extends \lang\Object {
         $this->appendToken('[]');
       } else {
         $this->appendToken($map ? '}' : ']');
-      }
-    } else if (is_array($value)) {
-      if (empty($value)) {
-        $this->appendToken('[]');
-      } else if (0 === key($value)) {
-        $next= false;
-        foreach ($value as $element) {
-          if ($next) {
-            $this->appendToken($f->comma);
-          } else {
-            $this->appendToken($f->open('['));
-            $next= true;
-          }
-          $this->write($element);
-        }
-        $this->appendToken($f->close(']'));
-      } else {
-        $next= false;
-        foreach ($value as $key => $mapped) {
-          if ($next) {
-            $this->appendToken($f->comma);
-          } else {
-            $this->appendToken($f->open('{'));
-            $next= true;
-          }
-          $this->appendToken($f->representationOf($key).$f->colon);
-          $this->write($mapped);
-        }
-        $this->appendToken($f->close('}'));
       }
     } else {
       $this->appendToken($f->representationOf($value));
