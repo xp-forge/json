@@ -150,7 +150,9 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   #  ['[1,[2,3]]', new \ArrayIterator([1, new \ArrayIterator([2, 3])])],
   #  ['[1,[2,3]]', [1, new \ArrayIterator([2, 3])]],
   #  ['{"a":"v1","b":{"c":"v2"}}', new \ArrayIterator(['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])])],
-  #  ['{"a":"v1","b":{"c":"v2"}}', ['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])]]
+  #  ['{"a":"v1","b":{"c":"v2"}}', ['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])]],
+  #  ['[1,{"key":"value"}]', new \ArrayIterator([1, new \ArrayIterator(['key' => 'value'])])],
+  #  ['{"key":[1,2]}', new \ArrayIterator(['key' => new \ArrayIterator([1, 2])])]
   #])]
   public function write_iterable($expected, $write) {
     $this->assertEquals($expected, $this->write($write));
