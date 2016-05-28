@@ -87,4 +87,14 @@ class FileInputTest extends JsonInputTest {
     (new FileInput($file))->read();
     $this->assertTrue($file->isOpen());
   }
+
+  #[@test]
+  public function is_reopened_when_reset() {
+    $file= $this->fileWith('{}', File::WRITE);
+    $file->close();
+    $input= new FileInput($file);
+    $input->read();
+    $input->reset();
+    $this->assertTrue($file->isOpen());
+  }
 }
