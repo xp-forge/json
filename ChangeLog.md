@@ -3,6 +3,12 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #8: Add reset() operation. Enable calling the `elements()`,
+  `pairs()` and `read()` methids  again after explicitly resetting the 
+  stream. This operation may raise an exception if the input is not
+  seekable, e.g. if the underlying stream is socket I/O.
+  (@thekid)
+
 ## 2.0.1 / 2016-05-28
 
 * Merged PR #6: Fix unicode surrogate pairs not being handled correctly
