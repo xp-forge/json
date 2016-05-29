@@ -3,6 +3,8 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #7: Add support for all traversables to `Json::write()`
+  (@thekid)
 * Merged PR #8: Add reset() operation. Enable calling the `elements()`,
   `pairs()` and `read()` methids  again after explicitly resetting the 
   stream. This operation may raise an exception if the input is not
