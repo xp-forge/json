@@ -3,6 +3,8 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 2.1.0 / 2016-05-29
+
 * Merged PR #7: Add support for all traversables to `Json::write()`
   (@thekid)
 * Merged PR #8: Add reset() operation. Enable calling the `elements()`,
