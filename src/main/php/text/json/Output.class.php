@@ -22,33 +22,26 @@ abstract class Output extends \lang\Object {
    */
   public function write($value) {
     $f= $this->format;
-    if (is_array($value)) {
-      if (empty($value)) {
+    if ($value instanceof \Traversable || is_array($value)) {
+      $i= 0;
+      $map= null;
+      foreach ($value as $key => $element) {
+        if (0 === $i++) {
+          $map= 0 !== $key;
+          $this->appendToken($f->open($map ? '{' : '['));
+        } else {
+          $this->appendToken($f->comma);
+        }
+
+        if ($map) {
+          $this->appendToken($f->representationOf($key).$f->colon);
+        }
+        $this->write($element);
+      }
+      if (null === $map) {
         $this->appendToken('[]');
-      } else if (0 === key($value)) {
-        $next= false;
-        foreach ($value as $element) {
-          if ($next) {
-            $t= $f->comma;
-          } else {
-            $t= $f->open('[');
-            $next= true;
-          }
-          $this->appendToken($t.$f->representationOf($element));
-        }
-        $this->appendToken($f->close(']'));
       } else {
-        $next= false;
-        foreach ($value as $key => $mapped) {
-          if ($next) {
-            $t= $f->comma;
-          } else {
-            $t= $f->open('{');
-            $next= true;
-          }
-          $this->appendToken($t.$f->representationOf($key).$f->colon.$f->representationOf($mapped));
-        }
-        $this->appendToken($f->close('}'));
+        $this->appendToken($map ? '}' : ']');
       }
     } else {
       $this->appendToken($f->representationOf($value));
