@@ -33,6 +33,17 @@ class FileInput extends StreamInput {
     parent::__construct($this->file->getInputStream(), $encoding);
   }
 
+  /**
+   * Resets input
+   *
+   * @return void
+   * @throws io.IOException If this input cannot be reset
+   */
+  public function reset() {
+    $this->wasOpen || $this->file->open(File::READ);
+    parent::reset();
+  }
+
   /** @return void */
   public function close() {
     if (!$this->wasOpen && $this->file->isOpen()) {

@@ -545,4 +545,28 @@ abstract class JsonInputTest extends \unittest\TestCase {
     iterator_to_array($input->pairs());
     $this->assertEquals(Types::$OBJECT, $input->type());
   }
+
+  #[@test]
+  public function calling_read_after_resetting() {
+    $input= $this->input('[1]');
+    $this->assertEquals([1], $input->read(), '#1');
+    $input->reset();
+    $this->assertEquals([1], $input->read(), '#2');
+  }
+
+  #[@test]
+  public function calling_elements_after_resetting() {
+    $input= $this->input('[1]');
+    $this->assertEquals([1], iterator_to_array($input->elements()), '#1');
+    $input->reset();
+    $this->assertEquals([1], iterator_to_array($input->elements()), '#2');
+  }
+
+  #[@test]
+  public function calling_pairs_after_resetting() {
+    $input= $this->input('{"key" : "value"}');
+    $this->assertEquals(['key' => 'value'], iterator_to_array($input->pairs()), '#1');
+    $input->reset();
+    $this->assertEquals(['key' => 'value'], iterator_to_array($input->pairs()), '#2');
+  }
 }

@@ -9,7 +9,7 @@ use lang\FormatException;
  */
 class Elements extends \lang\Object implements \Iterator {
   protected $input;
-  protected $id= null;
+  protected $id= 0;
   protected $current= null;
 
   /**
@@ -30,7 +30,6 @@ class Elements extends \lang\Object implements \Iterator {
         $this->id= $this->end();
       } else {
         $this->current= $this->input->valueOf($token);
-        $this->id= 0;
       }
     } else {
       $this->id= $this->end();

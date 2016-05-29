@@ -1,6 +1,8 @@
 <?php namespace text\json;
 
 use io\streams\InputStream;
+use io\streams\Seekable;
+use io\IOException;
 use lang\FormatException;
 
 /**
@@ -14,7 +16,7 @@ use lang\FormatException;
  * @test  xp://text.json.unittest.StreamInputTest
  */
 class StreamInput extends Input {
-  protected $in;
+  protected $in, $offset;
 
   /**
    * Creates a new instance
@@ -28,20 +30,42 @@ class StreamInput extends Input {
     if ("\376\377" === $bom) {
       $encoding= \xp::ENCODING;
       $this->in= new MultiByteSource($in, 'utf-16be');
+      $this->offset= 2;
     } else if ("\377\376" === $bom) {
       $encoding= \xp::ENCODING;
       $this->in= new MultiByteSource($in, 'utf-16le');
+      $this->offset= 2;
     } else {
       $bom.= $in->read(1);
       if ("\357\273\277" === $bom) {
         $encoding= 'utf-8';
+        $this->offset= 3;
       } else {
         $initial= $bom;
+        $this->offset= 0;
       }
       $this->in= $in;
     }
 
     parent::__construct($initial.$this->in->read(), $encoding);
+  }
+
+  /**
+   * Resets input
+   *
+   * @return void
+   * @throws io.IOException If this input cannot be reset
+   */
+  public function reset() {
+    if ($this->in instanceof Seekable) {
+      $this->in->seek($this->offset);
+      $this->bytes= $this->in->read();
+      $this->len= strlen($this->bytes);
+      $this->pos= 0;
+      $this->firstToken= null;
+    } else {
+      throw new IOException('Cannot seek '.$this->in->toString());
+    }
   }
 
   /**
