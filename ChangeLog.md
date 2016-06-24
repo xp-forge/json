@@ -1,4 +1,4 @@
-Imaging APIs for the XP Framework ChangeLog
+JSON for the XP Framework ChangeLog
 ========================================================================
 
 ## ?.?.? / ????-??-??
