@@ -135,6 +135,7 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   #[@test, @values([
   #  ['{"":"value"}', ['' => 'value']],
   #  ['{"key":"value"}', ['key' => 'value']],
+  #  ['{"123":456}', [123 => 456]],
   #  ['{"a":"v1","b":"v2"}', ['a' => 'v1', 'b' => 'v2']]
   #])]
   public function write_object($expected, $write) {

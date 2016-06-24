@@ -3,6 +3,10 @@ Imaging APIs for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 2.1.1 / 2016-06-24
+
+* Fixed issue #9: Integer keys produce invalid JSON - @thekid 
+
 ## 2.1.0 / 2016-05-29
 
 * Merged PR #7: Add support for all traversables to `Json::write()`
