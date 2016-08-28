@@ -30,7 +30,7 @@ class FileInput extends StreamInput {
       $this->wasOpen= false;
     }
     $this->wasOpen || $this->file->open(File::READ);
-    parent::__construct($this->file->getInputStream(), $encoding);
+    parent::__construct($this->file->in(), $encoding);
   }
 
   /**
