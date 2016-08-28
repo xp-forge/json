@@ -34,7 +34,7 @@ abstract class Output extends \lang\Object {
         }
 
         if ($map) {
-          $this->appendToken($f->representationOf($key).$f->colon);
+          $this->appendToken($f->representationOf((string)$key).$f->colon);
         }
         $this->write($element);
       }

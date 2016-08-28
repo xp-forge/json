@@ -1,4 +1,4 @@
-Imaging APIs for the XP Framework ChangeLog
+JSON for the XP Framework ChangeLog
 ========================================================================
 
 ## ?.?.? / ????-??-??
@@ -8,6 +8,10 @@ Imaging APIs for the XP Framework ChangeLog
 * Added forward compatibility with XP 8.0.0: Use File::in() instead of
   the deprecated *getInputStream()*
   (@thekid)
+
+## 2.1.1 / 2016-06-24
+
+* Fixed issue #9: Integer keys produce invalid JSON - @thekid 
 
 ## 2.1.0 / 2016-05-29
 
