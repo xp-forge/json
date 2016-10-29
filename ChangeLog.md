@@ -8,6 +8,7 @@ JSON for the XP Framework ChangeLog
   - Support for UTF-16 without BOM
   - Raise errors for unexpected delimiters in arrays or objects
   - Be stricter than `is_numeric()` when parsing numbers
+  - Raise errors when encountering malformed or unclosed escape sequences
   (@thekid)
 
 ## 2.2.0 / 2016-08-28

@@ -43,18 +43,24 @@ abstract class Input extends \lang\Object {
    * Processes an escape sequence
    *
    * @param  int $pos The position
+   * @param  int $len The string length
    * @param  int &$offset How many bytes were consumed
    * @return string
    * @throws lang.FormatException
    */
-  protected function escaped($pos, &$offset) {
+  protected function escaped($pos, $len, &$offset) {
+    if ($len - $pos < 2) {
+      throw new FormatException('Unclosed escape sequence');
+    }
+
     $escape= $this->bytes{$pos + 1};
     if (isset(self::$escapes[$escape])) {
       $offset= 2;
       return self::$escapes[$escape];
     } else if ('u' === $escape) {
-      $hex= hexdec(substr($this->bytes, $pos + 2, 4));
-      if ($hex > 0xd800 && $hex < 0xdfff) {
+      if (1 !== sscanf(substr($this->bytes, $pos + 2, 4), '%4x', $hex)) {
+        throw new FormatException('Illegal unicode escape sequence '.substr($this->bytes, $pos, 6));
+      } else if ($hex > 0xd800 && $hex < 0xdfff) {
         $offset= 12;
         $surrogate= hexdec(substr($this->bytes, $pos + 8, 4));
         $char= ($hex << 10) + $surrogate + 0xfca02400;  // surrogate offset: 0x10000 - (0xd800 << 10) - 0xdc00

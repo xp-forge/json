@@ -110,7 +110,7 @@ class StreamInput extends Input {
                 $len= $this->len= strlen($bytes);
               }
 
-              $string.= substr($bytes, $o, $end - $o).$this->escaped($end, $consumed);
+              $string.= substr($bytes, $o, $end - $o).$this->escaped($end, $len, $consumed);
               $o= $end + $consumed;
               continue;
             } else if ($c === $bytes{$end}) {

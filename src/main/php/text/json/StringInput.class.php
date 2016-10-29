@@ -44,7 +44,7 @@ class StringInput extends Input {
           $end= strcspn($bytes, '"\\', $o) + $o;
           if ($end < $len) {
             if ('\\' === $bytes{$end}) {
-              $string.= substr($bytes, $o, $end - $o).$this->escaped($end, $consumed);
+              $string.= substr($bytes, $o, $end - $o).$this->escaped($end, $len, $consumed);
               $o= $end + $consumed;
               continue;
             } else if ($c === $bytes{$end}) {

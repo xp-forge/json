@@ -64,7 +64,12 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals($expected, $this->read($source));
   }
 
-  #[@test, @expect(FormatException::class), @values(['"\X"', '[ "\x" ]'])]
+  #[@test, @expect(FormatException::class), @values(['"\uTEST"', '[ "\uTEST" ]'])]
+  public function illegal_unicode($source) {
+    $this->read($source);
+  }
+
+  #[@test, @expect(FormatException::class), @values(['"\X"', '[ "\x" ]', '["\\'])]
   public function illegal_escape_sequence($source) {
     $this->read($source);
   }
@@ -85,7 +90,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(class= FormatException::class, withMessage= '/Unclosed string/'), @values([
-  #  '"', '"abc', '"abc\"'
+  #  '"', '"abc', '"abc\"',
   #])]
   public function unclosed_string($source) {
     $this->read($source);
@@ -465,10 +470,6 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $str= str_repeat('*', 0xFFFF);
     $this->assertEquals([$str, $str], $this->read('["'.$str.'", "'.$str.'"]'));
   }
-
-  #, [8192, '"', '\\"'], [8193, '"', '\\"'],
-  #  [8187, 'ü', '\u00fc'], [8192, 'ü', '\u00fc'], [8193, 'ü', '\u00fc'],
-  #  [8181, '💩', '\ud83d\udca9'], [8187, '💩', '\ud83d\udca9'], [8192, '💩', '\ud83d\udca9']
 
   #[@test, @values([
   #  [8191, '"', '\\"'],
