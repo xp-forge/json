@@ -122,6 +122,8 @@ abstract class Input extends \lang\Object {
           continue;
         } else if (']' === $delim) {
           return $result;
+        } else {
+          throw new FormatException('Unexpected '.\xp::stringOf($delim).', expecting "," or "]"');
         }
       } while ($token= $this->nextToken());
     }

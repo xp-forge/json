@@ -283,6 +283,15 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->read('["v1" "v2"]');
   }
 
+  #[@test, @expect(FormatException::class), @values([
+  #  '["v1" : "v2"]',
+  #  '["v1" => "v2"]',
+  #  '["v1" -> "v2"]'
+  #])]
+  public function incorrect_array_delimiter($input) {
+    $this->read($input);
+  }
+
   #[@test, @expect(FormatException::class)]
   public function trailing_comma_in_array() {
     $this->read('["value",]');
