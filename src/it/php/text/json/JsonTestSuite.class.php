@@ -5,7 +5,7 @@ use io\Folder;
 use lang\FormatException;
 
 class JsonTestSuite extends \unittest\TestCase {
-  private $folder;
+  private $parsing, $transform;
   private static $IGNORED= [
     'n_structure_100000_opening_arrays.json',
     'n_structure_open_array_object.json',
@@ -24,7 +24,8 @@ class JsonTestSuite extends \unittest\TestCase {
    */
   public function __construct($name, $folder= '.') {
     parent::__construct($name);
-    $this->folder= new Folder($folder);
+    $this->parsing= new Folder($folder, 'test_parsing');
+    $this->transform= new Folder($folder, 'test_transform');
   }
 
   /**
@@ -39,7 +40,7 @@ class JsonTestSuite extends \unittest\TestCase {
    * @return php.Generator
    */
   private function parsing($filter) {
-    foreach ((new Folder($this->folder, 'test_parsing'))->entries() as $entry) {
+    foreach ($this->parsing->entries() as $entry) {
       if (!in_array($entry->name(), self::$IGNORED) && 0 === strncmp($filter, $entry->name(), strlen($filter))) {
         yield [$entry];
       }
@@ -61,5 +62,23 @@ class JsonTestSuite extends \unittest\TestCase {
     try {
       (new FileInput($entry))->read();
     } catch (FormatException $ignored) { }
+  }
+
+  /**
+   * Returns transform tests.
+   *
+   * @return php.Generator
+   */
+  private function transform() {
+    foreach ($this->transform->entries() as $entry) {
+      if (!in_array($entry->name(), self::$IGNORED)) {
+        yield [$entry];
+      }
+    }
+  }
+
+  #[@test, @values(source= 'transform')]
+  public function may_understand_differently($entry) {
+    (new FileInput($entry))->read();
   }
 }
