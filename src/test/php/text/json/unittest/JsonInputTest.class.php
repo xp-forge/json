@@ -39,6 +39,8 @@ abstract class JsonInputTest extends \unittest\TestCase {
 
   #[@test, @values([
   #  ['', '""'],
+  #  ['\\', '"\\\\"'],
+  #  ['/', '"\\/"'],
   #  ['Test', '"Test"'],
   #  ['Test the "west"', '"Test the \"west\""'],
   #  ['Test "the" west', '"Test \"the\" west"'],
@@ -69,7 +71,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->read($source);
   }
 
-  #[@test, @expect(FormatException::class), @values(['"\X"', '[ "\x" ]', '["\\'])]
+  #[@test, @expect(FormatException::class), @values(['"\X"', '[ "\x" ]', '["\\', '"\\"'])]
   public function illegal_escape_sequence($source) {
     $this->read($source);
   }
