@@ -11,7 +11,13 @@ class JsonTestSuite extends \unittest\TestCase {
     'n_string_UTF8_surrogate_U+D800.json',
     'n_string_unescaped_tab.json',
     'n_string_unescaped_newline.json',
-    'n_string_unescaped_crtl_char.json'
+    'n_string_unescaped_crtl_char.json',
+    'string_1_escaped_invalid_codepoint.json',
+    'string_1_invalid_codepoint.json',
+    'string_2_escaped_invalid_codepoints.json',
+    'string_2_invalid_codepoints.json',
+    'string_3_escaped_invalid_codepoints.json',
+    'string_3_invalid_codepoints.json'
   ];
 
   /**
