@@ -100,6 +100,17 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals($expected, $this->read($source));
   }
 
+  #[@test, @expect(FormatException::class), @values([
+  #  '00', '01',
+  #  '-', '-00', '-01',
+  #  '+', '+00', '+01',
+  #  'e', 'E', 'ee', 'EE', '0e', '0E',
+  #  '.', '..', '0.', '0.e', '0.E', '0e.', '0E.'
+  #])]
+  public function malformed_numbers($source) {
+    $this->read($source);
+  }
+
   #[@test]
   public function read_int_max() {
     $n= PHP_INT_MAX;

@@ -180,7 +180,7 @@ abstract class Input extends \lang\Object {
       return false;
     } else if ('null' === $token) {
       return null;
-    } else if (is_numeric($token)) {
+    } else if (preg_match('/^\-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?$/', $token)) {
       return $token > PHP_INT_MAX || $token < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
         ? (double)$token
         : (int)$token
