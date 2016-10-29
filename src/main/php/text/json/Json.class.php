@@ -6,7 +6,7 @@
  * @see   https://github.com/xp-forge/json/issues/3
  * @test  xp://text.json.unittest.JsonTest
  */
-abstract class Json extends \lang\Object {
+abstract class Json {
 
   /**
    * Reads from an input
