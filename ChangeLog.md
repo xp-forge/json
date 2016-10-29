@@ -9,6 +9,7 @@ JSON for the XP Framework ChangeLog
   - Raise errors for unexpected delimiters in arrays or objects
   - Be stricter than `is_numeric()` when parsing numbers
   - Raise errors when encountering malformed or unclosed escape sequences
+  - Implement a maximum nesting level for arrays and objects, default 512
   (@thekid)
 
 ## 2.2.0 / 2016-08-28

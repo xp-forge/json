@@ -14,6 +14,7 @@ abstract class Input extends \lang\Object {
   protected $pos;
   protected $encoding;
   protected $firstToken= null;
+  protected $maximumNesting= 512;
 
   protected static $escapes= [
     '"'  => "\"",
@@ -31,12 +32,14 @@ abstract class Input extends \lang\Object {
    *
    * @param  string $source
    * @param  string $encoding
+   * @param  int $maximumNesting Maximum nesting level, defaults to 512
    */
-  public function __construct($source, $encoding= \xp::ENCODING) {
+  public function __construct($source, $encoding= \xp::ENCODING, $maximumNesting= 512) {
     $this->bytes= $source;
     $this->len= strlen($this->bytes);
     $this->pos= 0;
     $this->encoding= $encoding;
+    $this->maximumNesting= $maximumNesting;
   }
 
   /**
@@ -80,19 +83,22 @@ abstract class Input extends \lang\Object {
    * @return [:var]
    * @throws lang.FormatException
    */
-  protected function readObject() {
+  protected function readObject($nesting) {
     $token= $this->nextToken();
     if ('}' === $token) {
       return [];
     } else if (null !== $token) {
       $result= [];
+      if ($nesting++ > $this->maximumNesting) {
+        throw new FormatException('Nesting level too deep');
+      }
       do {
-        $key= $this->valueOf($token);
+        $key= $this->valueOf($token, $nesting);
         if (!is_string($key)) {
           throw new FormatException('Illegal key type '.typeof($key).', expecting string');
         }
         if (':' === ($token= $this->nextToken())) {
-          $result[$key]= $this->valueOf($this->nextToken());
+          $result[$key]= $this->valueOf($this->nextToken(), $nesting);
         } else {
           throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading object, expecting ":"');
         }
@@ -117,14 +123,17 @@ abstract class Input extends \lang\Object {
    * @return [:var]
    * @throws lang.FormatException
    */
-  protected function readArray() {
+  protected function readArray($nesting) {
     $token= $this->nextToken();
     if (']' === $token) {
       return [];
     } else if (null !== $token) {
       $result= [];
+      if ($nesting++ > $this->maximumNesting) {
+        throw new FormatException('Nesting level too deep');
+      }
       do {
-        $result[]= $this->valueOf($token);
+        $result[]= $this->valueOf($token, $nesting);
         $delim= $this->nextToken();
         if (',' === $delim) {
           continue;
@@ -173,13 +182,13 @@ abstract class Input extends \lang\Object {
    * @return var
    * @throws lang.FormatException
    */
-  public function valueOf($token) {
+  public function valueOf($token, $nesting= 0) {
     if (true === $token[0]) {
       return $token[1];
     } else if ('{' === $token) {
-      return $this->readObject();
+      return $this->readObject($nesting);
     } else if ('[' === $token) {
-      return $this->readArray();
+      return $this->readArray($nesting);
     } else if ('true' === $token) {
       return true;
     } else if ('false' === $token) {
