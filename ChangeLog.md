@@ -3,7 +3,7 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-* Read [Parsing JSON is a Minefield][(http://seriot.ch/parsing_json.html)
+* Read [Parsing JSON is a Minefield](http://seriot.ch/parsing_json.html)
   and fixed various noncompliant behaviors:
   - Support for UTF-16 without BOM
   - Raise errors for unexpected delimiters in arrays or objects
