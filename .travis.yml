@@ -19,5 +19,5 @@ before_script:
   - echo "vendor/autoload.php" > composer.pth
 
 script:
-  - git clone git@github.com:nst/JSONTestSuite.git
+  - git clone https://github.com/nst/JSONTestSuite.git
   - sh xp-run xp.unittest.TestRunner src/test/php src/it/php -a JSONTestSuite
