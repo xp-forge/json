@@ -3,6 +3,8 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 2.3.0 / 2016-10-29
+
 * Read [Parsing JSON is a Minefield](http://seriot.ch/parsing_json.html)
   and fixed various noncompliant behaviors:
   - Support for UTF-16 without BOM
