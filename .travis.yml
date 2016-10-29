@@ -17,7 +17,7 @@ before_script:
   - curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-master.sh > xp-run
   - composer install --prefer-dist
   - echo "vendor/autoload.php" > composer.pth
-  - phpenv config-rm xdebug.ini 
+  - phpenv config-rm xdebug.ini || true
 
 script:
   - git clone https://github.com/nst/JSONTestSuite.git
