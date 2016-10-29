@@ -6,7 +6,7 @@ JSON for the XP Framework ChangeLog
 * Read [Parsing JSON is a Minefield][(http://seriot.ch/parsing_json.html)
   and fixed various noncompliant behaviors:
   - Support for UTF-16 without BOM
-  - Raise errors when an unexpected delimiter is encountered in arrays
+  - Raise errors for unexpected delimiters in arrays or objects
   (@thekid)
 
 ## 2.2.0 / 2016-08-28

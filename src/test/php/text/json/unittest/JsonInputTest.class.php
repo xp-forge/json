@@ -229,6 +229,24 @@ abstract class JsonInputTest extends \unittest\TestCase {
   }
 
   #[@test, @expect(FormatException::class), @values([
+  #  '{"v1" , "v2"}',
+  #  '{"v1" => "v2"}',
+  #  '{"v1" -> "v2"}'
+  #])]
+  public function incorrect_pair_delimiter($input) {
+    $this->read($input);
+  }
+
+  #[@test, @expect(FormatException::class), @values([
+  #  '{"v1":"v2" & "a":"b"}',
+  #  '{"v1":"v2" : "a":"b"}',
+  #  '{"v1":"v2" ; "a":"b"}'
+  #])]
+  public function incorrect_member_delimiter($input) {
+    $this->read($input);
+  }
+
+  #[@test, @expect(FormatException::class), @values([
   #  '{1: "value"}',
   #  '{1.0: "value"}',
   #  '{true: "value"}', '{false: "value"}', '{null: "value"}',
