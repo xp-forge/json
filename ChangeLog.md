@@ -3,6 +3,11 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Read [Parsing JSON is a Minefield][(http://seriot.ch/parsing_json.html)
+  and fixed various noncompliant behaviors:
+  - Support for UTF-16 without BOM
+  (@thekid)
+
 ## 2.2.0 / 2016-08-28
 
 * Added forward compatibility with XP 8.0.0: Use File::in() instead of

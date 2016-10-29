@@ -27,7 +27,11 @@ class StreamInput extends Input {
   public function __construct(InputStream $in, $encoding= \xp::ENCODING) {
     $initial= '';
     $bom= $in->read(2);
-    if ("\376\377" === $bom) {
+    if (strlen($bom) < 2) {
+      $this->in= $in;
+      $initial= $bom;
+      $this->offset= 0;
+    } else if ("\376\377" === $bom) {
       $encoding= \xp::ENCODING;
       $this->in= new MultiByteSource($in, 'utf-16be');
       $this->offset= 2;
@@ -35,6 +39,16 @@ class StreamInput extends Input {
       $encoding= \xp::ENCODING;
       $this->in= new MultiByteSource($in, 'utf-16le');
       $this->offset= 2;
+    } else if ("\0" === $bom{0}) {
+      $encoding= \xp::ENCODING;
+      $this->in= new MultiByteSource($in, 'utf-16be');
+      $this->offset= 0;
+      $initial= $bom{1};
+    } else if ("\0" === $bom{1}) {
+      $encoding= \xp::ENCODING;
+      $this->in= new MultiByteSource($in, 'utf-16le');
+      $this->offset= 0;
+      $initial= $bom{0};
     } else {
       $bom.= $in->read(1);
       if ("\357\273\277" === $bom) {
