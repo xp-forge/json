@@ -23,8 +23,9 @@ class StreamInput extends Input {
    *
    * @param  io.streams.InputStream $in
    * @param  string $encoding
+   * @param  int $maximumNesting Maximum nesting level, defaults to 512
    */
-  public function __construct(InputStream $in, $encoding= \xp::ENCODING) {
+  public function __construct(InputStream $in, $encoding= \xp::ENCODING, $maximumNesting= 512) {
     $initial= '';
     $bom= $in->read(2);
     if (strlen($bom) < 2) {
@@ -61,7 +62,7 @@ class StreamInput extends Input {
       $this->in= $in;
     }
 
-    parent::__construct($initial.$this->in->read(), $encoding);
+    parent::__construct($initial.$this->in->read(), $encoding, $maximumNesting);
   }
 
   /**

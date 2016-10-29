@@ -20,8 +20,9 @@ class FileInput extends StreamInput {
    *
    * @param  var $arg Either an io.File object or a file name
    * @param  string $encoding
+   * @param  int $maximumNesting Maximum nesting level, defaults to 512
    */
-  public function __construct($arg, $encoding= \xp::ENCODING) {
+  public function __construct($arg, $encoding= \xp::ENCODING, $maximumNesting= 512) {
     if ($arg instanceof File) {
       $this->file= $arg;
       $this->wasOpen= $this->file->isOpen();
@@ -30,7 +31,7 @@ class FileInput extends StreamInput {
       $this->wasOpen= false;
     }
     $this->wasOpen || $this->file->open(File::READ);
-    parent::__construct($this->file->in(), $encoding);
+    parent::__construct($this->file->in(), $encoding, $maximumNesting);
   }
 
   /**
