@@ -7,7 +7,6 @@ use lang\FormatException;
 class JsonTestSuite extends \unittest\TestCase {
   private $parsing, $transform;
   private static $IGNORED= [
-    'n_number_then_00.json',
     'n_string_UTF8_surrogate_U+D800.json',
     'n_string_unescaped_tab.json',
     'n_string_unescaped_newline.json',

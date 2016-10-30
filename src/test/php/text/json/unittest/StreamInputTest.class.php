@@ -36,6 +36,16 @@ class StreamInputTest extends JsonInputTest {
     $this->assertEquals('Übercoder', $this->read("\376\377\000\"\000\334\000b\000e\000r\000c\000o\000d\000e\000r\000\""));
   }
 
+  #[@test]
+  public function detect_utf_16le() {
+    $this->assertEquals('Übercoder', $this->read("\"\000\334\000b\000e\000r\000c\000o\000d\000e\000r\000\"\000"));
+  }
+
+  #[@test]
+  public function detect_utf_16be() {
+    $this->assertEquals('Übercoder', $this->read("\000\"\000\334\000b\000e\000r\000c\000o\000d\000e\000r\000\""));
+  }
+
   #[@test, @values([
   #  "[1]",
   #  "\357\273\277[1]",

@@ -3,6 +3,11 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 2.3.1 / 2016-10-31
+
+* Fixed detection for UTF-16 (LE, BE) encoding - @thekid
+* Added maximum nesting level to all input sources - @thekid
+
 ## 2.3.0 / 2016-10-29
 
 * Read [Parsing JSON is a Minefield](http://seriot.ch/parsing_json.html)
