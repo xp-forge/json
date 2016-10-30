@@ -145,3 +145,4 @@ with ((new StreamOutput(...))->begin(Types::$ARRAY), function($stream) use($quer
 Further reading
 ---------------
 * [Performance figures](https://github.com/xp-forge/json/wiki/Performance-overview). TL;DR: While slower than the native functionality, the performance overhead is in low millisecond ranges. Using sequential processing we have an advantage both performance- and memory-wise.
+* [Parsing JSON is a Minefield](http://seriot.ch/parsing_json.html). This library runs this test suite next to its own.
