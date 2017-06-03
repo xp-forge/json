@@ -90,7 +90,7 @@ class StreamInput extends Input {
       $this->pos= 0;
       $this->firstToken= null;
     } else {
-      throw new IOException('Cannot seek '.$this->in->toString());
+      throw new IOException('Cannot seek streams of type '.typeof($this->in)->getName());
     }
   }
 
