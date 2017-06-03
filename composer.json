@@ -6,11 +6,11 @@
   "description" : "Reads and writes JSON to and from various input sources",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "^8.0 | ^7.0 | ^6.5",
+    "xp-framework/core": "^9.0 | ^8.0 | ^7.0 | ^6.5",
     "php" : ">=5.5.0"
   },
   "require-dev" : {
-    "xp-framework/unittest": "^7.0 | ^6.5"
+    "xp-framework/unittest": "^9.0 | ^8.0 | ^7.0 | ^6.5"
   },
   "autoload" : {
     "files" : ["src/main/php/autoload.php"]
