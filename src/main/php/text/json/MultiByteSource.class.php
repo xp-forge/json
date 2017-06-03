@@ -5,7 +5,7 @@ use io\streams\Seekable;
 use io\streams\Streams;
 use io\IOException;
 
-class MultiByteSource extends \lang\Object implements InputStream, Seekable {
+class MultiByteSource implements InputStream, Seekable {
   protected $in= null;
 
   /**

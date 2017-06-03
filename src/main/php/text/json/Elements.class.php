@@ -7,7 +7,7 @@ use lang\FormatException;
  * an element from the underlying input, then returns it immediately for
  * further processing instead of parsing the entire representation first.
  */
-class Elements extends \lang\Object implements \Iterator {
+class Elements implements \Iterator {
   protected $input;
   protected $id= 0;
   protected $current= null;

@@ -8,7 +8,7 @@ use lang\FormatException;
  * @see  xp://text.json.JsonString
  * @see  xp://text.json.JsonStream
  */
-abstract class Input extends \lang\Object {
+abstract class Input {
   protected $bytes;
   protected $len;
   protected $pos;

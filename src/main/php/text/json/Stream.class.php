@@ -1,6 +1,6 @@
 <?php namespace text\json;
 
-abstract class Stream extends \lang\Object implements \lang\Closeable {
+abstract class Stream implements \lang\Closeable {
   protected $out;
 
   public function __construct(Output $out) {
