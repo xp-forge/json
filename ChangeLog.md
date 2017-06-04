@@ -3,7 +3,7 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 3.0.0 / 2017-06-03
+## 3.0.0 / 2017-06-04
 
 * **Heads up:** Dropped PHP 5.5 support - @thekid
 * Added forward compatibility with XP 9.0.0 - @thekid
