@@ -3,6 +3,11 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 3.0.0 / 2017-06-03
+
+* **Heads up:** Dropped PHP 5.5 support - @thekid
+* Added forward compatibility with XP 9.0.0 - @thekid
+
 ## 2.3.1 / 2016-10-31
 
 * Fixed detection for UTF-16 (LE, BE) encoding - @thekid

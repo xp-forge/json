@@ -2,7 +2,7 @@
 
 use lang\IllegalArgumentException;
 
-abstract class Output extends \lang\Object {
+abstract class Output {
   public $format;
 
   /**

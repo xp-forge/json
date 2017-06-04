@@ -7,7 +7,7 @@ use lang\IllegalArgumentException;
  *
  * @test  xp://text.json.unittest.FormatFactoryTest
  */
-abstract class Format extends \lang\Object {
+abstract class Format {
   const ESCAPE_SLASHES = -65;  // ~JSON_UNESCAPED_SLASHES
   const ESCAPE_UNICODE = -257; // ~JSON_UNESCAPED_UNICODE
   const ESCAPE_ENTITIES = 11;  // JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT
