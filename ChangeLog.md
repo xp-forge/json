@@ -5,7 +5,7 @@ JSON for the XP Framework ChangeLog
 
 ## 3.0.1 / 2017-06-29
 
-* Fixed issue #11: StreamOutput and empty arrays - @thekid
+* Fixed issue #11: Sequential output and empty arrays/objects - @thekid
 
 ## 3.0.0 / 2017-06-04
 
