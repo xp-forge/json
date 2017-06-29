@@ -3,6 +3,10 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 3.0.1 / 2017-06-29
+
+* Fixed issue #11: StreamOutput and empty arrays - @thekid
+
 ## 3.0.0 / 2017-06-04
 
 * **Heads up:** Dropped PHP 5.5 support - @thekid

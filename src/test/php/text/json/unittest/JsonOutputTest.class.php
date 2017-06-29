@@ -187,6 +187,13 @@ abstract class JsonOutputTest extends \unittest\TestCase {
   }
 
   #[@test]
+  public function write_empty_array_sequentially() {
+    $out= $this->output();
+    $out->begin(Types::$ARRAY)->close();
+    $this->assertEquals('[]', $this->result($out));
+  }
+
+  #[@test]
   public function write_array_sequentially() {
     $out= $this->output();
     with ($out->begin(Types::$ARRAY), function($array) {
@@ -195,6 +202,13 @@ abstract class JsonOutputTest extends \unittest\TestCase {
       $array->element(3);
     });
     $this->assertEquals('[1,2,3]', $this->result($out));
+  }
+
+  #[@test]
+  public function write_empty_object_sequentially() {
+    $out= $this->output();
+    $out->begin(Types::$OBJECT)->close();
+    $this->assertEquals('{}', $this->result($out));
   }
 
   #[@test]

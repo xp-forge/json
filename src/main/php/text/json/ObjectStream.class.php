@@ -27,6 +27,7 @@ class ObjectStream extends Stream {
    * @return void
    */
   public function close() {
+    $this->next || $this->out->appendToken($this->out->format->open('{'));
     $this->out->appendToken($this->out->format->close('}'));
     parent::close();
   }
