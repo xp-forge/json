@@ -3,6 +3,10 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 3.0.2 / 2017-08-19
+
+* Fixed issue #12: Error reading lists ending with 0 - @thekid
+
 ## 3.0.1 / 2017-06-29
 
 * Fixed issue #11: Sequential output and empty arrays/objects - @thekid

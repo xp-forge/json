@@ -111,7 +111,7 @@ abstract class Input {
         } else {
           throw new FormatException('Unexpected '.\xp::stringOf($delim).', expecting "," or "}"');
         }
-      } while ($token= $this->nextToken());
+      } while (null !== ($token= $this->nextToken()));
     }
 
     throw new FormatException('Unclosed object');
@@ -142,7 +142,7 @@ abstract class Input {
         } else {
           throw new FormatException('Unexpected '.\xp::stringOf($delim).', expecting "," or "]"');
         }
-      } while ($token= $this->nextToken());
+      } while (null !== ($token= $this->nextToken()));
     }
 
     throw new FormatException('Unclosed list');

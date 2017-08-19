@@ -203,6 +203,11 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals(['key' => 'v2'], $this->read('{"key": "v1", "key": "v2"}'));
   }
 
+  #[@test]
+  public function object_ending_with_zero() {
+    $this->assertEquals(['key' => 0], $this->read('{"key": 0}'));
+  }
+
   #[@test, @expect(FormatException::class), @values([
   #  '{', '{{', '{{}',
   #  '}', '}}'
@@ -304,6 +309,11 @@ abstract class JsonInputTest extends \unittest\TestCase {
   #])]
   public function read_list_with_nested_list($source) {
     $this->assertEquals(['v1', ['v2', 'v3']], $this->read($source));
+  }
+
+  #[@test]
+  public function list_ending_with_zero() {
+    $this->assertEquals([1, 0], $this->read('[1, 0]'));
   }
 
   #[@test, @expect(FormatException::class), @values([
