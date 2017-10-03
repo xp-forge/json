@@ -256,7 +256,7 @@ abstract class Input {
   /**
    * Reads elements from an input stream sequentially
    *
-   * @return php.Iterator
+   * @return text.json.Elements
    */
   public function elements() {
     return new Elements($this);
@@ -265,7 +265,7 @@ abstract class Input {
   /**
    * Reads key/value pairs from an input stream sequentially
    *
-   * @return php.Iterator
+   * @return text.json.Pairs
    */
   public function pairs() {
     return new Pairs($this);
