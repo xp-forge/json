@@ -132,6 +132,21 @@ abstract class JsonOutputTest extends \unittest\TestCase {
     $this->assertEquals('{}', $this->write((object)[]));
   }
 
+  #[@test]
+  public function write_array_as_object() {
+    $this->assertEquals('{0:1,1:2,2:3}', $this->write((object)[1, 2, 3]));
+  }
+
+  #[@test]
+  public function write_nested_array_as_object() {
+    $this->assertEquals('{"values":{0:1,1:2,2:3}}', $this->write(['values' => (object)[1, 2, 3]]));
+  }
+
+  #[@test]
+  public function write_map_as_object() {
+    $this->assertEquals('{"key":"value"}', $this->write((object)['key' => 'value']));
+  }
+
   #[@test, @values([
   #  ['{"":"value"}', ['' => 'value']],
   #  ['{"key":"value"}', ['key' => 'value']],
