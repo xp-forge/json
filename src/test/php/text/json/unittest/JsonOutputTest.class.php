@@ -174,6 +174,14 @@ abstract class JsonOutputTest extends \unittest\TestCase {
     $this->assertEquals($expected, $this->write($write));
   }
 
+  #[@test, @values([
+  #  ['[1,2]', function() { yield 1; yield 2; }],
+  #  ['{"key":"value"}', function() { yield 'key' => 'value'; }],
+  #])]
+  public function write_generator($expected, $write) {
+    $this->assertEquals($expected, $this->write($write()));
+  }
+
   #[@test, @expect('lang.IllegalArgumentException')]
   public function cannot_write_closures() {
     $this->write(function() { });
