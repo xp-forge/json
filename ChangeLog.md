@@ -3,6 +3,12 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 3.1.0 / 2018-02-01
+
+* Fixed `Output::write()` not to call the underlying stream's `close()`
+  method implicitely, this is unexpected.
+  (@thekid)
+
 ## 3.0.2 / 2017-08-19
 
 * Fixed issue #12: Error reading lists ending with 0 - @thekid

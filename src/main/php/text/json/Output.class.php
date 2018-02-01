@@ -46,7 +46,6 @@ abstract class Output {
     } else {
       $this->appendToken($f->representationOf($value));
     }
-    $this->close();
     return $this;
   }
 
