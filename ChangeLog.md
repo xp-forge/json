@@ -3,6 +3,10 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 3.1.1 / 2019-12-01
+
+* Made compatible with XP 10 - @thekid
+
 ## 3.1.0 / 2018-02-01
 
 * Fixed `Output::write()` not to call the underlying stream's `close()`
