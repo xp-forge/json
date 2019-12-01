@@ -66,7 +66,7 @@ abstract class Input {
         throw new FormatException('Illegal unicode escape sequence '.substr($this->bytes, $pos, 6));
       } else if ($hex > 0xd800 && $hex < 0xdfff) {
         $offset= 12;
-        $surrogate= hexdec(substr($this->bytes, $pos + 8, 4));
+        sscanf(substr($this->bytes, $pos + 8, 4), '%4x', $surrogate);
         $char= ($hex << 10) + $surrogate + 0xfca02400;  // surrogate offset: 0x10000 - (0xd800 << 10) - 0xdc00
         return iconv('ucs-4be', $this->encoding, pack('N', $char));
       } else {
