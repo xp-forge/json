@@ -1,9 +1,9 @@
 <?php namespace text\json\unittest;
 
-use text\json\FileInput;
 use io\File;
 use io\Path;
-use lang\System;
+use lang\Environment;
+use text\json\FileInput;
 
 /**
  * Tests the FileInput implementation
@@ -12,7 +12,7 @@ class FileInputTest extends JsonInputTest {
 
   /** @param io.Path */
   private function tempName() {
-    return Path::compose([System::tempDir(), md5(uniqid()).'-xp.json']);
+    return Path::compose([Environment::tempDir(), md5(uniqid()).'-xp.json']);
   }
 
   /**

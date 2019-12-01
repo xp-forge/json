@@ -1,6 +1,7 @@
 <?php namespace text\json;
 
 use lang\FormatException;
+use util\Objects;
 
 /**
  * Reads elements from a JSON representation sequentially, that is, parses
@@ -33,7 +34,7 @@ class Elements implements \Iterator {
       }
     } else {
       $this->id= $this->end();
-      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading elements, expecting "["');
+      throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading elements, expecting "["');
     }
   }
 
@@ -56,7 +57,7 @@ class Elements implements \Iterator {
       $this->id= $this->end();
     } else {
       $this->id= $this->end();
-      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading elements, expecting "," or "]"');
+      throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading elements, expecting "," or "]"');
     }
   }
 

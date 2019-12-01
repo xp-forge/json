@@ -2,7 +2,7 @@
 
 use io\File;
 use io\Path;
-use lang\System;
+use lang\Environment;
 use text\json\FileOutput;
 use text\json\Types;
 
@@ -10,7 +10,7 @@ class FileOutputTest extends JsonOutputTest {
 
   /** @param io.Path */
   private function tempName() {
-    return Path::compose([System::tempDir(), md5(uniqid()).'-xp.json']);
+    return Path::compose([Environment::tempDir(), md5(uniqid()).'-xp.json']);
   }
 
   /** @return text.json.Output */

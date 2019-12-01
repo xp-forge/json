@@ -1,6 +1,7 @@
 <?php namespace text\json;
 
 use lang\FormatException;
+use util\Objects;
 
 /**
  * Reads key/value pairs from a JSON representation sequentially, that is,
@@ -32,7 +33,7 @@ class Pairs implements \Iterator {
       return $this->input->valueOf($this->input->nextToken());
     } else {
       $this->end();
-      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting ":"');
+      throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading pairs, expecting ":"');
     }
   }
   
@@ -49,7 +50,7 @@ class Pairs implements \Iterator {
       }
     } else {
       $this->key= $this->end();
-      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading pairs, expecting "{"');
+      throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading pairs, expecting "{"');
     }
   }
 
@@ -72,7 +73,7 @@ class Pairs implements \Iterator {
       $this->key= $this->end();
     } else {
       $this->key= $this->end();
-      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading elements, expecting "," or "}"');
+      throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading elements, expecting "," or "}"');
     }
   }
 

@@ -1,6 +1,7 @@
 <?php namespace text\json;
 
 use lang\FormatException;
+use util\Objects;
 
 /**
  * Base class for JSON input implementations
@@ -100,7 +101,7 @@ abstract class Input {
         if (':' === ($token= $this->nextToken())) {
           $result[$key]= $this->valueOf($this->nextToken(), $nesting);
         } else {
-          throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading object, expecting ":"');
+          throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading object, expecting ":"');
         }
 
         $delim= $this->nextToken();
@@ -109,7 +110,7 @@ abstract class Input {
         } else if ('}' === $delim) {
           return $result;
         } else {
-          throw new FormatException('Unexpected '.\xp::stringOf($delim).', expecting "," or "}"');
+          throw new FormatException('Unexpected '.Objects::stringOf($delim).', expecting "," or "}"');
         }
       } while (null !== ($token= $this->nextToken()));
     }
@@ -140,7 +141,7 @@ abstract class Input {
         } else if (']' === $delim) {
           return $result;
         } else {
-          throw new FormatException('Unexpected '.\xp::stringOf($delim).', expecting "," or "]"');
+          throw new FormatException('Unexpected '.Objects::stringOf($delim).', expecting "," or "]"');
         }
       } while (null !== ($token= $this->nextToken()));
     }
@@ -203,7 +204,7 @@ abstract class Input {
     } else if (null === $token) {
       throw new FormatException('Empty input');
     } else {
-      throw new FormatException('Unexpected token ['.\xp::stringOf($token).'] reading value');
+      throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading value');
     }
   }
 
@@ -247,7 +248,7 @@ abstract class Input {
     $test= $this->nextToken();
     $this->close();
     if (null !== $test) {
-      throw new FormatException('Junk after end of value ['.\xp::stringOf($test).']');
+      throw new FormatException('Junk after end of value ['.Objects::stringOf($test).']');
     }
 
     return $value;
