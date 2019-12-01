@@ -36,18 +36,18 @@ class StringInput extends Input {
     $bytes= $this->bytes;
 
     while ($pos < $len) {
-      $c= $bytes{$pos};
+      $c= $bytes[$pos];
       if ('"' === $c) {
         $string= '';
         $o= $pos + 1;
         do {
           $end= strcspn($bytes, '"\\', $o) + $o;
           if ($end < $len) {
-            if ('\\' === $bytes{$end}) {
+            if ('\\' === $bytes[$end]) {
               $string.= substr($bytes, $o, $end - $o).$this->escaped($end, $len, $consumed);
               $o= $end + $consumed;
               continue;
-            } else if ($c === $bytes{$end}) {
+            } else if ($c === $bytes[$end]) {
               $string.= substr($bytes, $o, $end - $o);
               $encoded= iconv($this->encoding, \xp::ENCODING, $string);
               if (false === $encoded) {

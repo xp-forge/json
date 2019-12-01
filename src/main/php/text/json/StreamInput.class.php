@@ -1,8 +1,8 @@
 <?php namespace text\json;
 
+use io\IOException;
 use io\streams\InputStream;
 use io\streams\Seekable;
-use io\IOException;
 use lang\FormatException;
 
 /**
@@ -30,35 +30,35 @@ class StreamInput extends Input {
     $bytes= $in->read(4);
     $length= strlen($bytes);
 
-    if ($length > 1 && "\xfe" === $bytes{0} && "\xff" === $bytes{1}) {
+    if ($length > 1 && "\xfe" === $bytes[0] && "\xff" === $bytes[1]) {
 
       // UTF-16 BOM
       $this->in= new MultiByteSource($in, 'utf-16be');
       $this->offset= 2;
       $initial= iconv('utf-16be', 'utf-8', substr($bytes, 2));
       $encoding= \xp::ENCODING;
-    } else if ($length > 1 && "\xff" === $bytes{0} && "\xfe" === $bytes{1}) {
+    } else if ($length > 1 && "\xff" === $bytes[0] && "\xfe" === $bytes[1]) {
 
       // UTF-16 BOM
       $this->in= new MultiByteSource($in, 'utf-16le');
       $this->offset= 2;
       $initial= iconv('utf-16le', 'utf-8', substr($bytes, 2));
       $encoding= \xp::ENCODING;
-    } else if ($length > 2 && "\xef" === $bytes{0} && "\xbb"  === $bytes{1} && "\xbf"  === $bytes{2}) {
+    } else if ($length > 2 && "\xef" === $bytes[0] && "\xbb"  === $bytes[1] && "\xbf"  === $bytes[2]) {
 
       // UTF-8 BOM
       $this->in= $in;
       $this->offset= 3;
-      $initial= $length > 3 ? $bytes{3} : '';
+      $initial= $length > 3 ? $bytes[3] : '';
       $encoding= 'utf-8';
-    } else if ($length > 3 && "\x00" === $bytes{0} && "\x00" !== $bytes{1} && "\x00" === $bytes{2} && "\x00" !== $bytes{3}) {
+    } else if ($length > 3 && "\x00" === $bytes[0] && "\x00" !== $bytes[1] && "\x00" === $bytes[2] && "\x00" !== $bytes[3]) {
 
       // Encoding detection: 00 xx 00 xx -> UTF-16BE
       $this->in= new MultiByteSource($in, 'utf-16be');
       $this->offset= 0;
       $initial= iconv('utf-16be', 'utf-8', $bytes);
       $encoding= \xp::ENCODING;
-    } else if ($length > 3 && "\x00" !== $bytes{0} && "\x00" === $bytes{1} && "\x00" !== $bytes{2} && "\x00" === $bytes{3}) {
+    } else if ($length > 3 && "\x00" !== $bytes[0] && "\x00" === $bytes[1] && "\x00" !== $bytes[2] && "\x00" === $bytes[3]) {
 
       // Encoding detection: xx 00 xx 00 -> UTF-16LE
       $this->in= new MultiByteSource($in, 'utf-16le');
@@ -105,7 +105,7 @@ class StreamInput extends Input {
     $bytes= $this->bytes;
 
     while ($pos < $len) {
-      $c= $bytes{$pos};
+      $c= $bytes[$pos];
       if ('"' === $c) {
         $token= null;
         $string= '';
@@ -113,7 +113,7 @@ class StreamInput extends Input {
         do {
           $end= strcspn($bytes, '"\\', $o) + $o;
           if ($end < $len) {
-            if ('\\' === $bytes{$end}) {
+            if ('\\' === $bytes[$end]) {
 
               // Ensure either EOF or space for a surrogate pair
               while ($end + 12 > $len && $this->in->available()) {
@@ -125,7 +125,7 @@ class StreamInput extends Input {
               $string.= substr($bytes, $o, $end - $o).$this->escaped($end, $len, $consumed);
               $o= $end + $consumed;
               continue;
-            } else if ($c === $bytes{$end}) {
+            } else if ($c === $bytes[$end]) {
               $string.= substr($bytes, $o, $end - $o);
               $encoded= iconv($this->encoding, \xp::ENCODING, $string);
               if (false === $encoded) {

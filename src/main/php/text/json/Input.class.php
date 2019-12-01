@@ -57,7 +57,7 @@ abstract class Input {
       throw new FormatException('Unclosed escape sequence');
     }
 
-    $escape= $this->bytes{$pos + 1};
+    $escape= $this->bytes[$pos + 1];
     if (isset(self::$escapes[$escape])) {
       $offset= 2;
       return self::$escapes[$escape];
@@ -184,7 +184,9 @@ abstract class Input {
    * @throws lang.FormatException
    */
   public function valueOf($token, $nesting= 0) {
-    if (true === $token[0]) {
+    if (null === $token) {
+      throw new FormatException('Empty input');
+    } else if (true === $token[0]) {
       return $token[1];
     } else if ('{' === $token) {
       return $this->readObject($nesting);
@@ -201,8 +203,6 @@ abstract class Input {
         ? (double)$token
         : (int)$token
       ;
-    } else if (null === $token) {
-      throw new FormatException('Empty input');
     } else {
       throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading value');
     }
@@ -215,7 +215,9 @@ abstract class Input {
    */
   public function type() {
     $token= $this->firstToken();
-    if (true === $token[0]) {
+    if (null === $token) {
+      return null;
+    } else if (true === $token[0]) {
       return Types::$STRING;
     } else if ('{' === $token) {
       return Types::$OBJECT;
