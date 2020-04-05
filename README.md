@@ -57,8 +57,8 @@ $out->write([
   'name'    => 'example/package',
   'version' => '1.0.0',
   'require' => [
-    'xp-forge/json'     => '~1.0',
-    'xp-framework/core' => '~6.0'
+    'xp-forge/json'     => '^3.0',
+    'xp-framework/core' => '^10.0'
   ]
 ]);
 ```
@@ -70,8 +70,8 @@ The above code will yield the following output:
     "name": "example/package",
     "version": "1.0.0'",
     "require": {
-        "xp-forge/json": "~1.0",
-        "xp-framework/core": "~6.0"
+        "xp-forge/json": "^3.0",
+        "xp-framework/core": "^10.0"
     }
 }
 ```
