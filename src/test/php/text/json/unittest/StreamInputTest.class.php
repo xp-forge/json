@@ -1,9 +1,9 @@
 <?php namespace text\json\unittest;
 
-use text\json\StreamInput;
-use io\streams\MemoryInputStream;
-use io\streams\InputStream;
 use io\IOException;
+use io\streams\InputStream;
+use io\streams\MemoryInputStream;
+use text\json\StreamInput;
 
 /**
  * Tests the StreamInput implementation
@@ -47,12 +47,11 @@ class StreamInputTest extends JsonInputTest {
   }
 
   #[@test, @values([
-  #  "[1]",
   #  "\357\273\277[1]",
   #  "\377\376[\0001\000]\000",
   #  "\376\377\000[\0001\000]"
   #])]
-  public function calling_read_after_resetting($input) {
+  public function calling_read_after_resetting_with_bom($input) {
     $input= $this->input($input);
     $this->assertEquals([1], $input->read(), '#1');
     $input->reset();
@@ -60,12 +59,11 @@ class StreamInputTest extends JsonInputTest {
   }
 
   #[@test, @values([
-  #  "[1]",
   #  "\357\273\277[1]",
   #  "\377\376[\0001\000]\000",
   #  "\376\377\000[\0001\000]"
   #])]
-  public function calling_elements_after_resetting($input) {
+  public function calling_elements_after_resetting_with_bom($input) {
     $input= $this->input($input);
     $this->assertEquals([1], iterator_to_array($input->elements()), '#1');
     $input->reset();
@@ -73,12 +71,11 @@ class StreamInputTest extends JsonInputTest {
   }
 
   #[@test, @values([
-  #  "{\"key\":\"value\"}",
   #  "\357\273\277{\"key\":\"value\"}",
   #  "\377\376{\000\"\000k\000e\000y\000\"\000:\000\"\000v\000a\000l\000u\000e\000\"\000}\000",
   #  "\376\377\000{\000\"\000k\000e\000y\000\"\000:\000\"\000v\000a\000l\000u\000e\000\"\000}"
   #])]
-  public function calling_pairs_after_resetting($input) {
+  public function calling_pairs_after_resetting_with_bom($input) {
     $input= $this->input($input);
     $this->assertEquals(['key' => 'value'], iterator_to_array($input->pairs()), '#1');
     $input->reset();
