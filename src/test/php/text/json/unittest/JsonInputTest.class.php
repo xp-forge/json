@@ -1,9 +1,9 @@
 <?php namespace text\json\unittest;
 
 use io\streams\MemoryInputStream;
-use util\collections\Pair;
-use text\json\Types;
 use lang\FormatException;
+use text\json\Types;
+use util\collections\Pair;
 
 /**
  * Test JSON input
@@ -91,7 +91,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     $this->assertEquals('ü€', $this->read("\"\xfc\u20ac\"", 'iso-8859-15'));
   }
 
-  #[@test, @expect(class= FormatException::class, withMessage= '/Unclosed string/'), @values([
+  #[@test, @expect(['class' => FormatException::class, 'withMessage' => '/Unclosed string/']), @values([
   #  '"', '"abc', '"abc\"',
   #])]
   public function unclosed_string($source) {
@@ -423,7 +423,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(class= FormatException::class, withMessage= '/expecting "\["/'), @values([
+  #[@test, @expect(['class' => FormatException::class, 'withMessage' => '/expecting "\["/']), @values([
   #  'null', 'false', 'true',
   #  '""', '"Test"',
   #  '0', '0.0',
@@ -435,7 +435,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(class= FormatException::class, withMessage= '/expecting "," or "\]"/')]
+  #[@test, @expect(['class' => FormatException::class, 'withMessage' => '/expecting "," or "\]"/'])]
   public function reading_malformed_array_sequentially() {
     foreach ($this->input('[1 2]')->elements() as $element) {
     }
@@ -453,7 +453,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(class= FormatException::class, withMessage= '/expecting "\{"/'), @values([
+  #[@test, @expect(['class' => FormatException::class, 'withMessage' => '/expecting "\{"/']), @values([
   #  'null', 'false', 'true',
   #  '""', '"Test"',
   #  '0', '0.0',
@@ -465,7 +465,7 @@ abstract class JsonInputTest extends \unittest\TestCase {
     }
   }
 
-  #[@test, @expect(class= FormatException::class, withMessage= '/expecting ":"/')]
+  #[@test, @expect(['class' => FormatException::class, 'withMessage' => '/expecting ":"/'])]
   public function reading_malformed_pairs_sequentially() {
     foreach ($this->input('{"key" "value"}')->pairs() as $element) {
     }

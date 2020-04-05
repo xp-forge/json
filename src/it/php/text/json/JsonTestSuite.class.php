@@ -1,8 +1,8 @@
 <?php namespace text\json;
 
-use text\json\FileInput;
 use io\Folder;
 use lang\FormatException;
+use text\json\FileInput;
 
 class JsonTestSuite extends \unittest\TestCase {
   private $parsing, $transform;
@@ -50,17 +50,17 @@ class JsonTestSuite extends \unittest\TestCase {
     }
   }
 
-  #[@test, @values(source= 'parsing', args= ['y_'])]
+  #[@test, @values(['source' => 'parsing', 'args' => ['y_']])]
   public function must_accept_parsing($entry) {
     (new FileInput($entry))->read();
   }
 
-  #[@test, @expect(FormatException::class), @values(source= 'parsing', args= ['n_'])]
+  #[@test, @expect(FormatException::class), @values(['source' => 'parsing', 'args' => ['n_']])]
   public function must_reject_parsing($entry) {
     (new FileInput($entry))->read();
   }
 
-  #[@test, @values(source= 'parsing', args= ['i_'])]
+  #[@test, @values(['source' => 'parsing', 'args' => ['i_']])]
   public function is_free_to_either_accept_or_reject($entry) {
     try {
       (new FileInput($entry))->read();
@@ -80,7 +80,7 @@ class JsonTestSuite extends \unittest\TestCase {
     }
   }
 
-  #[@test, @values(source= 'transform')]
+  #[@test, @values(['source' => 'transform'])]
   public function may_understand_differently($entry) {
     (new FileInput($entry))->read();
   }
