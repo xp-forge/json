@@ -1,9 +1,7 @@
 <?php namespace text\json;
 
-use io\streams\InputStream;
-use io\streams\Seekable;
-use io\streams\Streams;
 use io\IOException;
+use io\streams\{InputStream, Seekable, Streams};
 
 class MultiByteSource implements InputStream, Seekable {
   protected $in= null;

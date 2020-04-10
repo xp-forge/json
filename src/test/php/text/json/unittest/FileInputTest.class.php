@@ -1,7 +1,6 @@
 <?php namespace text\json\unittest;
 
-use io\File;
-use io\Path;
+use io\{File, Path};
 use lang\Environment;
 use text\json\FileInput;
 

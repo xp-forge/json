@@ -1,8 +1,6 @@
 <?php namespace text\json\unittest;
 
-use text\json\Format;
-use text\json\DenseFormat;
-use text\json\WrappedFormat;
+use text\json\{DenseFormat, Format, WrappedFormat};
 
 class FormatFactoryTest extends \unittest\TestCase {
 

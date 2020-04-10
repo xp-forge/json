@@ -1,10 +1,8 @@
 <?php namespace text\json\unittest;
 
-use io\File;
-use io\Path;
+use io\{File, Path};
 use lang\Environment;
-use text\json\FileOutput;
-use text\json\Types;
+use text\json\{FileOutput, Types};
 
 class FileOutputTest extends JsonOutputTest {
 

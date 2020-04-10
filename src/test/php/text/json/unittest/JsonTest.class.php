@@ -1,10 +1,7 @@
 <?php namespace text\json\unittest;
 
-use text\json\Json;
-use text\json\Format;
-use text\json\StringInput;
-use text\json\StringOutput;
 use lang\FormatException;
+use text\json\{Format, Json, StringInput, StringOutput};
 
 class JsonTest extends \unittest\TestCase {
 

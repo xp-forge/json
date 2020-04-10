@@ -1,8 +1,7 @@
 <?php namespace text\json;
 
 use io\IOException;
-use io\streams\InputStream;
-use io\streams\Seekable;
+use io\streams\{InputStream, Seekable};
 use lang\FormatException;
 
 /**

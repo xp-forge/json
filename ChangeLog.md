@@ -3,9 +3,16 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 4.0.0 / 2020-04-10
+
+* Implemented xp-framework/rfc#334: Drop PHP 5.6:
+  . Group use statements
+  (@thekid)
+
 ## 3.1.2 / 2020-04-05
 
-* Implemented RFC #335: Remove deprecated key/value pair annotation syntax
+* Implemented xp-framework/rfc#335: Remove deprecated key/value pair
+  annotation syntax
   (@thekid)
 
 ## 3.1.1 / 2019-12-01

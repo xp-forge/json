@@ -1,8 +1,7 @@
 <?php namespace text\json\unittest;
 
 use io\IOException;
-use io\streams\InputStream;
-use io\streams\MemoryInputStream;
+use io\streams\{InputStream, MemoryInputStream};
 use text\json\StreamInput;
 
 /**
