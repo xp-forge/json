@@ -3,6 +3,7 @@
 use io\{File, Path};
 use lang\Environment;
 use text\json\{FileOutput, Types};
+use unittest\Test;
 
 class FileOutputTest extends JsonOutputTest {
 
@@ -30,40 +31,40 @@ class FileOutputTest extends JsonOutputTest {
     return $file->read($file->size());
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_file() {
     $file= new File($this->tempName());
     $this->assertEquals($file, (new FileOutput($file))->file());
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_string() {
     $name= $this->tempName();
     $this->assertEquals(new File($name), (new FileOutput($name))->file());
   }
 
-  #[@test]
+  #[Test]
   public function is_closed_after_writing() {
     $file= new File($this->tempName());
     (new FileOutput($file))->write('test');
     $this->assertFalse($file->isOpen());
   }
 
-  #[@test]
+  #[Test]
   public function is_closed_after_begin_array() {
     $file= new File($this->tempName());
     (new FileOutput($file))->begin(Types::$ARRAY)->close();
     $this->assertFalse($file->isOpen());
   }
 
-  #[@test]
+  #[Test]
   public function is_closed_after_begin_object() {
     $file= new File($this->tempName());
     (new FileOutput($file))->begin(Types::$OBJECT)->close();
     $this->assertFalse($file->isOpen());
   }
 
-  #[@test]
+  #[Test]
   public function open_files_are_not_closed() {
     $file= new File($this->tempName());
     $file->open(File::REWRITE);

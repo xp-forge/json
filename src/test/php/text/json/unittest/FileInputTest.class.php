@@ -3,6 +3,7 @@
 use io\{File, Path};
 use lang\Environment;
 use text\json\FileInput;
+use unittest\Test;
 
 /**
  * Tests the FileInput implementation
@@ -41,21 +42,21 @@ class FileInputTest extends JsonInputTest {
     return new FileInput($file, $encoding);
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_file() {
     $file= new File($this->tempName());
     $file->touch();
     $this->assertEquals($file, (new FileInput($file))->file());
   }
 
-  #[@test]
+  #[Test]
   public function can_create_with_string() {
     $name= $this->tempName();
     touch($name);
     $this->assertEquals(new File($name), (new FileInput($name))->file());
   }
 
-  #[@test]
+  #[Test]
   public function is_closed_after_reading() {
     $file= $this->fileWith('"test"', File::WRITE);
     $file->close();
@@ -63,7 +64,7 @@ class FileInputTest extends JsonInputTest {
     $this->assertFalse($file->isOpen());
   }
 
-  #[@test]
+  #[Test]
   public function is_closed_after_elements() {
     $file= $this->fileWith('[]', File::WRITE);
     $file->close();
@@ -71,7 +72,7 @@ class FileInputTest extends JsonInputTest {
     $this->assertFalse($file->isOpen());
   }
 
-  #[@test]
+  #[Test]
   public function is_closed_after_pairs() {
     $file= $this->fileWith('{}', File::WRITE);
     $file->close();
@@ -79,7 +80,7 @@ class FileInputTest extends JsonInputTest {
     $this->assertFalse($file->isOpen());
   }
 
-  #[@test]
+  #[Test]
   public function open_files_are_not_closed() {
     $file= $this->fileWith('{}', File::REWRITE);
     $file->seek(0, SEEK_SET);
@@ -87,7 +88,7 @@ class FileInputTest extends JsonInputTest {
     $this->assertTrue($file->isOpen());
   }
 
-  #[@test]
+  #[Test]
   public function is_reopened_when_reset() {
     $file= $this->fileWith('{}', File::WRITE);
     $file->close();

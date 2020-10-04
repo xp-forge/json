@@ -1,6 +1,7 @@
 <?php namespace text\json\unittest;
 
 use text\json\DenseFormat;
+use unittest\Test;
 
 class DenseFormatTest extends FormatTest {
 
@@ -14,22 +15,22 @@ class DenseFormatTest extends FormatTest {
     return new DenseFormat($options);
   }
 
-  #[@test]
+  #[Test]
   public function array_with_one_element() {
     $this->assertEquals('[1]', $this->format()->representationOf([1]));
   }
 
-  #[@test]
+  #[Test]
   public function array_with_multiple_elements() {
     $this->assertEquals('[1,2,3]', $this->format()->representationOf([1, 2, 3]));
   }
 
-  #[@test]
+  #[Test]
   public function object_with_one_pair() {
     $this->assertEquals('{"key":"value"}', $this->format()->representationOf(['key' => 'value']));
   }
 
-  #[@test]
+  #[Test]
   public function object_with_multiple_pairs() {
     $this->assertEquals('{"a":"v1","b":"v2"}', $this->format()->representationOf(['a' => 'v1', 'b' => 'v2']));
   }

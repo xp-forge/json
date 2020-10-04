@@ -1,6 +1,7 @@
 <?php namespace text\json\unittest;
 
 use text\json\WrappedFormat;
+use unittest\Test;
 
 class WrappedFormatTest extends FormatTest {
 
@@ -14,17 +15,17 @@ class WrappedFormatTest extends FormatTest {
     return new WrappedFormat('  ', $options);
   }
 
-  #[@test]
+  #[Test]
   public function array_with_one_element() {
     $this->assertEquals('[1]', $this->format()->representationOf([1]));
   }
 
-  #[@test]
+  #[Test]
   public function array_with_multiple_elements() {
     $this->assertEquals('[1, 2, 3]', $this->format()->representationOf([1, 2, 3]));
   }
 
-  #[@test]
+  #[Test]
   public function object_with_one_pair() {
     $this->assertEquals(
       "{\n  \"key\": \"value\"\n}",
@@ -32,7 +33,7 @@ class WrappedFormatTest extends FormatTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function object_with_multiple_pairs() {
     $this->assertEquals(
       "{\n  \"a\": \"v1\",\n  \"b\": \"v2\"\n}",
@@ -40,7 +41,7 @@ class WrappedFormatTest extends FormatTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function object_with_nested_objects() {
     $this->assertEquals(
       "{\n  \"a\": \"v1\",\n  \"b\": {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  }\n}",
@@ -48,7 +49,7 @@ class WrappedFormatTest extends FormatTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function open_and_close_an_array_with_multiple_elements_and_nested_object() {
     $format= $this->format();
     $repr= '';
@@ -65,7 +66,7 @@ class WrappedFormatTest extends FormatTest {
     );
   }
 
-  #[@test]
+  #[Test]
   public function open_and_close_an_object_with_multiple_pairs_and_nested_object() {
     $format= $this->format();
     $repr= '';

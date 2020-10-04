@@ -1,21 +1,11 @@
 <?php namespace text\json\unittest;
 
+use lang\IllegalArgumentException;
 use text\json\Types;
+use unittest\{AfterClass, BeforeClass, Expect, Test, TestCase, Values};
 
-abstract class JsonOutputTest extends \unittest\TestCase {
+abstract class JsonOutputTest extends TestCase {
   private static $precision;
-
-  /** @return void */
-  #[@beforeClass]
-  public static function usePrecision() {
-    self::$precision= ini_set('precision', 14);
-  }
-
-  /** @return void */
-  #[@afterClass]
-  public static function resetPrecision() {
-    ini_set('precision', self::$precision);
-  }
 
   /**
    * Returns the implementation
@@ -43,180 +33,147 @@ abstract class JsonOutputTest extends \unittest\TestCase {
     return $this->result($this->output()->write($value));
   }
 
-  #[@test, @values([
-  #  ['""', ''],
-  #  ['"Test"', 'Test'],
-  #  ['"Test \"the\" west"', 'Test "the" west'],
-  #  ['"Test the \"west\""', 'Test the "west"'],
-  #  ['"Test\b"', "Test\x08"],
-  #  ['"Test\f"', "Test\x0c"],
-  #  ['"Test\n"', "Test\x0a"],
-  #  ['"Test\r"', "Test\x0d"],
-  #  ['"Test\t"', "Test\x09"],
-  #  ['"Test\\\\"', "Test\\"],
-  #  ['"Test\/"', "Test/"]
-  #])]
+  /** @return iterable */
+  private function iterables() {
+    yield ['[]', new \ArrayIterator([])];
+    yield ['[1]', new \ArrayIterator([1])];
+    yield ['[1,2]', new \ArrayIterator([1, 2])];
+    yield ['{"key":"value"}', new \ArrayIterator(['key' => 'value'])];
+    yield ['{"a":"v1","b":"v2"}', new \ArrayIterator(['a' => 'v1', 'b' => 'v2'])];
+    yield ['[1,[2,3]]', new \ArrayIterator([1, new \ArrayIterator([2, 3])])];
+    yield ['[1,[2,3]]', [1, new \ArrayIterator([2, 3])]];
+    yield ['{"a":"v1","b":{"c":"v2"}}', new \ArrayIterator(['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])])];
+    yield ['{"a":"v1","b":{"c":"v2"}}', ['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])]];
+    yield ['[1,{"key":"value"}]', new \ArrayIterator([1, new \ArrayIterator(['key' => 'value'])])];
+    yield ['{"key":[1,2]}', new \ArrayIterator(['key' => new \ArrayIterator([1, 2])])];
+  }
+
+  /** @return iterable */
+  private function generators() {
+    yield ['[1,2]', function() { yield 1; yield 2; }];
+    yield ['{"key":"value"}', function() { yield 'key' => 'value'; }];
+  }
+
+  #[BeforeClass]
+  public static function usePrecision() {
+    self::$precision= ini_set('precision', 14);
+  }
+
+  #[AfterClass]
+  public static function resetPrecision() {
+    ini_set('precision', self::$precision);
+  }
+
+  #[Test, Values([['""', ''], ['"Test"', 'Test'], ['"Test \"the\" west"', 'Test "the" west'], ['"Test the \"west\""', 'Test the "west"'], ['"Test\b"', "Test\x08"], ['"Test\f"', "Test\x0c"], ['"Test\n"', "Test\x0a"], ['"Test\r"', "Test\x0d"], ['"Test\t"', "Test\x09"], ['"Test\\\\"', "Test\\"], ['"Test\/"', "Test/"]])]
   public function write_string($expected, $value) {
     $this->assertEquals($expected, $this->write($value));
   }
 
-  #[@test, @values([
-  #  ['"\u20acuro"', '€uro'],
-  #  ['"\u00dcbercoder"', 'Übercoder'],
-  #  ['"Poop = \ud83d\udca9"', 'Poop = 💩']
-  #])]
+  #[Test, Values([['"\u20acuro"', '€uro'], ['"\u00dcbercoder"', 'Übercoder'], ['"Poop = \ud83d\udca9"', 'Poop = 💩']])]
   public function write_unicode($expected, $value) {
     $this->assertEquals($expected, $this->write($value));
   }
 
-  #[@test, @values([
-  #  ['1', 1],
-  #  ['0', 0],
-  #  ['-1', -1]
-  #])]
+  #[Test, Values([['1', 1], ['0', 0], ['-1', -1]])]
   public function write_integer($source, $input) {
     $this->assertEquals($source, $this->write($input));
   }
 
-  #[@test]
+  #[Test]
   public function write_int_max() {
     $n= PHP_INT_MAX;
     $this->assertEquals((string)$n, $this->write($n));
   }
 
-  #[@test]
+  #[Test]
   public function write_int_min() {
     $n= -PHP_INT_MAX -1;
     $this->assertEquals((string)$n, $this->write($n));
   }
 
-  #[@test, @values([
-  #  ['0.0', 0.0],
-  #  ['1.0', 1.0],
-  #  ['0.5', 0.5],
-  #  ['-1.0', -1.0],
-  #  ['-0.5', -0.5],
-  #  ['1.0E-10', 0.0000000001],
-  #  ['1.0E+37', 9999999999999999999999999999999999999.0],
-  #  ['-1.0E+37', -9999999999999999999999999999999999999.0]
-  #])]
+  #[Test, Values([['0.0', 0.0], ['1.0', 1.0], ['0.5', 0.5], ['-1.0', -1.0], ['-0.5', -0.5], ['1.0E-10', 0.0000000001], ['1.0E+37', 9999999999999999999999999999999999999.0], ['-1.0E+37', -9999999999999999999999999999999999999.0]])]
   public function write_double($expected, $value) {
     $this->assertEquals($expected, $this->write($value));
   }
 
-  #[@test, @values([
-  #  ['true', true],
-  #  ['false', false],
-  #  ['null', null]
-  #])]
+  #[Test, Values([['true', true], ['false', false], ['null', null]])]
   public function write_keyword($expected, $write) {
     $this->assertEquals($expected, $this->write($write));
   }
 
-  #[@test]
+  #[Test]
   public function write_empty_array() {
     $this->assertEquals('[]', $this->write([]));
   }
 
-  #[@test, @values([
-  #  ['[1]', [1]],
-  #  ['[1,2]', [1, 2]],
-  #  ['[[1],[2,3]]', [[1], [2, 3]]]
-  #])]
+  #[Test, Values([['[1]', [1]], ['[1,2]', [1, 2]], ['[[1],[2,3]]', [[1], [2, 3]]]])]
   public function write_array($expected, $write) {
     $this->assertEquals($expected, $this->write($write));
   }
 
-  #[@test]
+  #[Test]
   public function write_empty_object() {
     $this->assertEquals('{}', $this->write((object)[]));
   }
 
-  #[@test]
+  #[Test]
   public function write_array_as_object() {
     $this->assertEquals('{0:1,1:2,2:3}', $this->write((object)[1, 2, 3]));
   }
 
-  #[@test]
+  #[Test]
   public function write_nested_array_as_object() {
     $this->assertEquals('{"values":{0:1,1:2,2:3}}', $this->write(['values' => (object)[1, 2, 3]]));
   }
 
-  #[@test]
+  #[Test]
   public function write_map_as_object() {
     $this->assertEquals('{"key":"value"}', $this->write((object)['key' => 'value']));
   }
 
-  #[@test, @values([
-  #  ['{"":"value"}', ['' => 'value']],
-  #  ['{"key":"value"}', ['key' => 'value']],
-  #  ['{"123":456}', [123 => 456]],
-  #  ['{"a":"v1","b":"v2"}', ['a' => 'v1', 'b' => 'v2']]
-  #])]
+  #[Test, Values([['{"":"value"}', ['' => 'value']], ['{"key":"value"}', ['key' => 'value']], ['{"123":456}', [123 => 456]], ['{"a":"v1","b":"v2"}', ['a' => 'v1', 'b' => 'v2']]])]
   public function write_object($expected, $write) {
     $this->assertEquals($expected, $this->write($write));
   }
 
-  #[@test, @values([
-  #  ['[]', new \ArrayIterator([])],
-  #  ['[1]', new \ArrayIterator([1])],
-  #  ['[1,2]', new \ArrayIterator([1, 2])],
-  #  ['{"key":"value"}', new \ArrayIterator(['key' => 'value'])],
-  #  ['{"a":"v1","b":"v2"}', new \ArrayIterator(['a' => 'v1', 'b' => 'v2'])],
-  #  ['[1,[2,3]]', new \ArrayIterator([1, new \ArrayIterator([2, 3])])],
-  #  ['[1,[2,3]]', [1, new \ArrayIterator([2, 3])]],
-  #  ['{"a":"v1","b":{"c":"v2"}}', new \ArrayIterator(['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])])],
-  #  ['{"a":"v1","b":{"c":"v2"}}', ['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])]],
-  #  ['[1,{"key":"value"}]', new \ArrayIterator([1, new \ArrayIterator(['key' => 'value'])])],
-  #  ['{"key":[1,2]}', new \ArrayIterator(['key' => new \ArrayIterator([1, 2])])]
-  #])]
+  #[Test, Values('iterables')]
   public function write_iterable($expected, $write) {
     $this->assertEquals($expected, $this->write($write));
   }
 
-  #[@test, @values([
-  #  ['[1,2]', function() { yield 1; yield 2; }],
-  #  ['{"key":"value"}', function() { yield 'key' => 'value'; }],
-  #])]
+  #[Test, Values('generators')]
   public function write_generator($expected, $write) {
     $this->assertEquals($expected, $this->write($write()));
   }
 
-  #[@test, @expect('lang.IllegalArgumentException')]
+  #[Test, Expect(IllegalArgumentException::class)]
   public function cannot_write_closures() {
     $this->write(function() { });
   }
 
-  #[@test]
+  #[Test]
   public function begin_an_array() {
     $this->output()->begin(Types::$ARRAY);
   }
 
-  #[@test]
+  #[Test]
   public function begin_an_object() {
     $this->output()->begin(Types::$OBJECT);
   }
 
-  #[@test, @expect('lang.IllegalArgumentException'), @values([
-  #  Types::$STRING,
-  #  Types::$DOUBLE,
-  #  Types::$INT,
-  #  Types::$NULL,
-  #  Types::$FALSE,
-  #  Types::$TRUE
-  #])]
+  #[Test, Expect('lang.IllegalArgumentException'), Values(eval: '[Types::$STRING, Types::$DOUBLE, Types::$INT, Types::$NULL, Types::$FALSE, Types::$TRUE]')]
   public function begin_another_type_raises_an_exception($type) {
     $this->output()->begin($type);
   }
 
-  #[@test]
+  #[Test]
   public function write_empty_array_sequentially() {
     $out= $this->output();
     $out->begin(Types::$ARRAY)->close();
     $this->assertEquals('[]', $this->result($out));
   }
 
-  #[@test]
+  #[Test]
   public function write_array_sequentially() {
     $out= $this->output();
     with ($out->begin(Types::$ARRAY), function($array) {
@@ -227,14 +184,14 @@ abstract class JsonOutputTest extends \unittest\TestCase {
     $this->assertEquals('[1,2,3]', $this->result($out));
   }
 
-  #[@test]
+  #[Test]
   public function write_empty_object_sequentially() {
     $out= $this->output();
     $out->begin(Types::$OBJECT)->close();
     $this->assertEquals('{}', $this->result($out));
   }
 
-  #[@test]
+  #[Test]
   public function write_object_sequentially() {
     $out= $this->output();
     with ($out->begin(Types::$OBJECT), function($array) {
