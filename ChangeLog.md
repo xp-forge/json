@@ -6,7 +6,8 @@ JSON for the XP Framework ChangeLog
 ## 4.0.0 / 2020-04-10
 
 * Implemented xp-framework/rfc#334: Drop PHP 5.6:
-  . Group use statements
+  . **Heads up:** Minimum required PHP version now is PHP 7.0.0
+  . Rewrote code base, grouping use statements
   (@thekid)
 
 ## 3.1.2 / 2020-04-05
