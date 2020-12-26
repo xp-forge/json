@@ -28,6 +28,7 @@ class JsonSuiteTest {
   public function __construct($folder= '.') {
     $this->parsing= new Folder($folder, 'test_parsing');
     $this->transform= new Folder($folder, 'test_transform');
+    ini_set('xdebug.max_nesting_level', -1);
   }
 
   /**
