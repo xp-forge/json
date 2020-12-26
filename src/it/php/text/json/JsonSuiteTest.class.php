@@ -3,14 +3,15 @@
 use io\Folder;
 use lang\FormatException;
 use text\json\FileInput;
+use unittest\{Assert, Expect, Test, Values};
 
-class JsonTestSuite extends \unittest\TestCase {
+class JsonSuiteTest {
   private $parsing, $transform;
   private static $IGNORED= [
     'n_string_UTF8_surrogate_U+D800.json',
     'n_string_unescaped_tab.json',
     'n_string_unescaped_newline.json',
-    'n_string_unescaped_crtl_char.json',
+    'n_string_unescaped_ctrl_char.json',
     'string_1_escaped_invalid_codepoint.json',
     'string_1_invalid_codepoint.json',
     'string_2_escaped_invalid_codepoints.json',
@@ -22,11 +23,9 @@ class JsonTestSuite extends \unittest\TestCase {
   /**
    * Constructor
    *
-   * @param  string $name
    * @param  string $folder Folder with `test_parsing` inside
    */
-  public function __construct($name, $folder= '.') {
-    parent::__construct($name);
+  public function __construct($folder= '.') {
     $this->parsing= new Folder($folder, 'test_parsing');
     $this->transform= new Folder($folder, 'test_transform');
   }
@@ -50,23 +49,6 @@ class JsonTestSuite extends \unittest\TestCase {
     }
   }
 
-  #[@test, @values(['source' => 'parsing', 'args' => ['y_']])]
-  public function must_accept_parsing($entry) {
-    (new FileInput($entry))->read();
-  }
-
-  #[@test, @expect(FormatException::class), @values(['source' => 'parsing', 'args' => ['n_']])]
-  public function must_reject_parsing($entry) {
-    (new FileInput($entry))->read();
-  }
-
-  #[@test, @values(['source' => 'parsing', 'args' => ['i_']])]
-  public function is_free_to_either_accept_or_reject($entry) {
-    try {
-      (new FileInput($entry))->read();
-    } catch (FormatException $ignored) { }
-  }
-
   /**
    * Returns transform tests.
    *
@@ -80,7 +62,24 @@ class JsonTestSuite extends \unittest\TestCase {
     }
   }
 
-  #[@test, @values(['source' => 'transform'])]
+  #[Test, Values(['source' => 'parsing', 'args' => ['y_']])]
+  public function must_accept_parsing($entry) {
+    (new FileInput($entry))->read();
+  }
+
+  #[Test, Expect(FormatException::class), Values(['source' => 'parsing', 'args' => ['n_']])]
+  public function must_reject_parsing($entry) {
+    (new FileInput($entry))->read();
+  }
+
+  #[Test, Values(['source' => 'parsing', 'args' => ['i_']])]
+  public function is_free_to_either_accept_or_reject($entry) {
+    try {
+      (new FileInput($entry))->read();
+    } catch (FormatException $ignored) { }
+  }
+
+  #[Test, Values(['source' => 'transform'])]
   public function may_understand_differently($entry) {
     (new FileInput($entry))->read();
   }
