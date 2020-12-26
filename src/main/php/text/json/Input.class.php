@@ -71,7 +71,12 @@ abstract class Input {
         return iconv('ucs-4be', $this->encoding, pack('N', $char));
       } else {
         $offset= 6;
-        return iconv('ucs-4be', $this->encoding, pack('N', $hex));
+        if (false === ($i= iconv('ucs-4be', $this->encoding, pack('N', $hex)))) {
+          $e= new FormatException('Illegal unicode escape sequence '.substr($this->bytes, $pos, 6));
+          \xp::gc(__FILE__);
+          throw $e;
+        }
+        return $i;
       }
     } else {
       throw new FormatException('Illegal escape sequence \\'.$escape.'...');
