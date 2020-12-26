@@ -3,6 +3,10 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 4.0.1 / 2020-12-27
+
+* Fixed warnings from *iconv* library on Un\*x systems - @thekid
+
 ## 4.0.0 / 2020-04-10
 
 * Implemented xp-framework/rfc#334: Drop PHP 5.6:
