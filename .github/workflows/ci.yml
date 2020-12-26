@@ -53,7 +53,7 @@ jobs:
       run: >
         curl -sSL https://dl.bintray.com/xp-runners/generic/xp-run-8.2.0.sh > xp-run &&
         composer install --prefer-dist &&
-        echo "vendor/autoload.php" > composer.pth
+        echo "vendor/autoload.php" > composer.pth &&
         git clone -–depth 1 https://github.com/nst/JSONTestSuite.git
 
     - name: Run test suite
