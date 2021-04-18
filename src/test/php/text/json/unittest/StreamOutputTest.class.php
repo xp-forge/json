@@ -17,4 +17,12 @@ class StreamOutputTest extends JsonOutputTest {
   protected function result($out) {
     return $out->stream()->getBytes();
   }
+
+  #[Test]
+  public function string_representation() {
+    $this->assertEquals(
+      'text.json.StreamOutput(stream= io.streams.MemoryOutputStream(@0 of 0 bytes), format= text.json.DenseFormat)',
+      $this->output()->toString()
+    );
+  }
 }

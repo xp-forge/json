@@ -1,6 +1,6 @@
 <?php namespace text\json;
 
-use lang\FormatException;
+use lang\{FormatException, Value};
 use util\Objects;
 
 /**
@@ -9,7 +9,7 @@ use util\Objects;
  * @see  xp://text.json.JsonString
  * @see  xp://text.json.JsonStream
  */
-abstract class Input {
+abstract class Input implements Value {
   protected $bytes;
   protected $len;
   protected $pos;
@@ -282,6 +282,22 @@ abstract class Input {
   /** @return void */
   public function close() {
     // Does nothing
+  }
+
+  /** @return string */
+  public function toString() { return nameof($this).'(encoding= '.$this->encoding.')'; }
+
+  /** @return string */
+  public function hashCode() { return spl_object_id($this); }
+
+  /**
+   * Comparison
+   *
+   * @param  var $value
+   * @return int
+   */
+  public function compareTo($value) {
+    return $value === $this ? 0 : 1;
   }
 
   /** @return void */

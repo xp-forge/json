@@ -3,13 +3,21 @@
 use io\{File, Path};
 use lang\Environment;
 use text\json\{FileOutput, Types};
-use unittest\Test;
+use unittest\{Test, AfterClass};
 
 class FileOutputTest extends JsonOutputTest {
+  private $created= [];
 
   /** @param io.Path */
   private function tempName() {
-    return Path::compose([Environment::tempDir(), md5(uniqid()).'-xp.json']);
+    return $this->created[]= Path::compose([Environment::tempDir(), md5(uniqid()).'-xp.json']);
+  }
+
+  /** @return void */
+  public function tearDown() {
+    foreach ($this->created as $path) {
+      $path->exists() && $path->asFile()->unlink();
+    }
   }
 
   /** @return text.json.Output */
@@ -71,5 +79,14 @@ class FileOutputTest extends JsonOutputTest {
     $file->seek(0, SEEK_SET);
     (new FileOutput($file))->write('test');
     $this->assertTrue($file->isOpen());
+  }
+
+  #[Test]
+  public function string_representation() {
+    $output= $this->output();
+    $this->assertEquals(
+      'text.json.FileOutput(file= '.$output->file()->toString().', format= text.json.DenseFormat)',
+      $output->toString()
+    );
   }
 }

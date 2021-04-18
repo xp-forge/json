@@ -54,4 +54,9 @@ class FileInput extends StreamInput {
 
   /** @return io.File */
   public function file() { return $this->file; }
+
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(file= '.$this->file->toString().', encoding= '.$this->encoding.')';
+  }
 }

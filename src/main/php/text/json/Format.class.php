@@ -1,13 +1,13 @@
 <?php namespace text\json;
 
-use lang\IllegalArgumentException;
+use lang\{IllegalArgumentException, Value};
 
 /**
  * JSON format
  *
  * @test  xp://text.json.unittest.FormatFactoryTest
  */
-abstract class Format {
+abstract class Format implements Value {
   const ESCAPE_SLASHES = -65;  // ~JSON_UNESCAPED_SLASHES
   const ESCAPE_UNICODE = -257; // ~JSON_UNESCAPED_UNICODE
   const ESCAPE_ENTITIES = 11;  // JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT
@@ -129,5 +129,21 @@ abstract class Format {
     } else {
       throw new IllegalArgumentException('Cannot represent instances of '.typeof($value));
     }
+  }
+
+  /** @return string */
+  public function toString() { return nameof($this); }
+
+  /** @return string */
+  public function hashCode() { return spl_object_id($this); }
+
+  /**
+   * Comparison
+   *
+   * @param  var $value
+   * @return int
+   */
+  public function compareTo($value) {
+    return $value === $this ? 0 : 1;
   }
 }

@@ -86,4 +86,12 @@ class StreamInputTest extends JsonInputTest {
       // OK
     }
   }
+
+  #[Test]
+  public function string_representation() {
+    $this->assertEquals(
+      'text.json.StreamInput(stream= io.streams.MemoryInputStream(@2 of 2 bytes), encoding= utf-8)',
+      $this->input('{}')->toString()
+    );
+  }
 }

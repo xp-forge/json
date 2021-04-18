@@ -1,8 +1,8 @@
 <?php namespace text\json;
 
-use lang\IllegalArgumentException;
+use lang\{IllegalArgumentException, Value};
 
-abstract class Output {
+abstract class Output implements Value {
   public $format;
 
   /**
@@ -77,6 +77,22 @@ abstract class Output {
   /** @return void */
   public function close() {
     // Does nothing
+  }
+
+  /** @return string */
+  public function toString() { return nameof($this).'(format= '.$this->format->toString().')'; }
+
+  /** @return string */
+  public function hashCode() { return spl_object_id($this); }
+
+  /**
+   * Comparison
+   *
+   * @param  var $value
+   * @return int
+   */
+  public function compareTo($value) {
+    return $value === $this ? 0 : 1;
   }
 
   /** @return void */

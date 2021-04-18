@@ -173,6 +173,11 @@ class StreamInput extends Input {
     return null;
   }
 
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(stream= '.$this->in->toString().', encoding= '.$this->encoding.')';
+  }
+
   /** @return void */
   public function close() { $this->in->close(); }
 }

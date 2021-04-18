@@ -3,6 +3,15 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 4.1.0 / 2021-04-18
+
+* Fixed up file-based input and output tests to clean up temporary files
+  they create as their fixture
+  (@thekid)
+* Made all of `text.json.Format`, `text.json.Input` and `text.json.Output`
+  implement `lang.Value` and provide string representations
+  (@thekid)
+
 ## 4.0.1 / 2020-12-27
 
 * Fixed warnings from *iconv* library on Un\*x systems - @thekid

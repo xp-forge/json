@@ -36,6 +36,11 @@ class StreamOutput extends Output {
     $this->stream->write($bytes);
   }
 
+  /** @return string */
+  public function toString() {
+    return nameof($this).'(stream= '.$this->stream->toString().', format= '.$this->format->toString().')';
+  }
+
   /** @return void */
   public function close() { $this->stream->close(); }
 

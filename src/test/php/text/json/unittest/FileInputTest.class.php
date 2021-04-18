@@ -9,10 +9,18 @@ use unittest\Test;
  * Tests the FileInput implementation
  */
 class FileInputTest extends JsonInputTest {
+  private $created= [];
 
   /** @param io.Path */
   private function tempName() {
-    return Path::compose([Environment::tempDir(), md5(uniqid()).'-xp.json']);
+    return $this->created[]= Path::compose([Environment::tempDir(), md5(uniqid()).'-xp.json']);
+  }
+
+  /** @return void */
+  public function tearDown() {
+    foreach ($this->created as $path) {
+      $path->exists() && $path->asFile()->unlink();
+    }
   }
 
   /**
@@ -96,5 +104,14 @@ class FileInputTest extends JsonInputTest {
     $input->read();
     $input->reset();
     $this->assertTrue($file->isOpen());
+  }
+
+  #[Test]
+  public function string_representation() {
+    $file= $this->fileWith('{}', File::REWRITE);
+    $this->assertEquals(
+      'text.json.FileInput(file= '.$file->toString().', encoding= utf-8)',
+      (new FileInput($file))->toString()
+    );
   }
 }
