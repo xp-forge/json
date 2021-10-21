@@ -6,7 +6,7 @@
   "description" : "Reads and writes JSON to and from various input sources",
   "keywords": ["module", "xp"],
   "require" : {
-    "xp-framework/core": "^10.0",
+    "xp-framework/core": "^11.0 | ^10.0",
     "php" : ">=7.0.0"
   },
   "require-dev" : {
