@@ -3,6 +3,11 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.0.0 / 2021-10-21
+
+* Implemented xp-framework/rfc#341, dropping compatibility with XP 9
+  (@thekid)
+
 ## 4.1.0 / 2021-04-18
 
 * Fixed up file-based input and output tests to clean up temporary files

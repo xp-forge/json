@@ -15,7 +15,7 @@ class StreamOutputTest extends JsonOutputTest {
    * @return string
    */
   protected function result($out) {
-    return $out->stream()->getBytes();
+    return $out->stream()->bytes();
   }
 
   #[Test]
