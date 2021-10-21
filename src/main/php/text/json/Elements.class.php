@@ -1,5 +1,6 @@
 <?php namespace text\json;
 
+use Iterator, ReturnTypeWillChange;
 use lang\FormatException;
 use util\Objects;
 
@@ -8,7 +9,7 @@ use util\Objects;
  * an element from the underlying input, then returns it immediately for
  * further processing instead of parsing the entire representation first.
  */
-class Elements implements \Iterator {
+class Elements implements Iterator {
   protected $input;
   protected $id= 0;
   protected $current= null;
@@ -23,6 +24,7 @@ class Elements implements \Iterator {
   }
   
   /** @return void */
+  #[ReturnTypeWillChange]
   public function rewind() {
     $token= $this->input->firstToken();
     if ('[' === $token) {
@@ -39,15 +41,19 @@ class Elements implements \Iterator {
   }
 
   /** @return var */
+  #[ReturnTypeWillChange]
   public function current() { return $this->current; }
 
   /** @return var */
+  #[ReturnTypeWillChange]
   public function key() { return $this->id; }
 
   /** @return bool */
+  #[ReturnTypeWillChange]
   public function valid() { return null !== $this->id; }
 
   /** @return void */
+  #[ReturnTypeWillChange]
   public function next() {
     $token= $this->input->nextToken();
     if (',' === $token) {
