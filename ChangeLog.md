@@ -3,6 +3,12 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.0.1 / 2021-10-21
+
+* Fixed PHP 7.0 and 7.1 compatibility: *Call to undefined function
+  spl_object_id()*, see https://www.php.net/spl_object_id
+  (@thekid)
+
 ## 5.0.0 / 2021-10-21
 
 * Made compatible with PHP 8.1 - add `ReturnTypeWillChange` attributes to

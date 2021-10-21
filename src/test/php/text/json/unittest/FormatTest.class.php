@@ -19,6 +19,11 @@ abstract class FormatTest extends \unittest\TestCase {
   }
 
   #[Test]
+  public function hash_code() {
+    $this->assertNotEquals('', $this->format()->hashCode());
+  }
+
+  #[Test]
   public function slash_is_escaped_per_default() {
     $this->assertEquals('"xp-framework\/core"', $this->format()->representationOf('xp-framework/core'));
   }

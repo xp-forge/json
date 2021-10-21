@@ -135,7 +135,7 @@ abstract class Format implements Value {
   public function toString() { return nameof($this); }
 
   /** @return string */
-  public function hashCode() { return spl_object_id($this); }
+  public function hashCode() { return spl_object_hash($this); }
 
   /**
    * Comparison
