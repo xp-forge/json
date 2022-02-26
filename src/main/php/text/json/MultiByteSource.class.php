@@ -4,7 +4,7 @@ use io\IOException;
 use io\streams\{InputStream, Seekable, Streams};
 
 class MultiByteSource implements InputStream, Seekable {
-  protected $in= null;
+  protected $in, $encoding;
 
   /**
    * Constructor. Creates a new MultiByteSource on an underlying input

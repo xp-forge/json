@@ -3,6 +3,10 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.0.2 / 2022-02-26
+
+* Fixed "Creation of dynamic property" warnings in PHP 8.2 - @thekid
+
 ## 5.0.1 / 2021-10-21
 
 * Fixed PHP 7.0 and 7.1 compatibility: *Call to undefined function

@@ -13,8 +13,7 @@ abstract class Format implements Value {
   const ESCAPE_ENTITIES = 11;  // JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT
 
   public static $DEFAULT;
-  public $comma;
-  public $colon;
+  public $comma, $colon, $options;
 
   static function __static() {
     self::$DEFAULT= new DenseFormat();
