@@ -60,9 +60,8 @@ class WrappedFormatTest extends FormatTest {
     $repr.= $format->comma;
     $repr.= $format->representationOf('b');
     $repr.= $format->close(']');
-
     $this->assertEquals(
-      "[\"a\", {\n  \"v2\": {\n    \"key\": \"value\"\n  }\n},\n\"b\"]",
+      "[\n  \"a\",\n  {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  },\n  \"b\"\n]",
       $repr
     );
   }

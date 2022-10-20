@@ -71,12 +71,13 @@ class WrappedFormat extends Format {
   }
 
   public function open($token) {
-    $this->stack[]= $this->comma;
-    if ('{' === $token) {
+    if ('{' === $token || empty($this->stack)) {
+      $this->stack[]= $this->comma;
       $indent= str_repeat($this->indent, $this->level++);
       $this->comma= ",\n".$indent;
       return $token."\n".$indent;
     } else {
+      $this->stack[]= $this->comma;
       $this->comma= ', ';
       return $token;
     }
@@ -84,7 +85,7 @@ class WrappedFormat extends Format {
 
   public function close($token) {
     $this->comma= array_pop($this->stack);
-    if ('}' === $token) {
+    if ('}' === $token || empty($this->stack)) {
       $this->level--;
       return "\n".str_repeat($this->indent, $this->level - 1).$token;
     } else {
