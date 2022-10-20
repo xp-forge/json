@@ -1,6 +1,6 @@
 <?php namespace text\json\unittest;
 
-use text\json\WrappedFormat;
+use text\json\{WrappedFormat, StringOutput};
 use unittest\Test;
 
 class WrappedFormatTest extends FormatTest {
@@ -60,8 +60,9 @@ class WrappedFormatTest extends FormatTest {
     $repr.= $format->comma;
     $repr.= $format->representationOf('b');
     $repr.= $format->close(']');
+
     $this->assertEquals(
-      "[\n  \"a\",\n  {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  },\n  \"b\"\n]",
+      "[\"a\", {\n  \"v2\": {\n    \"key\": \"value\"\n  }\n},\n\"b\"]",
       $repr
     );
   }
@@ -83,5 +84,30 @@ class WrappedFormatTest extends FormatTest {
       "{\n  \"a\": \"v1\",\n  \"b\": {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  }\n}",
       $repr
     );
+  }
+
+  #[Test]
+  public function writing_to_output_produces_same_representation() {
+    $data= [
+      '_id'      => 1234,
+      'clusters' => [
+        ['skills' => [
+          '_id'   => 5678,
+          'state' => 'REMOVED',
+        ]],
+        ['skills' => [
+          '_id'   => 7890,
+          'state' => 'REMOVED',
+        ]],
+      ],
+      'title'    => 'Test'
+    ];
+    $format= $this->format();
+
+    $out= new StringOutput($format);
+    $out->write($data);
+    $representation= $out->bytes();
+
+    $this->assertEquals($format->representationOf($data), $representation);
   }
 }

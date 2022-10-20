@@ -8,6 +8,7 @@
 class WrappedFormat extends Format {
   protected $indent;
   protected $level= 1;
+  protected $stack= [];
 
   static function __static() { }
 
@@ -70,11 +71,24 @@ class WrappedFormat extends Format {
   }
 
   public function open($token) {
-    return $token."\n".str_repeat($this->indent, $this->level++);
+    $this->stack[]= $this->comma;
+    if ('{' === $token) {
+      $indent= str_repeat($this->indent, $this->level++);
+      $this->comma= ",\n".$indent;
+      return $token."\n".$indent;
+    } else {
+      $this->comma= ', ';
+      return $token;
+    }
   }
 
   public function close($token) {
-    $this->level--;
-    return "\n".str_repeat($this->indent, $this->level - 1).$token;
+    $this->comma= array_pop($this->stack);
+    if ('}' === $token) {
+      $this->level--;
+      return "\n".str_repeat($this->indent, $this->level - 1).$token;
+    } else {
+      return $token;
+    }
   }
 }

@@ -41,7 +41,7 @@ abstract class Output implements Value {
       if (null === $map) {
         $this->appendToken('[]');
       } else {
-        $this->appendToken($map ? '}' : ']');
+        $this->appendToken($f->close($map ? '}' : ']'));
       }
     } else {
       $this->appendToken($f->representationOf($value));
