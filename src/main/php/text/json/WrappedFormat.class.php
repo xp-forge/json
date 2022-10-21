@@ -19,7 +19,7 @@ class WrappedFormat extends Format {
    * @param  int $options
    */
   public function __construct($indent= '  ', $options= 0) {
-    parent::__construct(",\n".$indent, ': ', $options);
+    parent::__construct(', ', ': ', $options);
     $this->indent= $indent;
   }
 
@@ -30,16 +30,19 @@ class WrappedFormat extends Format {
    * @return string
    */
   protected function formatArray($value) {
+    $comma= $this->comma;
+    $this->comma= ', ';
     $r= '[';
     $next= false;
     foreach ($value as $element) {
       if ($next) {
-        $r.= ', ';
+        $r.= $this->comma;
       } else {
         $next= true;
       }
       $r.= $this->representationOf($element);
     }
+    $this->comma= $comma;
     return $r.']';
   }
 
@@ -50,23 +53,23 @@ class WrappedFormat extends Format {
    * @return string
    */
   protected function formatObject($value) {
+    $comma= $this->comma;
     $indent= str_repeat($this->indent, $this->level);
     $this->comma= ",\n".$indent;
     $r= "{\n".$indent;
     $next= false;
+    $this->level++;
     foreach ($value as $key => $mapped) {
       if ($next) {
         $r.= $this->comma;
       } else {
         $next= true;
       }
-      $r.= $this->representationOf($key).': ';
-      $this->level++;
-      $r.= $this->representationOf($mapped);
-      $this->level--;
+      $r.= $this->representationOf($key).$this->colon.$this->representationOf($mapped);
     }
+    $this->level--;
     $indent= str_repeat($this->indent, $this->level - 1);
-    $this->comma= ",\n".$indent;
+    $this->comma= $comma;
     return $r."\n".$indent.'}';
   }
 
