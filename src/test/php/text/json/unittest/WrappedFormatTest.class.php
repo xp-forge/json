@@ -1,6 +1,6 @@
 <?php namespace text\json\unittest;
 
-use text\json\WrappedFormat;
+use text\json\{WrappedFormat, StringOutput};
 use unittest\Test;
 
 class WrappedFormatTest extends FormatTest {
@@ -17,12 +17,17 @@ class WrappedFormatTest extends FormatTest {
 
   #[Test]
   public function array_with_one_element() {
-    $this->assertEquals('[1]', $this->format()->representationOf([1]));
+    $this->assertEquals("[\n  1\n]", $this->format()->representationOf([1]));
   }
 
   #[Test]
   public function array_with_multiple_elements() {
-    $this->assertEquals('[1, 2, 3]', $this->format()->representationOf([1, 2, 3]));
+    $this->assertEquals("[\n  1,\n  2,\n  3\n]", $this->format()->representationOf([1, 2, 3]));
+  }
+
+  #[Test]
+  public function array_with_nested_array() {
+    $this->assertEquals("[\n  1,\n  [2, 3]\n]", $this->format()->representationOf([1, [2, 3]]));
   }
 
   #[Test]
@@ -83,5 +88,30 @@ class WrappedFormatTest extends FormatTest {
       "{\n  \"a\": \"v1\",\n  \"b\": {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  }\n}",
       $repr
     );
+  }
+
+  #[Test]
+  public function writing_to_output_produces_same_representation() {
+    $data= [
+      '_id'      => 1234,
+      'clusters' => [
+        ['skills' => [
+          '_id'   => 5678,
+          'state' => 'REMOVED',
+        ]],
+        ['skills' => [
+          '_id'   => 7890,
+          'state' => 'REMOVED',
+        ]],
+      ],
+      'title'    => 'Test'
+    ];
+    $format= $this->format();
+
+    $out= new StringOutput($format);
+    $out->write($data);
+    $representation= $out->bytes();
+
+    $this->assertEquals($format->representationOf($data), $representation);
   }
 }

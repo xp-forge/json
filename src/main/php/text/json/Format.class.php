@@ -1,11 +1,12 @@
 <?php namespace text\json;
 
+use StdClass;
 use lang\{IllegalArgumentException, Value};
 
 /**
  * JSON format
  *
- * @test  xp://text.json.unittest.FormatFactoryTest
+ * @test  text.json.unittest.FormatFactoryTest
  */
 abstract class Format implements Value {
   const ESCAPE_SLASHES = -65;  // ~JSON_UNESCAPED_SLASHES
@@ -54,22 +55,6 @@ abstract class Format implements Value {
   }
 
   /**
-   * Formats an array
-   *
-   * @param  var[] $value
-   * @return string
-   */
-  protected abstract function formatArray($value);
-
-  /**
-   * Formats an object
-   *
-   * @param  [:var] $value
-   * @return string
-   */
-  protected abstract function formatObject($value);
-
-  /**
    * Open an array or object
    *
    * @param  string $token either `[` or `{`
@@ -92,7 +77,7 @@ abstract class Format implements Value {
   /**
    * Creates a representation of a given value
    *
-   * @param  string $value
+   * @param  var $value
    * @return string
    */
   public function representationOf($value) {
@@ -108,9 +93,29 @@ abstract class Format implements Value {
       if (empty($value)) {
         return '[]';
       } else if (0 === key($value)) {
-        return $this->formatArray($value);
-      } else {
-        return $this->formatObject($value);
+        $r= $this->open('[');
+        $next= false;
+        foreach ($value as $element) {
+          if ($next) {
+            $r.= $this->comma;
+          } else {
+            $next= true;
+          }
+          $r.= $this->representationOf($element);
+        }
+        return $r.$this->close(']');
+      } else { map:
+        $r= $this->open('{');
+        $next= false;
+        foreach ($value as $key => $mapped) {
+          if ($next) {
+            $r.= $this->comma;
+          } else {
+            $next= true;
+          }
+          $r.= $this->representationOf($key).$this->colon.$this->representationOf($mapped);
+        }
+        return $r.$this->close('}');
       }
     } else if (null === $value) {
       return 'null';
@@ -118,13 +123,10 @@ abstract class Format implements Value {
       return 'true';
     } else if (false === $value) {
       return 'false';
-    } else if ($value instanceof \stdclass) {
-      $cast= (array)$value;
-      if (empty($cast)) {
-        return '{}';
-      } else {
-        return $this->formatObject($cast);
-      }
+    } else if ($value instanceof StdClass) {
+      $value= (array)$value;
+      if (empty($value)) return '{}';
+      goto map;
     } else {
       throw new IllegalArgumentException('Cannot represent instances of '.typeof($value));
     }
