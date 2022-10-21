@@ -97,7 +97,7 @@ abstract class Format implements Value {
   /**
    * Creates a representation of a given value
    *
-   * @param  string $value
+   * @param  var $value
    * @return string
    */
   public function representationOf($value) {
