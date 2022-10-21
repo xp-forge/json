@@ -55,26 +55,6 @@ abstract class Format implements Value {
   }
 
   /**
-   * Formats an object
-   *
-   * @param  [:var] $value
-   * @return string
-   */
-  protected function formatObject($value) {
-    $r= $this->open('{');
-    $next= false;
-    foreach ($value as $key => $mapped) {
-      if ($next) {
-        $r.= $this->comma;
-      } else {
-        $next= true;
-      }
-      $r.= $this->representationOf($key).$this->colon.$this->representationOf($mapped);
-    }
-    return $r.$this->close('}');
-  }
-
-  /**
    * Open an array or object
    *
    * @param  string $token either `[` or `{`
@@ -124,8 +104,18 @@ abstract class Format implements Value {
           $r.= $this->representationOf($element);
         }
         return $r.$this->close(']');
-      } else {
-        return $this->formatObject($value);
+      } else { map:
+        $r= $this->open('{');
+        $next= false;
+        foreach ($value as $key => $mapped) {
+          if ($next) {
+            $r.= $this->comma;
+          } else {
+            $next= true;
+          }
+          $r.= $this->representationOf($key).$this->colon.$this->representationOf($mapped);
+        }
+        return $r.$this->close('}');
       }
     } else if (null === $value) {
       return 'null';
@@ -134,12 +124,9 @@ abstract class Format implements Value {
     } else if (false === $value) {
       return 'false';
     } else if ($value instanceof StdClass) {
-      $cast= (array)$value;
-      if (empty($cast)) {
-        return '{}';
-      } else {
-        return $this->formatObject($cast);
-      }
+      $value= (array)$value;
+      if (empty($value)) return '{}';
+      goto map;
     } else {
       throw new IllegalArgumentException('Cannot represent instances of '.typeof($value));
     }
