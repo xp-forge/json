@@ -3,6 +3,10 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.0.3 / 2022-10-21
+
+* Merged PR #14: Fix WrappedFormat indentation, fixing #13 - @thekid
+
 ## 5.0.2 / 2022-02-26
 
 * Fixed "Creation of dynamic property" warnings in PHP 8.2 - @thekid
