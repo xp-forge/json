@@ -1,5 +1,6 @@
 <?php namespace text\json;
 
+use Traversable;
 use lang\{IllegalArgumentException, Value};
 
 abstract class Output implements Value {
@@ -22,7 +23,7 @@ abstract class Output implements Value {
    */
   public function write($value) {
     $f= $this->format;
-    if ($value instanceof \Traversable || is_array($value)) {
+    if ($value instanceof Traversable || is_array($value)) {
       $i= 0;
       $map= null;
       foreach ($value as $key => $element) {
