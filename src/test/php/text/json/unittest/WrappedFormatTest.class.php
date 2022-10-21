@@ -17,12 +17,17 @@ class WrappedFormatTest extends FormatTest {
 
   #[Test]
   public function array_with_one_element() {
-    $this->assertEquals('[1]', $this->format()->representationOf([1]));
+    $this->assertEquals("[\n  1\n]", $this->format()->representationOf([1]));
   }
 
   #[Test]
   public function array_with_multiple_elements() {
-    $this->assertEquals('[1, 2, 3]', $this->format()->representationOf([1, 2, 3]));
+    $this->assertEquals("[\n  1,\n  2,\n  3\n]", $this->format()->representationOf([1, 2, 3]));
+  }
+
+  #[Test]
+  public function array_with_nested_array() {
+    $this->assertEquals("[\n  1,\n  [2, 3]\n]", $this->format()->representationOf([1, [2, 3]]));
   }
 
   #[Test]
