@@ -3,7 +3,7 @@
 /**
  * Wrapped JSON format - indents objects and first-level arrays.
  *
- * @test  xp://text.json.unittest.WrappedFormatTest
+ * @test  text.json.unittest.WrappedFormatTest
  */
 class WrappedFormat extends Format {
   protected $indent;
@@ -15,12 +15,12 @@ class WrappedFormat extends Format {
   /**
    * Creates a new wrapped format
    *
-   * @param  string $indent If omitted, uses 2 spaces
+   * @param  int|string $indent If omitted, uses 2 spaces
    * @param  int $options
    */
   public function __construct($indent= '  ', $options= 0) {
     parent::__construct(', ', ': ', $options);
-    $this->indent= $indent;
+    $this->indent= is_string($indent) ? $indent : str_repeat(' ', $indent);
   }
 
   /**
