@@ -3,7 +3,7 @@
 use io\Folder;
 use lang\FormatException;
 use text\json\FileInput;
-use unittest\{Assert, Expect, Test, Values};
+use test\{Assert, Expect, Test, Values};
 
 class JsonSuiteTest {
   private $parsing, $transform;

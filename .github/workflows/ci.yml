@@ -57,4 +57,4 @@ jobs:
         git clone https://github.com/nst/JSONTestSuite.git --single-branch 
 
     - name: Run test suite
-      run: sh xp-run xp.unittest.TestRunner src/test/php src/it/php -a JSONTestSuite
+      run: sh xp-run xp.test.Runner src/test/php src/it/php -a JSONTestSuite

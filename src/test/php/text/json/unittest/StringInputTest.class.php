@@ -1,6 +1,7 @@
 <?php namespace text\json\unittest;
 
 use text\json\StringInput;
+use test\Assert;
 
 /**
  * Tests the JsonString implementation

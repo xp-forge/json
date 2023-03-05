@@ -2,18 +2,19 @@
 
 use lang\FormatException;
 use text\json\{Format, Json, StringInput, StringOutput};
-use unittest\{Expect, Test};
+use test\Assert;
+use test\{Expect, Test};
 
-class JsonTest extends \unittest\TestCase {
+class JsonTest {
 
   #[Test]
   public function read_input() {
-    $this->assertEquals('Test', Json::read(new StringInput('"Test"')));
+    Assert::equals('Test', Json::read(new StringInput('"Test"')));
   }
 
   #[Test]
   public function read_string() {
-    $this->assertEquals('Test', Json::read('"Test"'));
+    Assert::equals('Test', Json::read('"Test"'));
   }
 
   #[Test, Expect(FormatException::class)]
@@ -28,16 +29,16 @@ class JsonTest extends \unittest\TestCase {
 
   #[Test]
   public function write_output() {
-    $this->assertEquals('"Test"', Json::write('Test', new StringOutput())->bytes());
+    Assert::equals('"Test"', Json::write('Test', new StringOutput())->bytes());
   }
 
   #[Test]
   public function of_string() {
-    $this->assertEquals('"Test"', Json::of('Test'));
+    Assert::equals('"Test"', Json::of('Test'));
   }
 
   #[Test]
   public function of_string_with_format() {
-    $this->assertEquals('"Test"', Json::of('Test', Format::$DEFAULT));
+    Assert::equals('"Test"', Json::of('Test', Format::$DEFAULT));
   }
 }

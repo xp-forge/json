@@ -1,7 +1,8 @@
 <?php namespace text\json\unittest;
 
-use text\json\{WrappedFormat, StringOutput};
-use unittest\Test;
+use text\json\{StringOutput, WrappedFormat};
+use test\Assert;
+use test\Test;
 
 class WrappedFormatTest extends FormatTest {
 
@@ -17,22 +18,22 @@ class WrappedFormatTest extends FormatTest {
 
   #[Test]
   public function array_with_one_element() {
-    $this->assertEquals("[\n  1\n]", $this->format()->representationOf([1]));
+    Assert::equals("[\n  1\n]", $this->format()->representationOf([1]));
   }
 
   #[Test]
   public function array_with_multiple_elements() {
-    $this->assertEquals("[\n  1,\n  2,\n  3\n]", $this->format()->representationOf([1, 2, 3]));
+    Assert::equals("[\n  1,\n  2,\n  3\n]", $this->format()->representationOf([1, 2, 3]));
   }
 
   #[Test]
   public function array_with_nested_array() {
-    $this->assertEquals("[\n  1,\n  [2, 3]\n]", $this->format()->representationOf([1, [2, 3]]));
+    Assert::equals("[\n  1,\n  [2, 3]\n]", $this->format()->representationOf([1, [2, 3]]));
   }
 
   #[Test]
   public function object_with_one_pair() {
-    $this->assertEquals(
+    Assert::equals(
       "{\n  \"key\": \"value\"\n}",
       $this->format()->representationOf(['key' => 'value'])
     );
@@ -40,7 +41,7 @@ class WrappedFormatTest extends FormatTest {
 
   #[Test]
   public function object_with_multiple_pairs() {
-    $this->assertEquals(
+    Assert::equals(
       "{\n  \"a\": \"v1\",\n  \"b\": \"v2\"\n}",
       $this->format()->representationOf(['a' => 'v1', 'b' => 'v2'])
     );
@@ -48,7 +49,7 @@ class WrappedFormatTest extends FormatTest {
 
   #[Test]
   public function object_with_nested_objects() {
-    $this->assertEquals(
+    Assert::equals(
       "{\n  \"a\": \"v1\",\n  \"b\": {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  }\n}",
       $this->format()->representationOf(['a' => 'v1', 'b' => ['v2' => ['key' => 'value']]])
     );
@@ -65,7 +66,7 @@ class WrappedFormatTest extends FormatTest {
     $repr.= $format->comma;
     $repr.= $format->representationOf('b');
     $repr.= $format->close(']');
-    $this->assertEquals(
+    Assert::equals(
       "[\n  \"a\",\n  {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  },\n  \"b\"\n]",
       $repr
     );
@@ -84,7 +85,7 @@ class WrappedFormatTest extends FormatTest {
     $repr.= $format->colon;
     $repr.= $format->representationOf(['v2' => ['key' => 'value']]);
     $repr.= $format->close('}');
-    $this->assertEquals(
+    Assert::equals(
       "{\n  \"a\": \"v1\",\n  \"b\": {\n    \"v2\": {\n      \"key\": \"value\"\n    }\n  }\n}",
       $repr
     );
@@ -112,6 +113,6 @@ class WrappedFormatTest extends FormatTest {
     $out->write($data);
     $representation= $out->bytes();
 
-    $this->assertEquals($format->representationOf($data), $representation);
+    Assert::equals($format->representationOf($data), $representation);
   }
 }

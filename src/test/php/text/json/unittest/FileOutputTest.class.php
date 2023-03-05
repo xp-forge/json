@@ -3,7 +3,8 @@
 use io\{File, Path};
 use lang\Environment;
 use text\json\{FileOutput, Types};
-use unittest\{Test, AfterClass};
+use test\Assert;
+use test\{AfterClass, Test};
 
 class FileOutputTest extends JsonOutputTest {
   private $created= [];
@@ -14,6 +15,7 @@ class FileOutputTest extends JsonOutputTest {
   }
 
   /** @return void */
+  #[After]
   public function tearDown() {
     foreach ($this->created as $path) {
       $path->exists() && $path->asFile()->unlink();
@@ -42,34 +44,34 @@ class FileOutputTest extends JsonOutputTest {
   #[Test]
   public function can_create_with_file() {
     $file= new File($this->tempName());
-    $this->assertEquals($file, (new FileOutput($file))->file());
+    Assert::equals($file, (new FileOutput($file))->file());
   }
 
   #[Test]
   public function can_create_with_string() {
     $name= $this->tempName();
-    $this->assertEquals(new File($name), (new FileOutput($name))->file());
+    Assert::equals(new File($name), (new FileOutput($name))->file());
   }
 
   #[Test]
   public function is_closed_after_writing() {
     $file= new File($this->tempName());
     (new FileOutput($file))->write('test');
-    $this->assertFalse($file->isOpen());
+    Assert::false($file->isOpen());
   }
 
   #[Test]
   public function is_closed_after_begin_array() {
     $file= new File($this->tempName());
     (new FileOutput($file))->begin(Types::$ARRAY)->close();
-    $this->assertFalse($file->isOpen());
+    Assert::false($file->isOpen());
   }
 
   #[Test]
   public function is_closed_after_begin_object() {
     $file= new File($this->tempName());
     (new FileOutput($file))->begin(Types::$OBJECT)->close();
-    $this->assertFalse($file->isOpen());
+    Assert::false($file->isOpen());
   }
 
   #[Test]
@@ -78,13 +80,13 @@ class FileOutputTest extends JsonOutputTest {
     $file->open(File::REWRITE);
     $file->seek(0, SEEK_SET);
     (new FileOutput($file))->write('test');
-    $this->assertTrue($file->isOpen());
+    Assert::true($file->isOpen());
   }
 
   #[Test]
   public function string_representation() {
     $output= $this->output();
-    $this->assertEquals(
+    Assert::equals(
       'text.json.FileOutput(file= '.$output->file()->toString().', format= text.json.DenseFormat)',
       $output->toString()
     );
