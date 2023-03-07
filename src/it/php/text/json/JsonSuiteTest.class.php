@@ -2,11 +2,12 @@
 
 use io\Folder;
 use lang\FormatException;
+use test\{Args, Assert, Expect, Test, Values};
 use text\json\FileInput;
-use unittest\{Assert, Expect, Test, Values};
 
+#[Args('folder')]
 class JsonSuiteTest {
-  private $parsing, $transform;
+  private $base;
   private static $IGNORED= [
     'n_string_UTF8_surrogate_U+D800.json',
     'n_string_unescaped_tab.json',
@@ -21,66 +22,46 @@ class JsonSuiteTest {
   ];
 
   /**
-   * Constructor
-   *
-   * @param  string $folder Folder with `test_parsing` inside
-   */
-  public function __construct($folder= '.') {
-    $this->parsing= new Folder($folder, 'test_parsing');
-    $this->transform= new Folder($folder, 'test_transform');
-    ini_set('xdebug.max_nesting_level', -1);
-  }
-
-  /**
-   * Returns parsing tests. The name of these files tell if their contents
-   * should be accepted or rejected.
+   * Creates JSON test suite from a folder with `test_parsing` and
+   * `test_transform` subfolders inside. These contain files with the
+   * following naming convention:
    *
    * - `y_`: content must be accepted by parsers
    * - `n_`: content must be rejected by parsers
    * - `i_`: parsers are free to accept or reject content
    *
-   * @param  string $filter
-   * @return php.Generator
+   * @param  string $folder
    */
-  private function parsing($filter) {
-    foreach ($this->parsing->entries() as $entry) {
-      if (!in_array($entry->name(), self::$IGNORED) && 0 === strncmp($filter, $entry->name(), strlen($filter))) {
-        yield [$entry];
-      }
+  public function __construct($folder= '.') {
+    $this->base= new Folder($folder);
+    ini_set('xdebug.max_nesting_level', -1);
+  }
+
+  /** @return iterable */
+  public function files($folder) {
+    foreach ((new Folder($this->base, $folder))->entries() as $entry) {
+      in_array($entry->name(), self::$IGNORED) || yield $entry;
     }
   }
 
-  /**
-   * Returns transform tests.
-   *
-   * @return php.Generator
-   */
-  private function transform() {
-    foreach ($this->transform->entries() as $entry) {
-      if (!in_array($entry->name(), self::$IGNORED)) {
-        yield [$entry];
-      }
-    }
-  }
-
-  #[Test, Values(['source' => 'parsing', 'args' => ['y_']])]
+  #[Test, SelectFiles(from: 'files', filter: 'test_parsing/y_*')]
   public function must_accept_parsing($entry) {
     (new FileInput($entry))->read();
   }
 
-  #[Test, Expect(FormatException::class), Values(['source' => 'parsing', 'args' => ['n_']])]
+  #[Test, Expect(FormatException::class), SelectFiles(from: 'files', filter: 'test_parsing/n_*')]
   public function must_reject_parsing($entry) {
     (new FileInput($entry))->read();
   }
 
-  #[Test, Values(['source' => 'parsing', 'args' => ['i_']])]
+  #[Test, SelectFiles(from: 'files', filter: 'test_parsing/i_*')]
   public function is_free_to_either_accept_or_reject($entry) {
     try {
       (new FileInput($entry))->read();
     } catch (FormatException $ignored) { }
   }
 
-  #[Test, Values(['source' => 'transform'])]
+  #[Test, SelectFiles(from: 'files', filter: 'test_transform/*')]
   public function may_understand_differently($entry) {
     (new FileInput($entry))->read();
   }

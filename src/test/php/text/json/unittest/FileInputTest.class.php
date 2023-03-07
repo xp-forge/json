@@ -2,8 +2,8 @@
 
 use io\{File, Path};
 use lang\Environment;
+use test\{Assert, After, Test};
 use text\json\FileInput;
-use unittest\Test;
 
 /**
  * Tests the FileInput implementation
@@ -16,7 +16,7 @@ class FileInputTest extends JsonInputTest {
     return $this->created[]= Path::compose([Environment::tempDir(), md5(uniqid()).'-xp.json']);
   }
 
-  /** @return void */
+  #[After]
   public function tearDown() {
     foreach ($this->created as $path) {
       $path->exists() && $path->asFile()->unlink();
@@ -54,14 +54,14 @@ class FileInputTest extends JsonInputTest {
   public function can_create_with_file() {
     $file= new File($this->tempName());
     $file->touch();
-    $this->assertEquals($file, (new FileInput($file))->file());
+    Assert::equals($file, (new FileInput($file))->file());
   }
 
   #[Test]
   public function can_create_with_string() {
     $name= $this->tempName();
     touch($name);
-    $this->assertEquals(new File($name), (new FileInput($name))->file());
+    Assert::equals(new File($name), (new FileInput($name))->file());
   }
 
   #[Test]
@@ -69,7 +69,7 @@ class FileInputTest extends JsonInputTest {
     $file= $this->fileWith('"test"', File::WRITE);
     $file->close();
     (new FileInput($file))->read();
-    $this->assertFalse($file->isOpen());
+    Assert::false($file->isOpen());
   }
 
   #[Test]
@@ -77,7 +77,7 @@ class FileInputTest extends JsonInputTest {
     $file= $this->fileWith('[]', File::WRITE);
     $file->close();
     iterator_to_array((new FileInput($file))->elements());
-    $this->assertFalse($file->isOpen());
+    Assert::false($file->isOpen());
   }
 
   #[Test]
@@ -85,7 +85,7 @@ class FileInputTest extends JsonInputTest {
     $file= $this->fileWith('{}', File::WRITE);
     $file->close();
     iterator_to_array((new FileInput($file))->pairs());
-    $this->assertFalse($file->isOpen());
+    Assert::false($file->isOpen());
   }
 
   #[Test]
@@ -93,7 +93,7 @@ class FileInputTest extends JsonInputTest {
     $file= $this->fileWith('{}', File::REWRITE);
     $file->seek(0, SEEK_SET);
     (new FileInput($file))->read();
-    $this->assertTrue($file->isOpen());
+    Assert::true($file->isOpen());
   }
 
   #[Test]
@@ -103,13 +103,13 @@ class FileInputTest extends JsonInputTest {
     $input= new FileInput($file);
     $input->read();
     $input->reset();
-    $this->assertTrue($file->isOpen());
+    Assert::true($file->isOpen());
   }
 
   #[Test]
   public function string_representation() {
     $file= $this->fileWith('{}', File::REWRITE);
-    $this->assertEquals(
+    Assert::equals(
       'text.json.FileInput(file= '.$file->toString().', encoding= utf-8)',
       (new FileInput($file))->toString()
     );

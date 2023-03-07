@@ -1,6 +1,7 @@
 <?php namespace text\json\unittest;
 
 use io\streams\MemoryOutputStream;
+use test\{Assert, Test};
 use text\json\StreamOutput;
 
 class StreamOutputTest extends JsonOutputTest {
@@ -20,7 +21,7 @@ class StreamOutputTest extends JsonOutputTest {
 
   #[Test]
   public function string_representation() {
-    $this->assertEquals(
+    Assert::equals(
       'text.json.StreamOutput(stream= io.streams.MemoryOutputStream(@0 of 0 bytes), format= text.json.DenseFormat)',
       $this->output()->toString()
     );
