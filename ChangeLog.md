@@ -3,6 +3,8 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Merged PR #15: Migrate to new testing library - @thekid
+
 ## 5.0.3 / 2022-10-21
 
 * Merged PR #14: Fix WrappedFormat indentation, fixing #13 - @thekid
