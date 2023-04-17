@@ -42,12 +42,13 @@ class FileInputTest extends JsonInputTest {
    *
    * @param  string $source
    * @param  string $encoding
+   * @param  int $maximumNesting
    * @return text.json.Input
    */
-  protected function input($source, $encoding= 'utf-8') {
+  protected function input($source, $encoding= 'utf-8', $maximumNesting= 512) {
     $file= $this->fileWith($source, File::REWRITE);
     $file->seek(0, SEEK_SET);
-    return new FileInput($file, $encoding);
+    return new FileInput($file, $encoding, $maximumNesting);
   }
 
   #[Test]

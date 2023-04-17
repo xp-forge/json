@@ -2,9 +2,9 @@
 
 use io\IOException;
 use io\streams\{InputStream, MemoryInputStream};
-use text\json\StreamInput;
 use test\Assert;
 use test\{Test, Values};
+use text\json\StreamInput;
 
 /**
  * Tests the StreamInput implementation
@@ -16,10 +16,11 @@ class StreamInputTest extends JsonInputTest {
    *
    * @param  string $source
    * @param  string $encoding
+   * @param  int $maximumNesting
    * @return text.json.Input
    */
-  protected function input($source, $encoding= 'utf-8') {
-    return new StreamInput(new MemoryInputStream($source), $encoding);
+  protected function input($source, $encoding= 'utf-8', $maximumNesting= 512) {
+    return new StreamInput(new MemoryInputStream($source), $encoding, $maximumNesting);
   }
 
   #[Test]

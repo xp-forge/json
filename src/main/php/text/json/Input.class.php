@@ -95,7 +95,7 @@ abstract class Input implements Value {
       return [];
     } else if (null !== $token) {
       $result= [];
-      if ($nesting++ > $this->maximumNesting) {
+      if (++$nesting > $this->maximumNesting) {
         throw new FormatException('Nesting level too deep');
       }
       do {
@@ -135,7 +135,7 @@ abstract class Input implements Value {
       return [];
     } else if (null !== $token) {
       $result= [];
-      if ($nesting++ > $this->maximumNesting) {
+      if (++$nesting > $this->maximumNesting) {
         throw new FormatException('Nesting level too deep');
       }
       do {

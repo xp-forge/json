@@ -23,9 +23,10 @@ abstract class JsonInputTest {
    *
    * @param  string $source
    * @param  string $encoding
+   * @param  int $maximumNesting
    * @return text.json.Input
    */
-  protected abstract function input($source, $encoding= 'utf-8');
+  protected abstract function input($source, $encoding= 'utf-8', $maximumNesting= 512);
 
   /**
    * Helper
@@ -475,5 +476,25 @@ abstract class JsonInputTest {
     Assert::equals(['key' => 'value'], iterator_to_array($input->pairs()), '#1');
     $input->reset();
     Assert::equals(['key' => 'value'], iterator_to_array($input->pairs()), '#2');
+  }
+
+  #[Test]
+  public function just_below_maximum_array_nesting_level() {
+    $this->input('[[["just-fine"]]]', 'utf-8', 3)->read();
+  }
+
+  #[Test]
+  public function just_below_maximum_object_nesting_level() {
+    $this->input('[[{"just":"fine"}]]', 'utf-8', 3)->read();
+  }
+
+  #[Test, Expect(class: FormatException::class, message: 'Nesting level too deep')]
+  public function maximum_array_nesting_level_exceeded() {
+    $this->input('[[[["too-deep"]]]]', 'utf-8', 3)->read();
+  }
+
+  #[Test, Expect(class: FormatException::class, message: 'Nesting level too deep')]
+  public function maximum_object_nesting_level_exceeded() {
+    $this->input('[[[{"too":"deep"}]]]', 'utf-8', 3)->read();
   }
 }
