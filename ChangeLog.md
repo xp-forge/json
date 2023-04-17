@@ -3,6 +3,9 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.0.4 / 2023-04-17
+
+* Fixed an off-by-one in maximum nesting level calculation - @thekid
 * Merged PR #15: Migrate to new testing library - @thekid
 
 ## 5.0.3 / 2022-10-21
