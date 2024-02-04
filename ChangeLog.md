@@ -3,6 +3,8 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Added PHP 8.4 to test matrix - @thekid
+
 ## 5.0.4 / 2023-04-17
 
 * Fixed an off-by-one in maximum nesting level calculation - @thekid
