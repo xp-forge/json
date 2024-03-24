@@ -9,10 +9,10 @@ abstract class Output implements Value {
   /**
    * Creates a new instance
    *
-   * @param  text.json.Format $format
+   * @param  ?text.json.Format $format
    */
-  public function __construct(Format $format= null) {
-    $this->format= $format ?: Format::$DEFAULT;
+  public function __construct($format= null) {
+    $this->format= $format ?? Format::$DEFAULT;
   }
 
   /**

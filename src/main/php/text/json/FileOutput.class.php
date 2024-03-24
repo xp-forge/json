@@ -19,9 +19,9 @@ class FileOutput extends Output {
    * Creates a new instance
    *
    * @param  var $arg Either an io.File object or a file name
-   * @param  text.json.Format $format
+   * @param  ?text.json.Format $format
    */
-  public function __construct($arg, Format $format= null) {
+  public function __construct($arg, $format= null) {
     parent::__construct($format);
     if ($arg instanceof File) {
       $this->file= $arg;

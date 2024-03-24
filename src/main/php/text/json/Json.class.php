@@ -38,10 +38,10 @@ abstract class Json {
    * Returns the output as a string
    *
    * @param  var $value
-   * @param  text.json.Format $format
+   * @param  ?text.json.Format $format
    * @return string
    */
-  public static function of($value, Format $format= null) {
+  public static function of($value, $format= null) {
     $output= new StringOutput($format ?: Format::$DEFAULT);
     $output->write($value);
     return $output->bytes();

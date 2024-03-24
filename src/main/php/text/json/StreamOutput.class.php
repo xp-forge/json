@@ -19,9 +19,9 @@ class StreamOutput extends Output {
    * Creates a new instance
    *
    * @param  io.streams.OutputStream $out
-   * @param  text.json.Format $format
+   * @param  ?text.json.Format $format
    */
-  public function __construct(OutputStream $out, Format $format= null) {
+  public function __construct(OutputStream $out, $format= null) {
     parent::__construct($format);
     $this->stream= $out;
   }
