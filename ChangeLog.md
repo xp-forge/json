@@ -3,6 +3,10 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 5.1.0 / 2024-03-24
+
+* Made compatible with XP 12 - @thekid
+
 * Added PHP 8.4 to test matrix - @thekid
 
 ## 5.0.4 / 2023-04-17
