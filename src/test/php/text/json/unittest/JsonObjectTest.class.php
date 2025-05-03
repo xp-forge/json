@@ -23,7 +23,8 @@ class JsonObjectTest {
 
   #[Test]
   public function null_coalesce() {
-    Assert::equals('default', (new JsonObject())['key'] ?? 'default');
+    $fixture= new JsonObject();
+    Assert::equals('default', $fixture['key'] ?? 'default');
   }
 
   #[Test]
