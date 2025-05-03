@@ -22,6 +22,11 @@ class JsonObjectTest {
   }
 
   #[Test]
+  public function null_coalesce() {
+    Assert::equals('default', (new JsonObject())['key'] ?? 'default');
+  }
+
+  #[Test]
   public function set() {
     $fixture= new JsonObject(['key' => 'value']);
     $fixture['key']= 'changed';
@@ -31,9 +36,10 @@ class JsonObjectTest {
 
   #[Test]
   public function isset() {
-    $fixture= new JsonObject(['key' => 'value']);
+    $fixture= new JsonObject(['key' => 'value', 'price' => null]);
 
     Assert::true(isset($fixture['key']));
+    Assert::false(isset($fixture['price']));
     Assert::false(isset($fixture['color']));
   }
 

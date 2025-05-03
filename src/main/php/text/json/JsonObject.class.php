@@ -23,7 +23,7 @@ class JsonObject implements ArrayAccess, Countable, IteratorAggregate, Value {
   public function offsetSet($key, $value) { $this->backing[$key]= $value; }
 
   #[ReturnTypeWillChange]
-  public function offsetExists($key) { return array_key_exists($key, $this->backing); }
+  public function offsetExists($key) { return isset($this->backing[$key]); }
 
   #[ReturnTypeWillChange]
   public function offsetUnset($key) { unset($this->backing[$key]); }
