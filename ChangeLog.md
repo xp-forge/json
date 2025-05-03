@@ -3,6 +3,11 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.0.0 / ????-??-??
+
+* Merged PR #16: Return `{}` as empty object instead of empty array
+  (@thekid)
+
 ## 5.1.0 / 2024-03-24
 
 * Made compatible with XP 12 - @thekid
