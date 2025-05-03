@@ -1,9 +1,9 @@
 <?php namespace text\json\unittest;
 
 use lang\FormatException;
-use text\json\{Format, Json, StringInput, StringOutput};
 use test\Assert;
 use test\{Expect, Test};
+use text\json\{Format, Json, StringInput, StringOutput};
 
 class JsonTest {
 
@@ -40,5 +40,10 @@ class JsonTest {
   #[Test]
   public function of_string_with_format() {
     Assert::equals('"Test"', Json::of('Test', Format::$DEFAULT));
+  }
+
+  #[Test]
+  public function object_roundtrip() {
+    Assert::equals('{}', Json::of(Json::read('{}')));
   }
 }
