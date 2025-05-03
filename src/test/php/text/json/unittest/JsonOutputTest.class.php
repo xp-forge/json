@@ -117,8 +117,13 @@ abstract class JsonOutputTest {
   }
 
   #[Test]
-  public function write_json_object() {
+  public function write_empty_json_object() {
     Assert::equals('{}', $this->write(new JsonObject()));
+  }
+
+  #[Test]
+  public function write_json_object() {
+    Assert::equals('{"key":"value"}', $this->write(new JsonObject(['key' => 'value'])));
   }
 
   #[Test]
