@@ -9,12 +9,13 @@ use util\collections\Pair;
 /**
  * Test JSON input
  *
- * @see   php://json_decode
+ * @see   https://php.net/json_decode
  * @see   https://bugs.php.net/bug.php?id=41504
  * @see   https://bugs.php.net/bug.php?id=45791
  * @see   https://bugs.php.net/bug.php?id=45989
  * @see   https://bugs.php.net/bug.php?id=54484
  * @see   https://github.com/xp-framework/xp-framework/issues/189
+ * @see   https://github.com/xp-forge/json/pull/16
  */
 abstract class JsonInputTest {
 
