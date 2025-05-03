@@ -86,7 +86,7 @@ abstract class Input implements Value {
   /**
    * Reads an object
    *
-   * @return [:var]
+   * @return [:var]|object
    * @throws lang.FormatException
    */
   protected function readObject($nesting) {
