@@ -5,6 +5,8 @@ JSON for the XP Framework ChangeLog
 
 ## 6.0.0 / ????-??-??
 
+* Made serialization of integer keys consistent with `JSON.stringify()`
+  (@thekid)
 * Merged PR #16: Return `{}` as empty object instead of empty array
   (@thekid)
 

@@ -118,12 +118,12 @@ abstract class JsonOutputTest {
 
   #[Test]
   public function write_array_as_object() {
-    Assert::equals('{0:1,1:2,2:3}', $this->write((object)[1, 2, 3]));
+    Assert::equals('{"0":1,"1":2,"2":3}', $this->write((object)[1, 2, 3]));
   }
 
   #[Test]
   public function write_nested_array_as_object() {
-    Assert::equals('{"values":{0:1,1:2,2:3}}', $this->write(['values' => (object)[1, 2, 3]]));
+    Assert::equals('{"values":{"0":1,"1":2,"2":3}}', $this->write(['values' => (object)[1, 2, 3]]));
   }
 
   #[Test]
