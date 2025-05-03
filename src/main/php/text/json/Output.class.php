@@ -22,30 +22,8 @@ abstract class Output implements Value {
    * @return self
    */
   public function write($value) {
-    $f= $this->format;
-    if ($value instanceof Traversable || is_array($value)) {
-      $i= 0;
-      $map= null;
-      foreach ($value as $key => $element) {
-        if (0 === $i++) {
-          $map= 0 !== $key;
-          $this->appendToken($f->open($map ? '{' : '['));
-        } else {
-          $this->appendToken($f->comma);
-        }
-
-        if ($map) {
-          $this->appendToken($f->representationOf((string)$key).$f->colon);
-        }
-        $this->write($element);
-      }
-      if (null === $map) {
-        $this->appendToken('[]');
-      } else {
-        $this->appendToken($f->close($map ? '}' : ']'));
-      }
-    } else {
-      $this->appendToken($f->representationOf($value));
+    foreach ($this->format->tokensOf($value) as $token) {
+      $this->appendToken($token);
     }
     return $this;
   }

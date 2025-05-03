@@ -1,6 +1,6 @@
 <?php namespace text\json;
 
-use StdClass;
+use StdClass, Traversable;
 use lang\{IllegalArgumentException, Value};
 
 /**
@@ -81,52 +81,75 @@ abstract class Format implements Value {
    * @return string
    */
   public function representationOf($value) {
-    $t= gettype($value);
-    if ('string' === $t) {
-      return json_encode($value, $this->options);
-    } else if ('integer' === $t) {
-      return (string)$value;
-    } else if ('double' === $t) {
+    $r= '';
+    foreach ($this->tokensOf($value) as $bytes) {
+      $r.= $bytes;
+    }
+    return $r;
+  }
+
+  /**
+   * Yields tokens for a given value
+   *
+   * @param  var $value
+   * @return iterable
+   */
+  public function tokensOf($value) {
+    if (is_string($value)) {
+      yield json_encode($value, $this->options);
+    } else if (is_int($value)) {
+      yield (string)$value;
+    } else if (is_float($value)) {
       $cast= (string)$value;
-      return strpos($cast, '.') ? $cast : $cast.'.0';
-    } else if ('array' === $t) {
+      yield strpos($cast, '.') ? $cast : $cast.'.0';
+    } else if (is_array($value)) {
       if (empty($value)) {
-        return '[]';
+        yield '[]';
       } else if (0 === key($value)) {
-        $r= $this->open('[');
-        $next= false;
+        yield $this->open('[');
+        $i= 0;
         foreach ($value as $element) {
-          if ($next) {
-            $r.= $this->comma;
-          } else {
-            $next= true;
-          }
-          $r.= $this->representationOf($element);
+          if ($i++) yield $this->comma;
+          yield from $this->tokensOf($element);
         }
-        return $r.$this->close(']');
-      } else { map:
-        $r= $this->open('{');
-        $next= false;
-        foreach ($value as $key => $mapped) {
-          if ($next) {
-            $r.= $this->comma;
-          } else {
-            $next= true;
-          }
-          $r.= $this->representationOf($key).$this->colon.$this->representationOf($mapped);
+        yield $this->close(']');
+      } else {
+        map: yield $this->open('{');
+        $i= 0;
+        foreach ($value as $key => $element) {
+          if ($i++) yield $this->comma;
+          yield from $this->tokensOf((string)$key);
+          yield $this->colon;
+          yield from $this->tokensOf($element);
         }
-        return $r.$this->close('}');
+        yield $this->close('}');
       }
     } else if (null === $value) {
-      return 'null';
+      yield 'null';
     } else if (true === $value) {
-      return 'true';
+      yield 'true';
     } else if (false === $value) {
-      return 'false';
-    } else if ($value instanceof StdClass) {
-      $value= (array)$value;
-      if (empty($value)) return '{}';
+      yield 'false';
+    } else if ($value instanceof JsonObject || $value instanceof StdClass) {
       goto map;
+    } else if ($value instanceof Traversable) {
+      $i= 0;
+      $map= null;
+      foreach ($value as $key => $element) {
+        if (0 === $i++) {
+          $map= 0 !== $key;
+          yield $this->open($map ? '{' : '[');
+        } else {
+          yield $this->comma;
+        }
+
+        if ($map) {
+          yield from $this->tokensOf((string)$key);
+          yield $this->colon;
+        }
+        yield from $this->tokensOf($element);
+      }
+      yield null === $map ? '[]' : $this->close($map ? '}' : ']');
     } else {
       throw new IllegalArgumentException('Cannot represent instances of '.typeof($value));
     }

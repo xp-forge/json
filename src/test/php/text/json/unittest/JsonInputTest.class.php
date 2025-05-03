@@ -3,7 +3,7 @@
 use io\streams\MemoryInputStream;
 use lang\FormatException;
 use test\{Assert, Expect, Test, Values};
-use text\json\Types;
+use text\json\{Types, JsonObject};
 use util\collections\Pair;
 
 /**
@@ -118,32 +118,37 @@ abstract class JsonInputTest {
 
   #[Test, Values(['{}', '{ }'])]
   public function read_empty_object($source) {
-    Assert::equals([], $this->read($source));
+    Assert::equals(new JsonObject([]), $this->read($source));
   }
 
   #[Test, Values(['{"key": "value"}', '{"key" : "value"}', '{ "key" : "value" }'])]
   public function read_key_value_pair($source) {
-    Assert::equals(['key' => 'value'], $this->read($source));
+    Assert::equals(new JsonObject(['key' => 'value']), $this->read($source));
   }
 
   #[Test, Values(['{"a": "v1", "b": "v2"}', '{"a" : "v1", "b" : "v2"}', '{ "a" : "v1" , "b" : "v2" }'])]
   public function read_key_value_pairs($source) {
-    Assert::equals(['a' => 'v1', 'b' => 'v2'], $this->read($source));
+    Assert::equals(new JsonObject(['a' => 'v1', 'b' => 'v2']), $this->read($source));
   }
 
   #[Test, Values(['{"": "value"}', '{"" : "value"}', '{ "" : "value" }'])]
   public function empty_key($source) {
-    Assert::equals(['' => 'value'], $this->read($source));
+    Assert::equals(new JsonObject(['' => 'value']), $this->read($source));
   }
 
   #[Test]
   public function keys_overwrite_each_other() {
-    Assert::equals(['key' => 'v2'], $this->read('{"key": "v1", "key": "v2"}'));
+    Assert::equals(new JsonObject(['key' => 'v2']), $this->read('{"key": "v1", "key": "v2"}'));
   }
 
   #[Test]
   public function object_ending_with_zero() {
-    Assert::equals(['key' => 0], $this->read('{"key": 0}'));
+    Assert::equals(new JsonObject(['key' => 0]), $this->read('{"key": 0}'));
+  }
+
+  #[Test]
+  public function array_access() {
+    Assert::equals('value', $this->read('{"key" : "value"}')['key']);
   }
 
   #[Test, Expect(FormatException::class), Values(['{', '{{', '{{}', '}', '}}'])]
@@ -279,11 +284,11 @@ abstract class JsonInputTest {
   #[Test]
   public function indented_json() {
     Assert::equals(
-      [
+      new JsonObject([
         'color' => 'green',
         'sizes' => ['S', 'M', 'L', 'XL'],
         'price' => 12.99
-      ],
+      ]),
       $this->read('{
         "color" : "green",
         "sizes" : [ "S", "M", "L", "XL" ],

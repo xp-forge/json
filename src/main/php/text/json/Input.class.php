@@ -92,7 +92,7 @@ abstract class Input implements Value {
   protected function readObject($nesting) {
     $token= $this->nextToken();
     if ('}' === $token) {
-      return [];
+      return new JsonObject();
     } else if (null !== $token) {
       $result= [];
       if (++$nesting > $this->maximumNesting) {
@@ -113,7 +113,7 @@ abstract class Input implements Value {
         if (',' === $delim) {
           continue;
         } else if ('}' === $delim) {
-          return $result;
+          return new JsonObject($result);
         } else {
           throw new FormatException('Unexpected '.Objects::stringOf($delim).', expecting "," or "}"');
         }

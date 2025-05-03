@@ -1,10 +1,21 @@
 <?php namespace text\json\unittest;
 
+use test\{Assert, Before, Test, Values};
 use text\json\Format;
-use test\Assert;
-use test\Test;
 
 abstract class FormatTest {
+  protected $format;
+
+  /** @return iterable */
+  protected function singleTokens() {
+    yield [true, ['true']];
+    yield [false, ['false']];
+    yield [null, ['null']];
+    yield [6100, ['6100']];
+    yield [0.5, ['0.5']];
+    yield ['Test', ['"Test"']];
+    yield [[], ['[]']];
+  }
 
   /**
    * Returns a `Format` instance
@@ -96,4 +107,8 @@ abstract class FormatTest {
   #[Test]
   public abstract function object_with_multiple_pairs();
 
+  #[Test, Values(from: 'singleTokens')]
+  public function iterate_single_tokens($value, $expected) {
+    Assert::equals($expected, iterator_to_array($this->format()->tokensOf($value)));
+  }
 }

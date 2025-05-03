@@ -2,7 +2,7 @@
 
 use lang\IllegalArgumentException;
 use test\{Assert, After, Before, Expect, Test, Values};
-use text\json\Types;
+use text\json\{Types, JsonObject};
 
 abstract class JsonOutputTest {
   private static $precision;
@@ -117,13 +117,18 @@ abstract class JsonOutputTest {
   }
 
   #[Test]
+  public function write_json_object() {
+    Assert::equals('{}', $this->write(new JsonObject()));
+  }
+
+  #[Test]
   public function write_array_as_object() {
-    Assert::equals('{0:1,1:2,2:3}', $this->write((object)[1, 2, 3]));
+    Assert::equals('{"0":1,"1":2,"2":3}', $this->write((object)[1, 2, 3]));
   }
 
   #[Test]
   public function write_nested_array_as_object() {
-    Assert::equals('{"values":{0:1,1:2,2:3}}', $this->write(['values' => (object)[1, 2, 3]]));
+    Assert::equals('{"values":{"0":1,"1":2,"2":3}}', $this->write(['values' => (object)[1, 2, 3]]));
   }
 
   #[Test]
