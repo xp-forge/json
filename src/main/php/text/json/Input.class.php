@@ -94,10 +94,11 @@ abstract class Input implements Value {
     if ('}' === $token) {
       return new JsonObject();
     } else if (null !== $token) {
-      $result= [];
       if (++$nesting > $this->maximumNesting) {
         throw new FormatException('Nesting level too deep');
       }
+
+      $result= [];
       do {
         $key= $this->valueOf($token, $nesting);
         if (!is_string($key)) {
