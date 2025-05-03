@@ -118,7 +118,7 @@ abstract class JsonInputTest {
 
   #[Test, Values(['{}', '{ }'])]
   public function read_empty_object($source) {
-    Assert::equals([], $this->read($source));
+    Assert::equals((object)[], $this->read($source));
   }
 
   #[Test, Values(['{"key": "value"}', '{"key" : "value"}', '{ "key" : "value" }'])]

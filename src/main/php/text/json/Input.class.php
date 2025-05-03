@@ -92,7 +92,7 @@ abstract class Input implements Value {
   protected function readObject($nesting) {
     $token= $this->nextToken();
     if ('}' === $token) {
-      return [];
+      return (object)[];
     } else if (null !== $token) {
       $result= [];
       if (++$nesting > $this->maximumNesting) {
