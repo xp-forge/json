@@ -10,7 +10,7 @@ use lang\FormatException;
  * $value= $json->read();
  * ```
  *
- * @test  xp://text.json.unittest.StringInputTest
+ * @test  text.json.unittest.StringInputTest
  */
 class StringInput extends Input {
 

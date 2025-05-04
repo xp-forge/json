@@ -4,7 +4,7 @@
  * Dense JSON format - no insignificant whitespace between tokens. Ideal
  * use on network I/O.
  *
- * @test  xp://text.json.unittest.DenseFormatTest
+ * @test  text.json.unittest.DenseFormatTest
  */
 class DenseFormat extends Format {
 

@@ -10,7 +10,7 @@ use io\streams\OutputStream;
  * $json->write('Hello World');
  * ```
  *
- * @test  xp://text.json.unittest.StreamOutputTest
+ * @test  /text.json.unittest.StreamOutputTest
  */
 class StreamOutput extends Output {
   protected $stream;

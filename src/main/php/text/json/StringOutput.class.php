@@ -11,7 +11,7 @@ use io\streams\OutputStream;
  * echo $json->bytes();
  * ```
  *
- * @test  xp://text.json.unittest.StringOutputTest
+ * @test  text.json.unittest.StringOutputTest
  */
 class StringOutput extends Output {
   protected $bytes= null;

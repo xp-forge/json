@@ -1,9 +1,9 @@
 <?php namespace text\json;
 
-/**
- * Json types enumeration
- */
-class Types extends \lang\Enum {
+use lang\Enum;
+
+/** Json types enumeration */
+class Types extends Enum {
   public static $STRING, $DOUBLE, $INT, $NULL, $FALSE, $TRUE, $ARRAY, $OBJECT;
 
   /** @return bool */

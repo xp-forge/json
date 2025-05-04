@@ -10,7 +10,7 @@ use io\File;
  * $value= $json->read();
  * ```
  *
- * @test  xp://text.json.unittest.FileInputTest
+ * @test  text.json.unittest.FileInputTest
  */
 class FileInput extends StreamInput {
   protected $file, $wasOpen;

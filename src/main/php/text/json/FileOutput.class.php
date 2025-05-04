@@ -10,7 +10,7 @@ use io\File;
  * $json->write('Hello World');
  * ```
  *
- * @test  xp://text.json.unittest.FileOutputTest
+ * @test  text.json.unittest.FileOutputTest
  */
 class FileOutput extends Output {
   protected $file, $wasOpen;

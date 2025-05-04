@@ -12,7 +12,7 @@ use lang\FormatException;
  * $value= $json->read();
  * ```
  *
- * @test  xp://text.json.unittest.StreamInputTest
+ * @test  text.json.unittest.StreamInputTest
  */
 class StreamInput extends Input {
   protected $in, $offset;

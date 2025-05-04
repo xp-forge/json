@@ -3,12 +3,7 @@
 use lang\{FormatException, Value};
 use util\Objects;
 
-/**
- * Base class for JSON input implementations
- *
- * @see  xp://text.json.JsonString
- * @see  xp://text.json.JsonStream
- */
+/** Base class for JSON input implementations */
 abstract class Input implements Value {
   protected $bytes;
   protected $len;
