@@ -94,6 +94,9 @@ Processing elements sequentially can save you memory and give a better performan
 You can use the `elements()` method to receive an iterator over a JSON array. Instead of loading the entire source into memory and then returning the parsed array, it will parse one array element at a time, yielding them while going.
 
 ```php
+use peer\http\HttpConnection;
+use text\json\StreamInput;
+
 $conn= new HttpConnection(...);
 $in= new StreamInput($conn->get('/search?q=example&limit=1000')->in());
 foreach ($in->elements() as $element) {
@@ -104,6 +107,9 @@ foreach ($in->elements() as $element) {
 If you get a huge object, you can also process it sequentially using the `pairs()` method. This will parse a single key/value pair at a time.
 
 ```php
+use peer\http\HttpConnection;
+use text\json\StreamInput;
+
 $conn= new HttpConnection(...);
 $in= new StreamInput($conn->get('/resources/4711?expand=*')->in());
 foreach ($in->pairs() as $key => $value) {
@@ -114,6 +120,9 @@ foreach ($in->pairs() as $key => $value) {
 To detect the type of the data on the stream (again, without reading it completely), you can use the `type()` method.
 
 ```php
+use peer\http\HttpConnection;
+use text\json\StreamInput;
+
 $conn= new HttpConnection(...);
 $in= new StreamInput($conn->get($resource)->in());
 $type= $in->type();
@@ -130,6 +139,8 @@ if ($type->isArray()) {
 To write data sequentially, you can use the `begin()` method and the stream it returns. This makes sense when the source offers a way to read data sequentially, if you already have the entire data in memory, using `write()` has the same effect.
 
 ```php
+use text\json\{StreamOutput, Types};
+
 $query= $conn->query('select * from person');
 
 $stream= (new StreamOutput(...))->begin(Types::$ARRAY);
@@ -142,6 +153,8 @@ $stream->close();
 As the `Stream` class implements the Closeable interface, it can be used in the `with` statement:
 
 ```php
+use text\json\{StreamOutput, Types};
+
 $query= $conn->query('select * from person');
 
 with ((new StreamOutput(...))->begin(Types::$ARRAY), function($stream) use($query) {
