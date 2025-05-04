@@ -1,5 +1,6 @@
 <?php namespace text\json\unittest;
 
+use ArrayIterator;
 use lang\IllegalArgumentException;
 use test\{Assert, After, Before, Expect, Test, Values};
 use text\json\Types;
@@ -35,17 +36,17 @@ abstract class JsonOutputTest {
 
   /** @return iterable */
   private function iterables() {
-    yield ['[]', new \ArrayIterator([])];
-    yield ['[1]', new \ArrayIterator([1])];
-    yield ['[1,2]', new \ArrayIterator([1, 2])];
-    yield ['{"key":"value"}', new \ArrayIterator(['key' => 'value'])];
-    yield ['{"a":"v1","b":"v2"}', new \ArrayIterator(['a' => 'v1', 'b' => 'v2'])];
-    yield ['[1,[2,3]]', new \ArrayIterator([1, new \ArrayIterator([2, 3])])];
-    yield ['[1,[2,3]]', [1, new \ArrayIterator([2, 3])]];
-    yield ['{"a":"v1","b":{"c":"v2"}}', new \ArrayIterator(['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])])];
-    yield ['{"a":"v1","b":{"c":"v2"}}', ['a' => 'v1', 'b' => new \ArrayIterator(['c' => 'v2'])]];
-    yield ['[1,{"key":"value"}]', new \ArrayIterator([1, new \ArrayIterator(['key' => 'value'])])];
-    yield ['{"key":[1,2]}', new \ArrayIterator(['key' => new \ArrayIterator([1, 2])])];
+    yield ['[]', new ArrayIterator([])];
+    yield ['[1]', new ArrayIterator([1])];
+    yield ['[1,2]', new ArrayIterator([1, 2])];
+    yield ['{"key":"value"}', new ArrayIterator(['key' => 'value'])];
+    yield ['{"a":"v1","b":"v2"}', new ArrayIterator(['a' => 'v1', 'b' => 'v2'])];
+    yield ['[1,[2,3]]', new ArrayIterator([1, new ArrayIterator([2, 3])])];
+    yield ['[1,[2,3]]', [1, new ArrayIterator([2, 3])]];
+    yield ['{"a":"v1","b":{"c":"v2"}}', new ArrayIterator(['a' => 'v1', 'b' => new ArrayIterator(['c' => 'v2'])])];
+    yield ['{"a":"v1","b":{"c":"v2"}}', ['a' => 'v1', 'b' => new ArrayIterator(['c' => 'v2'])]];
+    yield ['[1,{"key":"value"}]', new ArrayIterator([1, new ArrayIterator(['key' => 'value'])])];
+    yield ['{"key":[1,2]}', new ArrayIterator(['key' => new ArrayIterator([1, 2])])];
   }
 
   /** @return iterable */
