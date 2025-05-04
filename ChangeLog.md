@@ -7,6 +7,9 @@ JSON for the XP Framework ChangeLog
 
 **Heads up:** Dropped support for PHP < 7.4, see xp-framework/rfc#343
   (@thekid)
+* Merged PR #18: Extend `Json::read()` and `Json::write()` to accept
+  files and streams
+  (@thekid)
 * Made serialization of integer keys consistent with `JSON.stringify()`
   (@thekid)
 * Merged PR #16: Return `{}` as empty object instead of empty array

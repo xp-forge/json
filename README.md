@@ -12,35 +12,43 @@ Reads and writes JSON to and from various input sources.
 
 Examples
 --------
-Reading can be done from a string using one of the `Input` implementations:
+Reading can be done from a string, file or stream:
 
 ```php
+use text\json\Json;
+use io\File;
+use peer\SocketInputStream;
+
 // Strings
 $value= Json::read('"Test"');
 
 // Input
-$in= new FileInput(new File('input.json'));
-$in= new StringInput('{"Hello": "World"}');
-$in= new StreamInput(new SocketInputStream(...));
+$in= '{"Hello": "World"}');
+$in= new File('input.json');
+$in= new SocketInputStream(/* ... */);
 
 $value= Json::read($in);
 ```
 
-Writing can be done to a string or using one of the `Output` implementations:
+Writing can be done to a string, file or stream:
 
 ```php
+use text\json\Json;
+use io\File;
+use peer\SocketOutputStream;
+
 // Strings
 $json= Json::of('Test');
 
 // Output
-$out= new FileOutput(new File('output.json'));
-$out= new StreamOutput(new SocketOuputStream(...));
+$out= new File('output.json');
+$out= new SocketOuputStream(/* ... */);
 
 Json::write($value, $out);
 ```
 
 ### Formatted output
-To change the output format, pass a `Format` instance to the output's constructor. The formats available are:
+To change the output format, use one of the `Output` implementations and pass a `Format` instance to the output's constructor. The formats available are:
 
 * `DenseFormat($options)`: Best for network I/O, no unsignificant whitespace, default if nothing given and accessible via `Format::dense($options= ~Format::ESCAPE_SLASHES)`.
 * `WrappedFormat($indent, $options)`: Wraps first-level arrays and all objects, uses whitespace after commas colons. An instance of this format using 4 spaces for indentation and per default leaving forward slashes unescaped is available via `Format::wrapped($indent= "    ", $options= ~Format::ESCAPE_SLASHES)`.
@@ -52,7 +60,9 @@ The available options that can be or'ed together are:
 * `Format::ESCAPE_ENTITIES`: Escape XML entities `&`, `"`, `<` and `>`. Per default, these are represented in their literal form.
 
 ```php
-$out= new FileOutput(new File('glue.json'), Format::wrapped());
+use text\json\{FileOutput, Format};
+
+$out= new FileOutput('glue.json', Format::wrapped());
 $out->write([
   'name'    => 'example/package',
   'version' => '1.0.0',
