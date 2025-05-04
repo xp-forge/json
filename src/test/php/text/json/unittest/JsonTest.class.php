@@ -1,8 +1,11 @@
 <?php namespace text\json\unittest;
 
-use lang\FormatException;
+use io\streams\{MemoryInputStream, MemoryOutputStream};
+use io\{Files, TempFile};
+use lang\{FormatException, IllegalArgumentException};
 use test\{Assert, Expect, Test};
 use text\json\{Format, Json, StringInput, StringOutput};
+use util\Bytes;
 
 class JsonTest {
 
@@ -14,6 +17,26 @@ class JsonTest {
   #[Test]
   public function read_string() {
     Assert::equals('Test', Json::read('"Test"'));
+  }
+
+  #[Test]
+  public function read_casts_input_to_string() {
+    Assert::equals('Test', Json::read(new Bytes('"Test"')));
+  }
+
+  #[Test]
+  public function read_file() {
+    $file= new TempFile();
+    try {
+      Assert::equals('Test', Json::read($file->containing('"Test"')));
+    } finally {
+      $file->unlink();
+    }
+  }
+
+  #[Test]
+  public function read_stream() {
+    Assert::equals('Test', Json::read(new MemoryInputStream('"Test"')));
   }
 
   #[Test, Expect(FormatException::class)]
@@ -29,6 +52,26 @@ class JsonTest {
   #[Test]
   public function write_output() {
     Assert::equals('"Test"', Json::write('Test', new StringOutput())->bytes());
+  }
+
+  #[Test]
+  public function write_file() {
+    $file= new TempFile();
+    try {
+      Assert::equals('"Test"', Files::read(Json::write('Test', $file)->file()));
+    } finally {
+      $file->unlink();
+    }
+  }
+
+  #[Test]
+  public function write_stream() {
+    Assert::equals('"Test"', Json::write('Test', new MemoryOutputStream())->stream()->bytes());
+  }
+
+  #[Test, Expect(IllegalArgumentException::class)]
+  public function write_incorrect_type() {
+    Json::write('Test', $this);
   }
 
   #[Test]
