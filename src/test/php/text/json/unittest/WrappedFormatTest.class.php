@@ -1,8 +1,7 @@
 <?php namespace text\json\unittest;
 
+use test\{Assert, Test};
 use text\json\{StringOutput, WrappedFormat};
-use test\Assert;
-use test\Test;
 
 class WrappedFormatTest extends FormatTest {
 

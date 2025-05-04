@@ -2,13 +2,9 @@
 
 use io\IOException;
 use io\streams\{InputStream, MemoryInputStream};
-use test\Assert;
-use test\{Test, Values};
+use test\{Assert, Test, Values};
 use text\json\StreamInput;
 
-/**
- * Tests the StreamInput implementation
- */
 class StreamInputTest extends JsonInputTest {
 
   /**

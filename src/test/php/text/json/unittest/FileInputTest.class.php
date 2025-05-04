@@ -5,9 +5,6 @@ use lang\Environment;
 use test\{Assert, After, Test};
 use text\json\FileInput;
 
-/**
- * Tests the FileInput implementation
- */
 class FileInputTest extends JsonInputTest {
   private $created= [];
 

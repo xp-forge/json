@@ -1,8 +1,7 @@
 <?php namespace text\json\unittest;
 
+use test\{Assert, Test};
 use text\json\Format;
-use test\Assert;
-use test\Test;
 
 abstract class FormatTest {
 

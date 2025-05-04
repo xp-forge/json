@@ -1,11 +1,7 @@
 <?php namespace text\json\unittest;
 
-use test\Assert;
 use text\json\StringInput;
 
-/**
- * Tests the JsonString implementation
- */
 class StringInputTest extends JsonInputTest {
 
   /**

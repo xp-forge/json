@@ -1,12 +1,8 @@
 <?php namespace text\json\unittest;
 
+use test\{Assert, Test, Values};
 use text\json\Types;
-use test\Assert;
-use test\{Test, TestCase, Values};
 
-/**
- * Test JSON types enumeration
- */
 class TypesTest {
 
   #[Test]

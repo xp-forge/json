@@ -1,7 +1,6 @@
 <?php namespace text\json\unittest;
 
 use text\json\StringOutput;
-use test\Assert;
 
 class StringOutputTest extends JsonOutputTest {
 

@@ -1,8 +1,7 @@
 <?php namespace text\json\unittest;
 
 use lang\FormatException;
-use test\Assert;
-use test\{Expect, Test};
+use test\{Assert, Expect, Test};
 use text\json\{Format, Json, StringInput, StringOutput};
 
 class JsonTest {

@@ -2,9 +2,8 @@
 
 use io\{File, Path};
 use lang\Environment;
+use test\{Assert, After, Test};
 use text\json\{FileOutput, Types};
-use test\Assert;
-use test\{AfterClass, Test};
 
 class FileOutputTest extends JsonOutputTest {
   private $created= [];
@@ -14,7 +13,6 @@ class FileOutputTest extends JsonOutputTest {
     return $this->created[]= Path::compose([Environment::tempDir(), md5(uniqid()).'-xp.json']);
   }
 
-  /** @return void */
   #[After]
   public function tearDown() {
     foreach ($this->created as $path) {
