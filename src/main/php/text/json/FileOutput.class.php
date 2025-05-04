@@ -18,16 +18,16 @@ class FileOutput extends Output {
   /**
    * Creates a new instance
    *
-   * @param  var $arg Either an io.File object or a file name
+   * @param  string|io.File $target
    * @param  ?text.json.Format $format
    */
-  public function __construct($arg, $format= null) {
+  public function __construct($target, $format= null) {
     parent::__construct($format);
-    if ($arg instanceof File) {
-      $this->file= $arg;
+    if ($target instanceof File) {
+      $this->file= $target;
       $this->wasOpen= $this->file->isOpen();
     } else {
-      $this->file= new File($arg);
+      $this->file= new File($target);
       $this->wasOpen= false;
     }
     $this->wasOpen || $this->file->open(File::WRITE);
