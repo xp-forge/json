@@ -70,19 +70,16 @@ class StreamInputTest extends JsonInputTest {
 
   #[Test]
   public function cannot_reset_unseekable() {
-    $input= new StreamInput(newinstance(InputStream::class, [], [
-      'read'      => function($size= 8192) { return '[1]'; },
-      'available' => function() { return true; },
-      'close'     => function() { }
-    ]));
+    $input= new StreamInput(new class() implements InputStream {
+      public function read($size= 8192) { return '[1]'; }
+      public function available() { return true; }
+      public function close() { }
+    });
     Assert::equals([1], iterator_to_array($input->elements()), '#1');
-    try {
+    Assert::throws(IOException::class, function() use($input) {
       $input->reset();
       iterator_to_array($input->elements());
-      $this->fail('Expected exception not caught', null, 'io.IOException');
-    } catch (IOException $expected) {
-      // OK
-    }
+    });
   }
 
   #[Test]
