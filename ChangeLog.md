@@ -3,7 +3,7 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
-## 6.0.0 / ????-??-??
+## 6.0.0 / 2025-05-04
 
 **Heads up:** Dropped support for PHP < 7.4, see xp-framework/rfc#343
   (@thekid)
@@ -14,6 +14,7 @@ JSON for the XP Framework ChangeLog
   (@thekid)
 * Merged PR #16: Return `{}` as empty object instead of empty array
   (@thekid)
+* Added PHP 8.5 to test matrix - @thekid
 
 ## 5.1.0 / 2024-03-24
 
