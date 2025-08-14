@@ -3,6 +3,10 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Fixed deprecation warning *Non-canonical cast (double) is deprecated,
+  use the (float) cast instead* in PHP 8.5
+  (@thekid)
+
 ## 6.0.0 / 2025-05-04
 
 **Heads up:** Dropped support for PHP < 7.4, see xp-framework/rfc#343

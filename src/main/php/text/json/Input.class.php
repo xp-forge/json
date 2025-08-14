@@ -200,7 +200,7 @@ abstract class Input implements Value {
       return null;
     } else if (preg_match('/^\-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?$/', $token)) {
       return $token > PHP_INT_MAX || $token < -PHP_INT_MAX- 1 || strcspn($token, '.eE') < strlen($token)
-        ? (double)$token
+        ? (float)$token
         : (int)$token
       ;
     } else {
