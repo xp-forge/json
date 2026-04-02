@@ -1,6 +1,7 @@
 <?php namespace text\json\unittest;
 
 use ArrayIterator;
+use io\Blob;
 use lang\IllegalArgumentException;
 use test\{Assert, After, Before, Expect, Test, Values};
 use text\json\Types;
@@ -53,6 +54,16 @@ abstract class JsonOutputTest {
   private function generators() {
     yield ['[1,2]', function() { yield 1; yield 2; }];
     yield ['{"key":"value"}', function() { yield 'key' => 'value'; }];
+  }
+
+  /** @return iterable */
+  private function blobs() {
+    yield ['""', new Blob()];
+    yield ['"Test"', new Blob(['Test'])];
+    yield ['"Test \"the\" west"', new Blob(['Test', ' "the" ', 'west'])];
+    yield ['"Test\t"', new Blob(['Test', "\t"])];
+    yield ['"Tested"', new Blob(['Test', 'ed'])];
+    yield ['"Tested"', new Blob((function() { yield 'Test'; yield 'ed'; })())];
   }
 
   #[Before]
@@ -145,6 +156,17 @@ abstract class JsonOutputTest {
   #[Test, Values(from: 'generators')]
   public function write_generator($expected, $write) {
     Assert::equals($expected, $this->write($write()));
+  }
+
+  #[Test, Values(from: 'blobs')]
+  public function write_blob($expected, $write) {
+    Assert::equals($expected, $this->write($write));
+  }
+
+  /** @see https://bugs.php.net/bug.php?id=77069 */
+  #[Test, Runtime(php: '>=7.4.14')]
+  public function write_encoded_blob() {
+    Assert::equals('"VGVzdA=="', $this->write((new Blob('Test'))->encoded('convert.base64-encode')));
   }
 
   #[Test, Expect(IllegalArgumentException::class)]

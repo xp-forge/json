@@ -1,6 +1,7 @@
 <?php namespace text\json;
 
 use StdClass, Traversable;
+use io\Blob;
 use lang\{IllegalArgumentException, Value};
 
 /**
@@ -9,9 +10,9 @@ use lang\{IllegalArgumentException, Value};
  * @test  text.json.unittest.FormatFactoryTest
  */
 abstract class Format implements Value {
-  const ESCAPE_SLASHES = -65;  // ~JSON_UNESCAPED_SLASHES
-  const ESCAPE_UNICODE = -257; // ~JSON_UNESCAPED_UNICODE
-  const ESCAPE_ENTITIES = 11;  // JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT
+  const ESCAPE_SLASHES= -65;  // ~JSON_UNESCAPED_SLASHES
+  const ESCAPE_UNICODE= -257; // ~JSON_UNESCAPED_UNICODE
+  const ESCAPE_ENTITIES= 11;  // JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT
 
   public static $DEFAULT;
   public $comma, $colon, $options;
@@ -130,8 +131,14 @@ abstract class Format implements Value {
       yield 'true';
     } else if (false === $value) {
       yield 'false';
-    } else if ($value instanceof JsonObject || $value instanceof StdClass) {
+    } else if ($value instanceof StdClass) {
       goto map;
+    } else if ($value instanceof Blob) {
+      yield '"';
+      foreach ($value as $bytes) {
+        yield substr(json_encode($bytes), 1, -1);
+      }
+      yield '"';
     } else if ($value instanceof Traversable) {
       $i= 0;
       $map= null;
