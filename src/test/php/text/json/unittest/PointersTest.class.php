@@ -112,6 +112,11 @@ class PointersTest {
     iterator_to_array(new Pointers(new StringInput('')));
   }
 
+  #[Test, Expect(class: FormatException::class, message: 'Unexpected token ["test"] reading value')]
+  public function invalid_literal() {
+    iterator_to_array(new Pointers(new StringInput('test')));
+  }
+
   #[Test, Expect(class: FormatException::class, message: 'Unexpected token ["2"] reading array, expecting "," or "]"')]
   public function missing_comma_in_array() {
     iterator_to_array(new Pointers(new StringInput('[1 2]')));
