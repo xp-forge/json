@@ -19,11 +19,11 @@ class Pointers implements IteratorAggregate {
   /**
    * Yields pointers
    *
-   * @param  string $base
    * @param  var $token
+   * @param  string $base
    * @return iterable
    */
-  private function pointers($base, $token) {
+  private function pointers($token, $base= '') {
     static $escape= ['/' => '~1', '~' => '~0'];
 
     if (true === $token[0]) {
@@ -37,7 +37,7 @@ class Pointers implements IteratorAggregate {
 
         $token= $this->input->nextToken();
         if (':' === $token) {
-          yield from $this->pointers($base.'/'.strtr($key[1], $escape), $this->input->nextToken());
+          yield from $this->pointers($this->input->nextToken(), $base.'/'.strtr($key[1], $escape));
         } else {
           throw new FormatException('Unexpected token ['.Objects::stringOf($token).'] reading object, expecting ":"');
         }
@@ -59,7 +59,7 @@ class Pointers implements IteratorAggregate {
         $value= $this->input->nextToken();
         if (']' === $value) break;
 
-        yield from $this->pointers($base.'/'.($i++), $value);
+        yield from $this->pointers($value, $base.'/'.($i++));
 
         $token= $this->input->nextToken();
         if (',' === $token) {
@@ -92,6 +92,6 @@ class Pointers implements IteratorAggregate {
       throw new FormatException('Empty input');
     }
 
-    yield from $this->pointers('', $token);
+    yield from $this->pointers($token);
   }
 }
