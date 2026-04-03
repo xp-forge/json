@@ -111,4 +111,19 @@ class PointersTest {
   public function empty_input() {
     iterator_to_array(new Pointers(new StringInput('')));
   }
+
+  #[Test, Expect(class: FormatException::class, message: 'Unexpected token ["2"] reading array, expecting "," or "]"')]
+  public function missing_comma_in_array() {
+    iterator_to_array(new Pointers(new StringInput('[1 2]')));
+  }
+
+  #[Test, Expect(class: FormatException::class, message: 'Unexpected token ["2"] reading object, expecting ":"')]
+  public function missing_colon_in_object() {
+    iterator_to_array(new Pointers(new StringInput('{"key" 2}')));
+  }
+
+  #[Test, Expect(class: FormatException::class, message: 'Unexpected token ["2"] reading object, expecting "," or "}"')]
+  public function missing_comma_in_object() {
+    iterator_to_array(new Pointers(new StringInput('{"key": "value" 2}')));
+  }
 }
