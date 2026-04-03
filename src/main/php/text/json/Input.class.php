@@ -274,6 +274,15 @@ abstract class Input implements Value {
     return new Pairs($this);
   }
 
+  /**
+   * Reads pointers from an input stream sequentially
+   *
+   * @return text.json.Pairs
+   */
+  public function pointers() {
+    return new Pointers($this);
+  }
+
   /** @return void */
   public function close() {
     // Does nothing

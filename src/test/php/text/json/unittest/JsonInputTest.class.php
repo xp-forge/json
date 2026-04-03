@@ -344,6 +344,36 @@ abstract class JsonInputTest {
   }
 
   #[Test]
+  public function read_pointers() {
+    $source= <<<'JSON'
+      {
+        "data": {
+          "b64_json": "VGVzdA=="
+        },
+        "meta": {
+          "tokens": 6100,
+          "dimensions": [1792, 1024],
+        }
+      }
+      JSON
+    ;
+
+    Assert::equals(
+      [
+        ''                   => Types::$OBJECT,
+        '/data'              => Types::$OBJECT,
+        '/data/b64_json'     => 'VGVzdA==',
+        '/meta'              => Types::$OBJECT,
+        '/meta/tokens'       => 6100,
+        '/meta/dimensions'   => Types::$ARRAY,
+        '/meta/dimensions/0' => 1792,
+        '/meta/dimensions/1' => 1024,
+      ],
+      iterator_to_array($this->input($source)->pointers())
+    );
+  }
+
+  #[Test]
   public function read_long_text() {
     $str= str_repeat('*', 0xFFFF);
     Assert::equals($str, $this->read('"'.$str.'"'));
