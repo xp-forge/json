@@ -5,7 +5,9 @@ JSON for the XP Framework ChangeLog
 
 ## 6.1.0 / 2026-06-21
 
-* Merged PR #21: Refactor I/O exceptions. See xp-framework/core#363
+* Merged PR #21: Refactor I/O exceptions, dropping XP 10 support in the
+  doing. See xp-framework/core#363 for a write-up on the reason behind
+  this and the plan to move forward.
   (@thekid)
 
 ## 6.0.1 / 2025-08-14
