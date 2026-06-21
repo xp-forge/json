@@ -3,6 +3,11 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.1.0 / 2026-06-21
+
+* Merged PR #21: Refactor I/O exceptions. See xp-framework/core#363
+  (@thekid)
+
 ## 6.0.1 / 2025-08-14
 
 * Fixed deprecation warning *Non-canonical cast (double) is deprecated,
