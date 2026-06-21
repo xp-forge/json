@@ -1,6 +1,6 @@
 <?php namespace text\json;
 
-use io\IOException;
+use io\NotSupported;
 use io\streams\{InputStream, Seekable};
 use lang\FormatException;
 
@@ -79,7 +79,7 @@ class StreamInput extends Input {
    * Resets input
    *
    * @return void
-   * @throws io.IOException If this input cannot be reset
+   * @throws io.NotSupported If this input cannot be reset
    */
   public function reset() {
     if ($this->in instanceof Seekable) {
@@ -89,7 +89,7 @@ class StreamInput extends Input {
       $this->pos= 0;
       $this->firstToken= null;
     } else {
-      throw new IOException('Cannot seek streams of type '.typeof($this->in)->getName());
+      throw new NotSupported('Cannot seek streams of type '.typeof($this->in)->getName());
     }
   }
 
