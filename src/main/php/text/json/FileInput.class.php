@@ -38,7 +38,7 @@ class FileInput extends StreamInput {
    * Resets input
    *
    * @return void
-   * @throws io.IOException If this input cannot be reset
+   * @throws io.OperationFailed If this input cannot be reset
    */
   public function reset() {
     $this->wasOpen || $this->file->open(File::READ);

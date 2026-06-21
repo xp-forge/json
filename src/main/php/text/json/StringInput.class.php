@@ -18,7 +18,7 @@ class StringInput extends Input {
    * Resets input
    *
    * @return void
-   * @throws io.IOException If this input cannot be reset
+   * @throws io.OperationFailed If this input cannot be reset
    */
   public function reset() {
     $this->pos= 0;

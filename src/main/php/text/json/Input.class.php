@@ -153,7 +153,7 @@ abstract class Input implements Value {
    * Resets input
    *
    * @return void
-   * @throws io.IOException If this input cannot be reset
+   * @throws io.OperationFailed If this input cannot be reset
    */
   public abstract function reset();
 
