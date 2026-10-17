@@ -3,6 +3,8 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* Remove unused *JsonObject* tests in `Format::tokensOf()` - @thekid
+
 ## 6.1.0 / 2026-06-21
 
 * Merged PR #21: Refactor I/O exceptions, dropping XP 10 support in the

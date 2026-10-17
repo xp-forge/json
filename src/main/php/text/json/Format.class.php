@@ -130,7 +130,7 @@ abstract class Format implements Value {
       yield 'true';
     } else if (false === $value) {
       yield 'false';
-    } else if ($value instanceof JsonObject || $value instanceof stdClass) {
+    } else if ($value instanceof stdClass) {
       goto map;
     } else if ($value instanceof Traversable) {
       $i= 0;
