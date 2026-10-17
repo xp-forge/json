@@ -1,6 +1,6 @@
 <?php namespace text\json;
 
-use io\IOException;
+use io\NotSupported;
 use io\streams\{InputStream, Seekable, Streams};
 
 class MultiByteSource implements InputStream, Seekable {
@@ -39,7 +39,7 @@ class MultiByteSource implements InputStream, Seekable {
     if ($this->in instanceof Seekable) {
       $this->in->seek($offset, $whence);
     } else {
-      throw new IOException('Cannot seek '.$this->in->toString());
+      throw new NotSupported('Cannot seek '.$this->in->toString());
     }
   }
 

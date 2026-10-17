@@ -3,6 +3,18 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.0 / 2026-10-17
+
+* Added PHP 8.6 to the test matrix - @thekid
+* Remove unused *JsonObject* tests in `Format::tokensOf()` - @thekid
+
+## 6.1.0 / 2026-06-21
+
+* Merged PR #21: Refactor I/O exceptions, dropping XP 10 support in the
+  doing. See xp-framework/core#363 for a write-up on the reason behind
+  this and the plan to move forward.
+  (@thekid)
+
 ## 6.0.1 / 2025-08-14
 
 * Fixed deprecation warning *Non-canonical cast (double) is deprecated,

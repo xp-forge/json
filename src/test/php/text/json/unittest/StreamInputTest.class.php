@@ -1,6 +1,6 @@
 <?php namespace text\json\unittest;
 
-use io\IOException;
+use io\NotSupported;
 use io\streams\{InputStream, MemoryInputStream};
 use test\{Assert, Test, Values};
 use text\json\StreamInput;
@@ -76,7 +76,7 @@ class StreamInputTest extends JsonInputTest {
       public function close() { }
     });
     Assert::equals([1], iterator_to_array($input->elements()), '#1');
-    Assert::throws(IOException::class, function() use($input) {
+    Assert::throws(NotSupported::class, function() use($input) {
       $input->reset();
       iterator_to_array($input->elements());
     });

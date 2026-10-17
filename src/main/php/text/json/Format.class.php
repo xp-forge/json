@@ -1,6 +1,6 @@
 <?php namespace text\json;
 
-use StdClass, Traversable;
+use Traversable, stdClass;
 use io\Blob;
 use lang\{IllegalArgumentException, Value};
 
@@ -131,7 +131,7 @@ abstract class Format implements Value {
       yield 'true';
     } else if (false === $value) {
       yield 'false';
-    } else if ($value instanceof StdClass) {
+    } else if ($value instanceof stdClass) {
       goto map;
     } else if ($value instanceof Blob) {
       yield '"';
@@ -166,7 +166,7 @@ abstract class Format implements Value {
   public function toString() { return nameof($this); }
 
   /** @return string */
-  public function hashCode() { return spl_object_hash($this); }
+  public function hashCode() { return spl_object_id($this); }
 
   /**
    * Comparison
