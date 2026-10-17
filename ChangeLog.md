@@ -3,6 +3,11 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 7.0.0 / 2026-10-17
+
+* Merged PR #19: Integrate new `io.Blob` class. This makes it possible
+  to write JSON while streaming from the blob's source
+  (@thekid)
 * **Heads up:** Dropped support for PHP < 7.4, see xp-framework/rfc#343
   (@thekid)
 
