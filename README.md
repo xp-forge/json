@@ -15,7 +15,7 @@ Reading can be done from a string, file or stream:
 
 ```php
 use text\json\Json;
-use io\File;
+use io\{Blob, File};
 use peer\SocketInputStream;
 
 // Strings
@@ -23,6 +23,7 @@ $value= Json::read('"Test"');
 
 // Input
 $in= '{"Hello": "World"}');
+$in= new Blob(['"Test', '"']);
 $in= new File('input.json');
 $in= new SocketInputStream(/* ... */);
 
