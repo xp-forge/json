@@ -1,7 +1,7 @@
 <?php namespace text\json\unittest;
 
 use io\streams\{MemoryInputStream, MemoryOutputStream};
-use io\{Files, TempFile};
+use io\{Blob, Files, TempFile};
 use lang\{FormatException, IllegalArgumentException};
 use test\{Assert, Expect, Test};
 use text\json\{Format, Json, StringInput, StringOutput};
@@ -37,6 +37,11 @@ class JsonTest {
   #[Test]
   public function read_stream() {
     Assert::equals('Test', Json::read(new MemoryInputStream('"Test"')));
+  }
+
+  #[Test]
+  public function read_blob() {
+    Assert::equals('Test', Json::read(new Blob(['"Test', '"'])));
   }
 
   #[Test, Expect(FormatException::class)]
