@@ -7,7 +7,7 @@
   "keywords": ["module", "xp"],
   "require" : {
     "xp-framework/core": "^12.11",
-    "php" : ">=7.4.0"
+    "php" : ">=8.0.0"
   },
   "require-dev" : {
     "xp-framework/test": "^2.0 | ^1.0"

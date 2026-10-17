@@ -3,6 +3,9 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+* **Heads up:** Dropped support for PHP < 7.4, see xp-framework/rfc#343
+  (@thekid)
+
 ## 6.2.0 / 2026-10-17
 
 * Added PHP 8.6 to the test matrix - @thekid
