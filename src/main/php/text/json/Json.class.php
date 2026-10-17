@@ -15,7 +15,7 @@ abstract class Json {
   /**
    * Reads from an input
    *
-   * @param  string|text.json.Input|io.File|io.stream.InputStream $input
+   * @param  string|text.json.Input|io.File|io.Blob|io.stream.InputStream $input
    * @return var
    */
   public static function read($input) {
