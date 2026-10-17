@@ -3,6 +3,8 @@ JSON for the XP Framework ChangeLog
 
 ## ?.?.? / ????-??-??
 
+## 6.2.0 / 2026-10-17
+
 * Added PHP 8.6 to the test matrix - @thekid
 * Remove unused *JsonObject* tests in `Format::tokensOf()` - @thekid
 
