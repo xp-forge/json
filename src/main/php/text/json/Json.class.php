@@ -1,7 +1,7 @@
 <?php namespace text\json;
 
-use io\File;
 use io\streams\{InputStream, OutputStream};
+use io\{Blob, File};
 use lang\IllegalArgumentException;
 
 /**
@@ -23,6 +23,8 @@ abstract class Json {
       // NOOP
     } else if ($input instanceof File) {
       $input= new FileInput($input);
+    } else if ($input instanceof Blob) {
+      $input= new StreamInput($input->stream());
     } else if ($input instanceof InputStream) {
       $input= new StreamInput($input);
     } else {
